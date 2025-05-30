@@ -59,7 +59,7 @@ export default function Hero() {
       </div>
 
       <Link
-        className="bg-custom-orange-light text-base anonymous-font text-white md:text-xl font-medium py-3 px-6 rounded-full relative z-10"
+        className="bg-custom-orange-light text-base anonymous-font text-white md:text-xl font-medium py-3 px-6 rounded-full relative"
         to="/auth/login"
       >
         Get Started - It's Free
