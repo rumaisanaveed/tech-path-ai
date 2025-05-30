@@ -4,15 +4,10 @@ import { navLinks } from "../constants";
 import Logo from "../assets/icons/logo.svg";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const handleGetStarted = () => {
-    navigate("/signup");
+    navigate("/auth/signup");
   };
 
   const location = useLocation();
@@ -56,40 +51,6 @@ const Header = () => {
             </button>
           </>
         )}
-
-        {/* Mobile Menu Button */}
-        {/* <button className="md:hidden text-gray-800" onClick={toggleMenu}>
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button> */}
-
-        {/* Mobile Navigation */}
-        {/* {isMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-white shadow-md py-4 md:hidden">
-            <div className="flex flex-col space-y-4 px-4">
-              <a href="/" className="text-gray-600 hover:text-gray-900 py-2">
-                Home
-              </a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 py-2">
-                About
-              </a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 py-2">
-                Steps
-              </a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 py-2">
-                Feature
-              </a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 py-2">
-                Testimonials
-              </a>
-              <button
-                onClick={handleGetStarted}
-                className="border border-gray-800 rounded-full py-2 hover:bg-gray-100 transition-colors"
-              >
-                Get Started
-              </button>
-            </div>
-          </div>
-        )} */}
       </nav>
       <hr className="bg-custom-gray-dark w-11/12 block md:hidden mx-auto" />
     </header>

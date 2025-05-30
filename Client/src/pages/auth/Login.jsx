@@ -48,7 +48,7 @@ export const Login = () => {
             </Link>
             <Button
               type="submit"
-              className="text-custom-black-dark anonymous-font font-medium text-base text-white rounded-full w-28 md:w-40 py-3 md:py-6 self-end"
+              className="anonymous-font font-medium text-base text-white rounded-full w-28 md:w-40 py-3 md:py-6 self-end"
             >
               Sign in
             </Button>
