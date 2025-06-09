@@ -9,7 +9,7 @@ import { PrimaryButton } from "../buttons/PrimaryButton";
 
 export const AssessmentQuestion = () => {
   return (
-    <div className="h-full flex flex-col grow justify-between px-6 md:px-10 py-4 md:py-7">
+    <div className="h-full flex flex-col grow 3xl:max-w-7xl 3xl:mx-auto justify-between 3xl:items-center 3xl:justify-center px-6 md:px-10 py-4 md:py-7">
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-3">
           <AssessmentBreadcrumb />
@@ -38,6 +38,7 @@ export const AssessmentQuestion = () => {
           <BackButton className="w-28 md:w-36 py-2.5" />
         </div>
       </div>
+
       <CustomProgressBar />
     </div>
   );

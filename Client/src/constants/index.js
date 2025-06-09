@@ -5,10 +5,14 @@ import PersonFour from "../assets/icons/person4.svg";
 import {
   BadgeCheck,
   BarChart3,
+  Brush,
+  Calculator,
   Calendar,
   Compass,
+  Headphones,
   Home,
   LayoutDashboard,
+  LocateFixed,
   Newspaper,
   Trophy,
   User,
@@ -435,4 +439,42 @@ export const blogData = [
       "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=60",
     span: "col-span-5 row-span-1 lg:col-span-4 lg:row-span-2",
   },
+];
+
+export const assessmentSectionsNames = [
+  {
+    id: 1,
+    name: "Communication and Interest",
+    icon: Headphones,
+  },
+  {
+    id: 2,
+    name: "Problem Solving Skills",
+    icon: Calculator,
+  },
+  {
+    id: 3,
+    name: "Critical Thinking",
+    icon: LocateFixed,
+  },
+  {
+    id: 4,
+    name: "Creative Thinking",
+    icon: Brush,
+  },
+];
+
+// Dummy trait data (replace with dynamic if needed)
+export const traits = [
+  { name: "Communication and Interest", value: 80 },
+  { name: "Problem Solving Skills", value: 70 },
+  { name: "Critical Thinking", value: 50 },
+  { name: "Creative Thinking", value: 60 },
+];
+
+// Dummy recommended careers
+export const careers = [
+  "Frontend Developer",
+  "UI / UX Designer",
+  "Mobile App Developer",
 ];

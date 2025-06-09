@@ -10,7 +10,7 @@ export const CustomProgressBar = ({
   const progressValue = Math.min(100, Math.max(0, value));
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mt-8 w-full">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mt-8 w-full 3xl:w-[650px]">
       <p className="text-black font-normal text-sm whitespace-nowrap">
         Question {questionNo} of {totalQuestions}
       </p>

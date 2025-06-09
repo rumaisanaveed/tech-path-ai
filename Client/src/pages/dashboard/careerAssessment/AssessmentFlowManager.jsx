@@ -6,6 +6,7 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { assessmentSections } from "@/constants";
 import { AssessmentQuestion } from "@/components/careerAssessment/AssessmentQuestion";
 import { AssessmentResult } from "@/components/careerAssessment/AssessmentResult";
+import { AssessmentInitialUi } from "@/components/careerAssessment/AssessmentInitialUi";
 
 export const AssessmentFlowManager = () => {
   usePageTitle("Assessment");
@@ -76,11 +77,12 @@ export const AssessmentFlowManager = () => {
         )}
       </div> */}
       {/* initial screen */}
+      <AssessmentInitialUi />
       {/* question screen */}
       {/* <AssessmentQuestion /> */}
       {/* interactive screen */}
       {/* assessment result screen */}
-      <AssessmentResult />
+      {/* <AssessmentResult /> */}
     </DashboardLayout>
   );
 };
