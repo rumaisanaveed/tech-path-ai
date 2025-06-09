@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BlogImage from "@/assets/images/blog.png";
 import MainLayout from "@/layouts/MainLayout";
 import { blogData } from "@/constants";
-import { useScreenSize } from "@/hooks/useScreenSize";
+import { BlogCard } from "@/components/blogs/BlogCard";
 
 export const BlogDetail = () => {
   //   const { id } = useParams();
@@ -10,10 +10,6 @@ export const BlogDetail = () => {
   const recommendedBlogs = blogData
     .slice(0, 4)
     .map(({ span, ...rest }) => rest);
-
-  const handleNavigate = (postId) => {
-    navigate(`/blogs/${postId}`);
-  };
 
   return (
     <MainLayout>
@@ -57,29 +53,14 @@ export const BlogDetail = () => {
           <h2 className="text-xl md:text-4xl font-semibold">
             Recommended articles
           </h2>
-          <div className="flex flex-col md:flex-row md:items-center md:overflow-x-scroll gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {recommendedBlogs.map((post) => (
-              <div
+              <BlogCard
+                post={post}
                 key={post.id}
-                onClick={() => handleNavigate(post.id)}
-                className="relative cursor-pointer rounded-2xl w-full md:w-[300px] h-[250px] md:h-[300px] overflow-hidden"
-                style={{
-                  backgroundImage: `url(${post.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  flex: "0 0 auto",
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/80" />
-                <div className="absolute bottom-0 p-4 pb-6 text-white w-full">
-                  <span className="text-[10px] md:text-xs bg-white text-black px-2 py-0.5 rounded-full font-medium inline-block mb-3">
-                    {post.category}
-                  </span>
-                  <h3 className="text-xs md:text-sm font-semibold leading-snug max-w-xs">
-                    {post.title}
-                  </h3>
-                </div>
-              </div>
+                className="w-full h-[250px] lg:h-[300px]"
+                variant="compact"
+              />
             ))}
           </div>
         </div>

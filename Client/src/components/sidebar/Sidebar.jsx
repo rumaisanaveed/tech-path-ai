@@ -1,14 +1,13 @@
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { sidebarItems } from "@/constants";
 import Logo from "@/assets/icons/logo.svg";
 import Logout from "@/assets/icons/sidebar/logout.svg";
 import { Settings } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { useGlobalContext } from "@/context/GlobalContext";
 
-export default function Sidebar() {
+export default function Sidebar({ items, variant = "sidebar" }) {
   const location = useLocation();
   const { open, setOpen } = useGlobalContext();
 
@@ -22,18 +21,21 @@ export default function Sidebar() {
         )}
       >
         {/* Logo */}
-        <div className="text-base font-normal flex items-center gap-2">
+        <div className="text-base font-normal flex items-center gap-2 pl-4">
           <img src={Logo} alt="logo" className="w-6 h-6" />
           Career Mentor
         </div>
 
         {/* Nav Links */}
         <nav className="space-y-1">
-          {sidebarItems.map((item) => {
+          {items.map((item) => {
+            // handling active states differently on mobile menu and sidebar
             const isActive =
-              item.href === "/dashboard"
-                ? location.pathname === item.href
-                : location.pathname.startsWith(item.href);
+              variant === "sidebar"
+                ? item.href === "/dashboard"
+                  ? location.pathname === item.href
+                  : location.pathname.startsWith(item.href)
+                : location.pathname === item.href;
 
             return (
               <SidebarItem key={item.label} item={{ ...item, isActive }} />
@@ -42,24 +44,28 @@ export default function Sidebar() {
         </nav>
 
         {/* Bottom buttons */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <SidebarItem
-            item={{
-              label: "Settings",
-              href: "/dashboard/settings",
-              icon: Settings,
-              isActive: location.pathname === "/dashboard/settings",
-            }}
-          />
+        {variant === "sidebar" ? (
+          <div className="absolute bottom-6 left-6 right-6">
+            <SidebarItem
+              item={{
+                label: "Settings",
+                href: "/dashboard/settings",
+                icon: Settings,
+                isActive: location.pathname === "/dashboard/settings",
+              }}
+            />
 
-          <Button
-            variant="ghost"
-            className="w-full flex justify-start gap-3 text-muted-foreground text-sm font-medium"
-          >
-            <img src={Logout} className="w-5 h-5" alt="logout" />
-            Logout
-          </Button>
-        </div>
+            <Button
+              variant="ghost"
+              className="w-full flex justify-start gap-3 text-muted-foreground text-sm font-medium"
+            >
+              <img src={Logout} className="w-5 h-5" alt="logout" />
+              Logout
+            </Button>
+          </div>
+        ) : (
+          <></>
+        )}
       </aside>
 
       {/* Dimmed overlay for mobile menu */}

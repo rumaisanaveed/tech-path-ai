@@ -5,11 +5,12 @@ import PersonProfile from "@/assets/icons/person-profile.svg";
 import { Button } from "@/components/ui/button";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Logo from "@/assets/icons/logo.svg";
+import { sidebarItems } from "@/constants";
 
 export default function DashboardLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+      <Sidebar items={sidebarItems} />
       <div className="flex-1 flex flex-col overflow-y-auto">
         <DashboardHeader />
         <main className="flex-1">{children}</main>
