@@ -1,12 +1,33 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/buttons/BackButton";
+import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
 
 export const ForgotPassword = () => {
   usePageTitle("Forgot Password");
+
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const { mutate: forgotPassword, isPending, isSuccess, isError, error } =
+    useForgotPassword();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!email.trim()) return;
+
+    forgotPassword(email, {
+      onSuccess: () => {
+        setSubmitted(true);
+      },
+    });
+  };
+
   return (
     <AuthLayout
       mainHeading="Forgot Your Password?"
@@ -14,7 +35,22 @@ export const ForgotPassword = () => {
       formText="No worries — we’ll help you get back on track."
     >
       <div className="flex flex-col justify-between md:h-full">
-        <form className="grid grid-cols-2 gap-5 text-custom-black-dark">
+        {submitted && isSuccess ? (
+          <p className="text-green-600 font-medium text-sm">
+            ✅ Reset email sent successfully!
+          </p>
+        ) : null}
+
+        {isError && (
+          <p className="text-red-500 font-medium text-sm">
+            ❌ {error?.response?.data?.message || "Something went wrong"}
+          </p>
+        )}
+
+        <form
+          className="grid grid-cols-2 gap-5 text-custom-black-dark"
+          onSubmit={handleSubmit}
+        >
           <div className="col-span-2 flex flex-col gap-2">
             <Label htmlFor="email" className="text-sm font-light">
               Email Address
@@ -24,6 +60,9 @@ export const ForgotPassword = () => {
               type="email"
               placeholder="johndoe@gmail.com"
               className="rounded-md"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -31,9 +70,10 @@ export const ForgotPassword = () => {
             <BackButton />
             <Button
               type="submit"
-              className="text-custom-black-dark anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6 self-end"
+              disabled={isPending}
+              className="text-white anonymous-font font-medium text-base rounded-full w-40 py-3 md:py-6 self-end"
             >
-              Send Reset Link
+              {isPending ? "Sending..." : "Send Reset Link"}
             </Button>
           </div>
         </form>

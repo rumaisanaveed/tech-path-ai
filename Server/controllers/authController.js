@@ -68,6 +68,16 @@ export const signUpController = async (req, res) => {
 
 export const verifyEmailController = async (req, res) => {
   const { code } = req.body;
+
+  if(!code) {
+    return res.status(400).json({
+      success: false,
+      message: "Verification code is required",
+    });
+  }
+
+  console.log("Verification code received:", code);
+
   try {
     const user = await User.findOne({
       where: {
@@ -105,6 +115,7 @@ export const verifyEmailController = async (req, res) => {
 
 export const loginController = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
   try {
     if (!email || !password) {
       return res.status(400).json({
@@ -190,7 +201,7 @@ export const forgotPasswordController = async (req, res) => {
 
     await sendPasswordResetEmail(
       user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+      `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`
     );
 
     res.status(200).json({
@@ -255,7 +266,7 @@ export const resetPasswordController = async (req, res) => {
 
 export const resendVerificationEmailController = async (req, res) => {
   const { email } = req.body;
-  
+
   if (!email) {
     return res.status(400).json({
       success: false,

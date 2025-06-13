@@ -3,10 +3,33 @@ import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLogin } from "@/hooks/auth/useLogin";
 
 export const Login = () => {
   usePageTitle("Login");
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { mutate: login, isPending } = useLogin();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(
+      { email, password },
+      {
+        onSuccess: () => {
+          alert("Login successful");
+          navigate("/dashboard");
+        },
+        onError: (err) => alert(err?.response?.data?.message || "Login failed"),
+      }
+    );
+  };
+
   return (
     <AuthLayout
       mainHeading="Welcome Back! To Career Mentor"
@@ -14,7 +37,10 @@ export const Login = () => {
       formText="Let’s continue your journey to a smarter career."
     >
       <div className="flex flex-col justify-between md:h-full">
-        <form className="grid grid-cols-2 gap-5 text-custom-black-dark">
+        <form
+          className="grid grid-cols-2 gap-5 text-custom-black-dark"
+          onSubmit={handleSubmit}
+        >
           <div className="col-span-2 flex flex-col gap-2">
             <Label htmlFor="email" className="text-sm font-light">
               Email Address
@@ -22,6 +48,8 @@ export const Login = () => {
             <Input
               id="email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="johndoe@gmail.com"
               className="rounded-md"
             />
@@ -34,6 +62,8 @@ export const Login = () => {
             <Input
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="******"
               className="rounded-md"
             />
@@ -49,8 +79,9 @@ export const Login = () => {
             <Button
               type="submit"
               className="anonymous-font font-medium text-base text-white rounded-full w-28 md:w-40 py-3 md:py-6 self-end"
+              disabled={isPending}
             >
-              Sign in
+              {isPending ? "Signing in..." : "Sign in"}
             </Button>
           </div>
         </form>

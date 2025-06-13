@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
@@ -8,9 +9,34 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { useVerifyOtp } from "@/hooks/auth/useVerifyIdentity";
+import { useNavigate } from "react-router-dom";
 
 export const VerifyIdentity = () => {
   usePageTitle("Verify Your Identity");
+  const navigate = useNavigate();
+
+  const [otp, setOtp] = useState(""); // Store 6-digit OTP
+  const {
+    mutate: verifyOtp,
+    isLoading,
+    isError,
+    error,
+  } = useVerifyOtp({
+    onSuccess: () => {
+      navigate("/auth/login"); // Redirect to login
+    },
+  });
+
+  console.log("OTP:", otp); // Debugging line to check OTP value
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (otp.length === 6) {
+      verifyOtp({ code: otp }); // ✅ send it to backend
+    }
+  };
+
   return (
     <AuthLayout
       mainHeading="Verify Your Identity"
@@ -18,10 +44,18 @@ export const VerifyIdentity = () => {
       formText="Check your email for a 6-digit code."
     >
       <div className="flex flex-col justify-between md:h-full">
-        <form className="grid grid-cols-2 gap-5 text-custom-black-dark">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-2 gap-5 text-custom-black-dark"
+        >
           <div className="col-span-2 flex flex-col gap-2">
             <Label className="text-sm font-light">OTP</Label>
-            <InputOTP maxLength={6} className="flex gap-4 w-full">
+            <InputOTP
+              maxLength={6}
+              value={otp}
+              onChange={setOtp}
+              className="flex gap-4 w-full"
+            >
               <InputOTPGroup className="flex gap-2 lg:gap-6 w-full">
                 {[...Array(6)].map((_, i) => (
                   <InputOTPSlot
@@ -32,6 +66,11 @@ export const VerifyIdentity = () => {
                 ))}
               </InputOTPGroup>
             </InputOTP>
+            {isError && (
+              <p className="text-sm text-red-500 mt-1">
+                {error?.response?.data?.message || "Verification failed"}
+              </p>
+            )}
           </div>
 
           <div className="col-span-2 flex flex-col gap-3 justify-end">
@@ -52,9 +91,10 @@ export const VerifyIdentity = () => {
               </Link>
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="text-custom-black-dark anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6"
               >
-                Verify
+                {isLoading ? "Verifying..." : "Verify"}
               </Button>
             </div>
           </div>
