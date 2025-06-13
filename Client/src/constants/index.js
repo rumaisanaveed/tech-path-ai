@@ -478,3 +478,32 @@ export const careers = [
   "UI / UX Designer",
   "Mobile App Developer",
 ];
+
+
+export const adminSidebarItems = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/admin-dashboard",
+  },
+  {
+    label: "Blogs Management",
+    icon: Newspaper,
+    href: "/admin-dashboard/blogs", 
+  },
+  {
+    label: "Events Management",
+    icon: Calendar,
+    href: "/admin-dashboard/events", 
+  },
+  {
+    label: "Career Assessment Management",
+    icon: BadgeCheck,
+    href: "/admin-dashboard/career-assessment",
+  },
+  {
+    label: "Career Explorer Management",
+    icon: Compass,
+    href: "/admin-dashboard/career-explorer",
+  },
+];

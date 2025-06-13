@@ -25,6 +25,11 @@ import {
 } from "./pages/dashboard";
 import { Blogs } from "./pages/blogs/Blogs";
 import { BlogDetail } from "./pages/blogs/BlogDetail";
+import { AdminDashboard } from "./pages/adminDashboard/AdminDashboard";
+import AdminBlogs from "./pages/adminDashboard/Blogs/AdminBlogs";
+import AdminEvents from "./pages/adminDashboard/Events/AdminEvents";
+import CareerExplorer from "./pages/adminDashboard/CareerExplorer/CareerExplorer";
+import AdminBlogDetails from "./pages/adminDashboard/Blogs/AdminBlogDetails";
 
 function App() {
   return (
@@ -57,6 +62,14 @@ function App() {
             <Route path="mentorship" element={<Mentors />} />
             <Route path="achievements" element={<Achievements />} />
             <Route path="settings" element={<Settings />} />
+          </Route>
+          {/* Admin Dashboard */}
+          <Route path="/admin-dashboard">
+            <Route index element={<AdminDashboard />} />
+            <Route path="blogs" element={<AdminBlogs />} />
+            <Route path="blogs/:id" element={<AdminBlogDetails />} />
+            <Route path="events" element={<AdminEvents />} />
+            <Route path="career-explorer" element={<CareerExplorer />} />
           </Route>
         </Routes>
       </BrowserRouter>
