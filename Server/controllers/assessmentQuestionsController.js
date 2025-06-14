@@ -29,6 +29,7 @@ export const createAssessmentSession = async (req, res) => {
       attributes: ["id"],
     });
 
+
     if (questions.length < 8) {
       return res
         .status(400)
