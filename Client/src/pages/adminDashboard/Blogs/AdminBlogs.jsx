@@ -26,6 +26,7 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
+import usePageTitle from "@/hooks/usePageTitle";
 
 const mockBlogs = [
   {
@@ -105,6 +106,7 @@ const filterOptions = [
 ];
 
 const AdminBlogs = () => {
+  usePageTitle("Admin Blogs");
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);

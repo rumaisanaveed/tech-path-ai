@@ -6,27 +6,13 @@ import Logout from "@/assets/icons/sidebar/logout.svg";
 import { Settings } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { useMutation } from "@tanstack/react-query";
-
-import { logout } from "@/api/auth";
+import { useLogout } from "@/services/auth/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Sidebar({ items, variant = "sidebar" }) {
   const location = useLocation();
   const { open, setOpen } = useGlobalContext();
-
-  const navigate = useNavigate();
-
-  const mutation = useMutation({
-    mutationFn: logout,
-
-    onSuccess: () => {
-      // Optionally clear client-side state here
-      navigate("/auth/login");
-    },
-    onError: () => {
-      alert("Failed to logout.");
-    },
-  });
+  const { logout } = useAuth;
 
   return (
     <>
@@ -72,13 +58,13 @@ export default function Sidebar({ items, variant = "sidebar" }) {
               }}
             />
 
-              <Button
+            <Button
               variant="ghost"
-              className="w-full flex justify-start gap-3 text-muted-foreground text-sm font-medium"
-              onClick={() => mutation.mutate()}
+              className="w-full flex justify-start gap-3 text text-muted-foreground text-sm font-medium"
+              onClick={logout}
             >
               <img src={Logout} className="w-5 h-5" alt="logout" />
-              {mutation.isPending ? "Logging out..." : "Logout"}
+              Logout
             </Button>
           </div>
         ) : (

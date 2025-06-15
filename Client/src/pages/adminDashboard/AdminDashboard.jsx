@@ -3,6 +3,6 @@ import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
 import React from "react";
 
 export const AdminDashboard = () => {
-  usePageTitle("admin-dashboard");
+  usePageTitle("Admin Dashboard");
   return <AdminDashboardLayout>Admin Dashboard</AdminDashboardLayout>;
 };

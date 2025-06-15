@@ -1,56 +1,43 @@
 import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { useSignup } from "@/hooks/auth/useSignup";
+import { useSignup } from "@/services/auth/auth.service";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Eye, EyeOff } from "lucide-react";
 
-// TODO: add validations
-// ui fixes
-// api folder structure fixes
-// eye button on password inputs
 export const Signup = () => {
   usePageTitle("Signup");
-
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
   });
 
   const { mutate: signup, isPending, isError, error, isSuccess } = useSignup();
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    const signupData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      dateOfBirth: formData.dateOfBirth,
-      email: formData.email,
-      password: formData.password,
-    };
-
-    signup(signupData);
+  const onSubmit = (data) => {
+    const { firstName, lastName, dateOfBirth, email, password } = data;
+    signup({ firstName, lastName, dateOfBirth, email, password });
   };
 
   useEffect(() => {
@@ -58,6 +45,8 @@ export const Signup = () => {
       navigate("/auth/verify-identity");
     }
   }, [isSuccess, navigate]);
+
+  const password = watch("password");
 
   return (
     <AuthLayout
@@ -78,109 +67,178 @@ export const Signup = () => {
         )}
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 md:grid-cols-2 gap-5 text-custom-black-dark"
         >
           <div className="grid gap-2">
-            <Label htmlFor="firstName" className="text-sm font-light">
-              First Name
-            </Label>
+            <Label htmlFor="firstName">First Name</Label>
             <Input
               id="firstName"
-              name="firstName"
               type="text"
               placeholder="John"
-              className="rounded-md"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
+              {...register("firstName", { required: "First name is required" })}
             />
+            {errors.firstName && (
+              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
+            )}
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="lastName" className="text-sm font-light">
-              Last Name
-            </Label>
+            <Label htmlFor="lastName">Last Name</Label>
             <Input
               id="lastName"
-              name="lastName"
               type="text"
               placeholder="Doe"
-              className="rounded-md"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
+              {...register("lastName", { required: "Last name is required" })}
             />
+            {errors.lastName && (
+              <p className="text-red-500 text-sm">{errors.lastName.message}</p>
+            )}
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="dob" className="text-sm font-light">
-              Date of Birth
-            </Label>
-            <Input
-              id="dateOfBirth"
+          <div className="grid gap-2 relative">
+            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Controller
               name="dateOfBirth"
-              type="text"
-              placeholder="12/04/2002"
-              className="rounded-md"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
+              control={control}
+              defaultValue={new Date()}
+              rules={{ required: "Date of Birth is required" }}
+              render={({ field }) => (
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Input
+                      onClick={() => setOpen(true)}
+                      readOnly
+                      value={
+                        field.value
+                          ? new Date(field.value).toLocaleDateString("en-US")
+                          : ""
+                      }
+                      placeholder="MM/DD/YYYY"
+                      className={`cursor-pointer text-left ${
+                        errors.dateOfBirth ? "border-red-500" : ""
+                      }`}
+                    />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      captionLayout="dropdown"
+                      selected={field.value}
+                      onSelect={(date) => {
+                        field.onChange(date);
+                        field.onBlur();
+                        setOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
             />
+
+            <p className="text-red-500 text-sm mt-1">
+              {errors.dateOfBirth?.message}
+            </p>
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="email" className="text-sm font-light">
-              Email Address
-            </Label>
+            <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
-              name="email"
               type="email"
               placeholder="johndoe@gmail.com"
-              className="rounded-md"
-              value={formData.email}
-              onChange={handleChange}
-              required
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "Invalid email address",
+                },
+              })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="password" className="text-sm font-light">
-              Password
-            </Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="******"
-              className="rounded-md"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="pr-10"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                })}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute top-1/2 right-2 -translate-y-1/2 h-7 w-7"
+              >
+                {showPassword ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+                <span className="sr-only">Toggle password visibility</span>
+              </Button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="confirmPassword" className="text-sm font-light">
-              Confirm Password
-            </Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="******"
-              className="rounded-md"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter confirm password"
+                className="pr-10"
+                {...register("confirmPassword", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                })}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute top-1/2 right-2 -translate-y-1/2 h-7 w-7"
+              >
+                {showConfirmPassword ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+                <span className="sr-only">Toggle password visibility</span>
+              </Button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
           <div className="md:col-span-2 flex justify-end">
             <Button
               type="submit"
               disabled={isPending}
-              className="text-custom-black-dark anonymous-font font-medium text-base text-white rounded-full"
+              className="anonymous-font font-medium text-base text-white rounded-full"
             >
               {isPending ? "Creating..." : "Create Account"}
             </Button>

@@ -5,7 +5,7 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/buttons/BackButton";
-import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
+import { useForgotPassword } from "@/services/auth/auth.service";
 
 export const ForgotPassword = () => {
   usePageTitle("Forgot Password");
@@ -13,8 +13,13 @@ export const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const { mutate: forgotPassword, isPending, isSuccess, isError, error } =
-    useForgotPassword();
+  const {
+    mutate: forgotPassword,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useForgotPassword();
 
   const handleSubmit = (e) => {
     e.preventDefault();

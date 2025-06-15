@@ -1,7 +1,7 @@
-// src/context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import * as authAPI from "../api/auth.js";
+import * as authAPI from "@/services/auth/auth.api";
+import { useLogout } from "@/services/auth/auth.service";
 
 const AuthContext = createContext();
 
@@ -16,9 +16,18 @@ export const AuthProvider = ({ children }) => {
     onError: () => setUser(null),
   });
 
+  const logoutMutation = useLogout({
+    onSuccess: () => {
+      setUser(null);
+      window.location.replace("/auth/login");
+    },
+    onError: () => {
+      console.error("Logout failed");
+    },
+  });
+
   const logout = () => {
-    setUser(null);
-    // optionally make a logout API call
+    logoutMutation.mutate();
   };
 
   return (

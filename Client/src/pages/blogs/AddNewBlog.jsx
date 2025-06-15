@@ -13,8 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import usePageTitle from "@/hooks/usePageTitle";
 
 const AddNewBlog = () => {
+  usePageTitle("Add blog");
   const [formData, setFormData] = useState({
     title: "",
     shortDesc: "",

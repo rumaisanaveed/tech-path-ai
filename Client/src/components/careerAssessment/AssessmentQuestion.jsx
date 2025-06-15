@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AssessmentBreadcrumb } from "./AssessmentBreadcrumb";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
@@ -6,8 +6,15 @@ import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
 import BackButton from "../buttons/BackButton";
 import { CustomProgressBar } from "../CustomProgressBar";
 import { PrimaryButton } from "../buttons/PrimaryButton";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 export const AssessmentQuestion = () => {
+  const { setBreadcrumbSuffix } = useGlobalContext();
+
+  useEffect(() => {
+    setBreadcrumbSuffix("Assessment");
+  }, []);
+
   return (
     <div className="h-full flex flex-col grow 3xl:max-w-7xl 3xl:mx-auto justify-between 3xl:items-center 3xl:justify-center px-6 md:px-10 py-4 md:py-7">
       <div className="flex flex-col gap-5">

@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { useVerifyOtp } from "@/hooks/auth/useVerifyIdentity";
 import { useNavigate } from "react-router-dom";
+import { useVerifyOtp } from "@/services/auth/auth.service";
 
 // TODO: create resend code page
 export const VerifyIdentity = () => {
@@ -26,16 +26,14 @@ export const VerifyIdentity = () => {
     error,
   } = useVerifyOtp({
     onSuccess: () => {
-      navigate("/auth/login"); // Redirect to login
+      navigate("/dashboard");
     },
   });
-
-  console.log("OTP:", otp); // Debugging line to check OTP value
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (otp.length === 6) {
-      verifyOtp({ code: otp }); // ✅ send it to backend
+      verifyOtp({ code: otp });
     }
   };
 

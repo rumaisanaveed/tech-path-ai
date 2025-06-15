@@ -1,7 +1,9 @@
-import React from 'react'
-import AdminDashboardLayout from '@/layouts/AdmindashboardLayout'
+import React from "react";
+import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
+import usePageTitle from "@/hooks/usePageTitle";
 
 const AdminEvents = () => {
+  usePageTitle("Admin Events");
   return (
     <AdminDashboardLayout>
       <div className="admin-events">
@@ -9,7 +11,7 @@ const AdminEvents = () => {
         {/* Add your event management components here */}
       </div>
     </AdminDashboardLayout>
-  )
-}
+  );
+};
 
-export default AdminEvents
+export default AdminEvents;

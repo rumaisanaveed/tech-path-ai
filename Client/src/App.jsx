@@ -23,19 +23,23 @@ import {
   Settings,
   SkillTracking,
 } from "./pages/dashboard";
+// blogs
 import { Blogs } from "./pages/blogs/Blogs";
 import { BlogDetail } from "./pages/blogs/BlogDetail";
+import AddNewBlog from "./pages/blogs/AddNewBlog";
+// admin
 import { AdminDashboard } from "./pages/adminDashboard/AdminDashboard";
 import AdminBlogs from "./pages/adminDashboard/Blogs/AdminBlogs";
 import AdminEvents from "./pages/adminDashboard/Events/AdminEvents";
 import CareerExplorer from "./pages/adminDashboard/CareerExplorer/CareerExplorer";
 import AdminBlogDetails from "./pages/adminDashboard/Blogs/AdminBlogDetails";
+// user blogs
 import UserBlogs from "./pages/dashboard/blogs/UserBlogs";
-import AddNewBlog from "./pages/dashboard/blogs/AddNewBlog";
 
 function App() {
   return (
     <>
+      {/* TODO : avoid repetition here and store the routes in separate file */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

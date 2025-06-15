@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useLogin } from "@/hooks/auth/useLogin";
+import { useLogin } from "@/services/auth/auth.service";
 
 export const Login = () => {
   usePageTitle("Login");

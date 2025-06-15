@@ -63,7 +63,10 @@ export const SidebarItem = ({ item }) => {
         </>
       ) : isActive ? (
         <div className="rounded-full bg-[linear-gradient(90deg,#F3B34E,#FFD272,#59A4C0)] p-[2px]">
-          <SidebarLink link={link} className="rounded-full text-black bg-white" />
+          <SidebarLink
+            link={link}
+            className="rounded-full text-black bg-white"
+          />
         </div>
       ) : (
         <SidebarLink link={link} className="rounded-md text-[#676767]" />
