@@ -5,7 +5,7 @@ export default function AuthLayout({ mainHeading, text, formText, children }) {
   return (
     <div className="h-screen">
       <Header />
-      <div className="flex flex-col md:flex-row gap-3 3xl:justify-center lg:gap-20 px-10 w-full mx-auto text-custom-black-dark pt-10 pb-3 lg:pt-0 lg:pb-0">
+      <div className="flex flex-col lg:flex-row gap-3 md:w-11/12 lg:w-full xl:gap-20 3xl:justify-center lg:gap-10 px-10 w-full mx-auto text-custom-black-dark pt-10 pb-3 lg:pt-0 lg:pb-0">
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="lg:font-normal font-bold anonymous-font lg:text-6xl text-3xl lg:max-w-xl">
             {mainHeading}

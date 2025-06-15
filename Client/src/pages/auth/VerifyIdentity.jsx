@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
@@ -8,17 +8,28 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useVerifyOtp } from "@/services/auth/auth.service";
 
-// TODO: create resend code page
 export const VerifyIdentity = () => {
   usePageTitle("Verify Your Identity");
   const navigate = useNavigate();
 
-  // TODO : navigate to the dashboard on signup
-  const [otp, setOtp] = useState(""); // Store 6-digit OTP
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    watch,
+  } = useForm({
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+  const otp = watch("otp"); // Watch OTP value
+
   const {
     mutate: verifyOtp,
     isLoading,
@@ -30,10 +41,9 @@ export const VerifyIdentity = () => {
     },
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (otp.length === 6) {
-      verifyOtp({ code: otp });
+  const onSubmit = (data) => {
+    if (data.otp.length === 6) {
+      verifyOtp({ code: data.otp });
     }
   };
 
@@ -45,15 +55,19 @@ export const VerifyIdentity = () => {
     >
       <div className="flex flex-col justify-between md:h-full">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-2 gap-5 text-custom-black-dark"
         >
           <div className="col-span-2 flex flex-col gap-2">
             <Label className="text-sm font-light">OTP</Label>
+
             <InputOTP
               maxLength={6}
               value={otp}
-              onChange={setOtp}
+              onChange={(val) => {
+                setValue("otp", val);
+                trigger("otp");
+              }}
               className="flex gap-4 w-full"
             >
               <InputOTPGroup className="flex gap-2 lg:gap-6 w-full">
@@ -66,9 +80,27 @@ export const VerifyIdentity = () => {
                 ))}
               </InputOTPGroup>
             </InputOTP>
-            {isError && (
+
+            <input
+              type="hidden"
+              {...register("otp", {
+                required: "OTP is required",
+                minLength: {
+                  value: 6,
+                  message: "OTP must be 6 digits",
+                },
+                maxLength: {
+                  value: 6,
+                  message: "OTP must be 6 digits",
+                },
+              })}
+            />
+
+            {(errors.otp || isError) && (
               <p className="text-sm text-red-500 mt-1">
-                {error?.response?.data?.message || "Verification failed"}
+                {errors.otp?.message ||
+                  error?.response?.data?.message ||
+                  "Verification failed"}
               </p>
             )}
           </div>
@@ -77,11 +109,15 @@ export const VerifyIdentity = () => {
             <div className="self-end">
               <p className="text-sm font-normal flex items-center">
                 Didn't get the code?&nbsp;
-                <span className="text-custom-light-blue font-medium">
+                <span
+                  className="text-custom-light-blue font-medium cursor-pointer"
+                  onClick={() => navigate("/auth/resend-otp")}
+                >
                   Resend Code
                 </span>
               </p>
             </div>
+
             <div className="flex gap-3 items-center self-end mt-4">
               <Link
                 className="text-base font-light w-24 flex items-center justify-center border border-custom-black-dark rounded-full py-2 md:py-2.5"
@@ -92,7 +128,7 @@ export const VerifyIdentity = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="text-custom-black-dark anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6"
+                className="anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6"
               >
                 {isLoading ? "Verifying..." : "Verify"}
               </Button>

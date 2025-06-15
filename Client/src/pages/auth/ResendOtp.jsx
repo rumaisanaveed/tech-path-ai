@@ -9,10 +9,12 @@ import { useForgotPassword } from "@/services/auth/auth.service";
 import { useForm } from "react-hook-form";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
-import { useNavigate } from "react-router-dom";
 
-export const ForgotPassword = () => {
-  usePageTitle("Forgot Password");
+export const ResendOtp = () => {
+  // email will be sent to the user to get the otp
+  // and on success redirect the user to the otp page
+
+  usePageTitle("Resend Otp");
 
   const [email, setEmail] = useState("");
 
@@ -37,16 +39,16 @@ export const ForgotPassword = () => {
 
     forgotPassword(email, {
       onSuccess: () => {
-        // navigate through the email to reset password page
+        // navigate the user to the verify identity page
       },
     });
   };
 
   return (
     <AuthLayout
-      mainHeading="Forgot Your Password?"
-      text="Enter your registered email address, and we'll send you instructions to reset your password."
-      formText="No worries — we’ll help you get back on track."
+      mainHeading="Didn't Receive the Code?"
+      text="If you still haven't received the code, you can request a new one."
+      formText="We'll send you a fresh 6-digit code to your email."
     >
       <div className="flex flex-col justify-between md:h-full">
         <form
@@ -73,7 +75,7 @@ export const ForgotPassword = () => {
           {isSuccess && (
             <Message
               variant="success"
-              message={"✅ Reset email sent successfully!"}
+              message={"✅ OTP sent! Please check your email."}
             />
           )}
 
@@ -93,7 +95,7 @@ export const ForgotPassword = () => {
               disabled={isPending}
               className="text-white anonymous-font font-medium text-base rounded-full w-40 py-3 md:py-6 self-end"
             >
-              {isPending ? "Sending..." : "Send Reset Link"}
+              {isPending ? "Sending..." : "Resend Otp"}
             </Button>
           </div>
         </form>

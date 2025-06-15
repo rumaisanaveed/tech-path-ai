@@ -9,6 +9,7 @@ import {
   Signup,
   VerifyIdentity,
   ResetPassword,
+  ResendOtp,
 } from "./pages/auth";
 
 //Pages
@@ -56,6 +57,7 @@ function App() {
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
             <Route path="verify-identity" element={<VerifyIdentity />} />
+            <Route path="resend-otp" element={<ResendOtp />} />
           </Route>
           {/* dashboard */}
           <Route path="/dashboard">

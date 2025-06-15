@@ -13,7 +13,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Eye, EyeOff } from "lucide-react";
+import { Message } from "@/components/Message";
+import { EyeButton } from "@/components/buttons/EyeButton";
+import { validations } from "@/validations/auth/validations";
 
 export const Signup = () => {
   // TODO : fix auth flow, add protect routes, and resend code pages
@@ -29,12 +31,14 @@ export const Signup = () => {
   const {
     register,
     handleSubmit,
-    watch,
     control,
+    watch,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
   });
+
+  const password = watch("password"); // watch the password field
 
   const { mutate: signup, isPending, isError, error, isSuccess } = useSignup();
 
@@ -49,8 +53,6 @@ export const Signup = () => {
     }
   }, [isSuccess, navigate]);
 
-  const password = watch("password");
-
   return (
     <AuthLayout
       mainHeading="Join Career Mentor Today"
@@ -58,186 +60,176 @@ export const Signup = () => {
       formText="It's free and only takes a minute to get started."
     >
       <div className="flex flex-col justify-between h-full">
-        {isSuccess && (
-          <p className="text-green-600 text-sm font-medium mb-3">
-            ✅ Signup successful! Please check your email to verify.
-          </p>
-        )}
-        {isError && (
-          <p className="text-red-500 text-sm font-medium mb-3">
-            ❌ {error?.response?.data?.message || "Signup failed. Try again."}
-          </p>
-        )}
-
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid grid-cols-1 md:grid-cols-2 gap-5 text-custom-black-dark"
+          className="grid grid-cols-1 md:grid-cols-2 md:gap-x-5 text-custom-black-dark"
         >
-          <div className="grid gap-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              id="firstName"
-              type="text"
-              placeholder="John"
-              {...register("firstName", { required: "First name is required" })}
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
-            )}
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              type="text"
-              placeholder="Doe"
-              {...register("lastName", { required: "Last name is required" })}
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm">{errors.lastName.message}</p>
-            )}
-          </div>
-
-          <div className="grid gap-2 relative">
-            <Label htmlFor="dateOfBirth">Date of Birth</Label>
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              defaultValue={new Date()}
-              rules={{ required: "Date of Birth is required" }}
-              render={({ field }) => (
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Input
-                      onClick={() => setOpen(true)}
-                      readOnly
-                      value={
-                        field.value
-                          ? new Date(field.value).toLocaleDateString("en-US")
-                          : ""
-                      }
-                      placeholder="MM/DD/YYYY"
-                      className={`cursor-pointer text-left ${
-                        errors.dateOfBirth ? "border-red-500" : ""
-                      }`}
-                    />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      captionLayout="dropdown"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        field.onChange(date);
-                        field.onBlur();
-                        setOpen(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
-            />
-
-            <p className="text-red-500 text-sm mt-1">
-              {errors.dateOfBirth?.message}
-            </p>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="johndoe@gmail.com"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+\.\S+$/,
-                  message: "Invalid email address",
-                },
-              })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
+          <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="firstName">First Name</Label>
               <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                className="pr-10"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
+                id="firstName"
+                className="w-full"
+                type="text"
+                placeholder="John"
+                {...register("firstName", {
+                  required: "First name is required",
                 })}
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute top-1/2 right-2 -translate-y-1/2 h-7 w-7"
-              >
-                {showPassword ? (
-                  <Eye className="h-4 w-4" />
-                ) : (
-                  <EyeOff className="h-4 w-4" />
-                )}
-                <span className="sr-only">Toggle password visibility</span>
-              </Button>
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <div className="relative">
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                {errors.firstName && (
+                  <Message message={errors.firstName.message} />
+                )}
+              </div>
+            </div>
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="lastName">Last Name</Label>
               <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter confirm password"
-                className="pr-10"
-                {...register("confirmPassword", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                })}
+                id="lastName"
+                className="w-full"
+                type="text"
+                placeholder="Doe"
+                {...register("lastName", { required: "Last name is required" })}
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute top-1/2 right-2 -translate-y-1/2 h-7 w-7"
-              >
-                {showConfirmPassword ? (
-                  <Eye className="h-4 w-4" />
-                ) : (
-                  <EyeOff className="h-4 w-4" />
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                {errors.lastName && (
+                  <Message message={errors.lastName.message} />
                 )}
-                <span className="sr-only">Toggle password visibility</span>
-              </Button>
+              </div>
             </div>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
-              </p>
-            )}
           </div>
 
-          <div className="md:col-span-2 flex justify-end">
+          <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
+            <div className="grid gap-2 relative w-full">
+              <Label htmlFor="dateOfBirth">Date of Birth</Label>
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                defaultValue={"12/04/2003"}
+                rules={{ required: "Date of Birth is required" }}
+                render={({ field }) => (
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Input
+                        onClick={() => setOpen(true)}
+                        onKeyDown={(e) => e.preventDefault()}
+                        onInput={(e) => e.preventDefault()}
+                        value={
+                          field.value
+                            ? new Date(field.value).toLocaleDateString("en-US")
+                            : ""
+                        }
+                        placeholder="12/04/2003"
+                        className={`cursor-pointer text-left w-full ${
+                          errors.dateOfBirth ? "border-red-500" : ""
+                        }`}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        captionLayout="dropdown"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          field.onBlur();
+                          setOpen(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                )}
+              />
+
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                <Message message={errors.dateOfBirth?.message} />
+              </div>
+            </div>
+
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                className="w-full"
+                type="email"
+                placeholder="johndoe@gmail.com"
+                {...register("email", validations.email)}
+              />
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                <Message message={errors.email?.message} />
+              </div>
+            </div>
+          </div>
+
+          {/* passwords */}
+          <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  className="w-full"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  {...register("password", validations.password)}
+                />
+                <EyeButton
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                />
+              </div>
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                {errors.password && (
+                  <Message message={errors.password.message} />
+                )}
+              </div>
+            </div>
+
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  className="w-full"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Enter confirm password"
+                  {...register("confirmPassword", {
+                    ...validations.password,
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
+                />
+                <EyeButton
+                  showPassword={showConfirmPassword}
+                  setShowPassword={setShowConfirmPassword}
+                />
+              </div>
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                {errors.confirmPassword && (
+                  <Message message={errors.confirmPassword.message} />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* error and success messages */}
+          {isSuccess && (
+            <Message
+              variant="success"
+              message="✅ Signup successful! Please check your email to verify."
+            />
+          )}
+
+          {isError && (
+            <Message
+              message={`❌ ${
+                error?.response?.data?.message || "Signup failed. Try again."
+              }`}
+            />
+          )}
+
+          <div className="md:col-span-2 flex justify-end mt-4">
             <Button
               type="submit"
               disabled={isPending}
