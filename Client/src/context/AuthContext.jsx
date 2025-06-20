@@ -11,13 +11,13 @@ export const AuthProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["me"],
-    queryFn: authAPI.verifyToken,
-    retry: false,
-    onSuccess: (data) => setUser(data.user),
-    onError: () => setUser(null),
-  });
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["me"],
+  //   queryFn: authAPI.verifyToken,
+  //   retry: false,
+  //   onSuccess: (data) => setUser(data.user),
+  //   onError: () => setUser(null),
+  // });
 
   const logoutMutation = useLogout({
     onSuccess: () => {
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

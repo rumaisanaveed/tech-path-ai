@@ -1,10 +1,12 @@
+const authController = "auth/";
+
 export const authApiRoutes = {
-  LOGIN: "/auth/login", 
-  SIGNUP: "/auth/signup",
-  FORGOT_PASSWORD: "/auth/forgot-password",
-  RESEND_VERIFICATION: "/auth/send-verification-code",
-  VERIFY_EMAIL: "/auth/verify-email",
-  VERIFY_TOKEN: "/auth/reset-password",
-  LOGOUT: "/auth/logout",
-  verifyBrowserToken: "/auth/checkauth",
+  LOGIN: `/${authController}login`,
+  SIGNUP: `/${authController}signup`,
+  FORGOT_PASSWORD: `/${authController}forgot-password`,
+  RESEND_VERIFICATION: `/${authController}send-verification-code`,
+  VERIFY_EMAIL: `/${authController}verify-email`,
+  VERIFY_TOKEN: `/${authController}reset-password`,
+  LOGOUT: `/${authController}logout`,
+  verifyBrowserToken: `/${authController}checkauth`,
 };

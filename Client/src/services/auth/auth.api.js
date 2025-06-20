@@ -28,15 +28,18 @@ export const resendVerification = async (email) => {
   return res.data;
 };
 
-export const VerifyIdentity = async (data) => {
+export const verifyIdentity = async (data) => {
   const res = await axiosInstance.post(authApiRoutes.VERIFY_EMAIL, data);
   return res.data;
 };
 
 export const verifyToken = async ({ password, token }) => {
-  const res = await axiosInstance.post(`${authApiRoutes.VERIFY_TOKEN}/${token}`, {
-    password,
-  });
+  const res = await axiosInstance.post(
+    `${authApiRoutes.VERIFY_TOKEN}/${token}`,
+    {
+      password,
+    }
+  );
   return res.data;
 };
 

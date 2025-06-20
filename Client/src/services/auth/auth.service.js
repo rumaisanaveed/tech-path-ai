@@ -25,13 +25,17 @@ export const useVerifyOtp = (options = {}) => {
   const { setUser } = useAuth();
 
   return useMutation({
-    mutationFn: AuthAPI.VerifyIdentity,
-    ...options,
+    mutationFn: AuthAPI.verifyIdentity,
     onSuccess: (data) => {
+      console.log(data.user);
       setUser(data.user);
       localStorage.setItem("user", JSON.stringify(data.user));
       console.log("OTP verification successful, user data:", data.user);
     },
+    onError: (error) => {
+      console.log(error);
+    },
+    ...options,
   });
 };
 export const useForgotPassword = () => {
@@ -47,7 +51,6 @@ export const useLogout = ({ onSuccess, onError } = {}) => {
     onError,
   });
 };
-
 
 export const useVerifyToken = () => {
   return useMutation({

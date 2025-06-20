@@ -69,7 +69,7 @@ export const signUpController = async (req, res) => {
 export const verifyEmailController = async (req, res) => {
   const { code } = req.body;
 
-  if(!code) {
+  if (!code) {
     return res.status(400).json({
       success: false,
       message: "Verification code is required",
@@ -99,10 +99,13 @@ export const verifyEmailController = async (req, res) => {
 
     await sendWelcomeEmail(user.email, user.firstName);
     await user.save();
+    const userData = { ...user.get() };
+    delete userData.password;
 
     res.status(200).json({
       success: true,
       message: "Email verified successfully",
+      user: userData,
     });
   } catch (error) {
     console.log(error);

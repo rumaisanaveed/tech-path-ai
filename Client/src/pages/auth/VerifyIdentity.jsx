@@ -10,6 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { useVerifyOtp } from "@/services/auth/auth.service";
+import { verifyIdentity } from "@/services/auth/auth.api";
 
 export const VerifyIdentity = () => {
   usePageTitle("Verify Your Identity");
@@ -30,20 +31,11 @@ export const VerifyIdentity = () => {
 
   const otp = watch("otp"); // Watch OTP value
 
-  const {
-    mutate: verifyOtp,
-    isLoading,
-    isError,
-    error,
-  } = useVerifyOtp({
-    onSuccess: () => {
-      navigate("/dashboard");
-    },
-  });
+  const { mutate: verifyIdentity, isLoading, isError, error } = useVerifyOtp();
 
   const onSubmit = (data) => {
     if (data.otp.length === 6) {
-      verifyOtp({ code: data.otp });
+      verifyIdentity({ code: data.otp });
     }
   };
 
