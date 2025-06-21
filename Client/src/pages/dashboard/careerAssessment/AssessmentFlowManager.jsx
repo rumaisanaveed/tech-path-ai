@@ -51,7 +51,7 @@ export const AssessmentFlowManager = () => {
       setShowSectionComplete(false);
     } else {
       console.log("All responses:", responses);
-      navigate("/dashboard/career-assessment/complete"); // Or any final screen
+      navigate("/user/dashboard/career-assessment/complete"); // Or any final screen
     }
   };
 

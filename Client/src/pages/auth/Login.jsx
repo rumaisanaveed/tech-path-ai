@@ -5,13 +5,17 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogin } from "@/services/auth/auth.service";
+import { useLogin } from "@/apis/auth/auth.service";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
+import { useEffect, useState } from "react";
+import { EyeButton } from "@/components/buttons/EyeButton";
+import { USER_DASHBOARD_ROUTES } from "@/constants/navigation";
 
 export const Login = () => {
   usePageTitle("Login");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const { mutate: login, isPending, isError, error, isSuccess } = useLogin();
 
   const {
@@ -21,12 +25,14 @@ export const Login = () => {
   } = useForm({ mode: "onTouched" });
 
   const onSubmit = (data) => {
-    login(data, {
-      onSuccess: () => {
-        navigate("/dashboard");
-      },
-    });
+    login(data);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/user/dashboard");
+    }
+  }, [isSuccess]);
 
   return (
     <AuthLayout
@@ -58,25 +64,36 @@ export const Login = () => {
 
           {/* Password */}
           <div className="col-span-2 flex flex-col gap-2">
-            <Label htmlFor="password" className="text-sm font-light">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="******"
-              className="rounded-md"
-              {...register("password", validations.password)}
-            />
-            <div className="min-h-[1.25rem] md:min-h-[35px]">
-              <Message message={errors.password?.message} />
+            <div className="grid gap-2 w-full">
+              <Label htmlFor="password" className="text-sm font-light">
+                Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="rounded-md"
+                  {...register("password", validations.password)}
+                />
+                <EyeButton
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                />
+              </div>
+              <div className="min-h-[1.25rem] md:min-h-[35px]">
+                <Message message={errors.password?.message} />
+              </div>
             </div>
           </div>
 
           {/* success message */}
           {isSuccess && (
             <div className="col-span-2">
-              <Message message="Login succesfull" />
+              <Message
+                variant="success"
+                message="Login succesfull! Redirecting to the dashboard."
+              />
             </div>
           )}
 
@@ -84,7 +101,7 @@ export const Login = () => {
           {isError && (
             <div className="col-span-2">
               <Message
-                message={`❌ ${
+                message={`${
                   error?.response?.data?.message || "Login failed. Try again."
                 }`}
               />

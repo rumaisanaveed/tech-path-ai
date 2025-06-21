@@ -6,7 +6,7 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { useSignup } from "@/services/auth/auth.service";
+import { useSignup } from "@/apis/auth/auth.service";
 import {
   Popover,
   PopoverContent,
@@ -18,9 +18,6 @@ import { EyeButton } from "@/components/buttons/EyeButton";
 import { validations } from "@/validations/auth/validations";
 
 export const Signup = () => {
-  // TODO : fix auth flow, add protect routes, and resend code pages
-  // add form validations on all auth pages
-  // fix the error message styling on auth pages
   usePageTitle("Signup");
   const navigate = useNavigate();
 
@@ -38,7 +35,7 @@ export const Signup = () => {
     mode: "onTouched",
   });
 
-  const password = watch("password"); // watch the password field
+  const password = watch("password");
 
   const { mutate: signup, isPending, isError, error, isSuccess } = useSignup();
 
@@ -66,7 +63,9 @@ export const Signup = () => {
         >
           <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
             <div className="grid gap-2 w-full">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName" className="text-sm font-light">
+                First Name
+              </Label>
               <Input
                 id="firstName"
                 className="w-full"
@@ -84,7 +83,9 @@ export const Signup = () => {
               </div>
             </div>
             <div className="grid gap-2 w-full">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName" className="text-sm font-light">
+                Last Name
+              </Label>
               <Input
                 id="lastName"
                 className="w-full"
@@ -102,7 +103,9 @@ export const Signup = () => {
 
           <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
             <div className="grid gap-2 relative w-full">
-              <Label htmlFor="dateOfBirth">Date of Birth</Label>
+              <Label htmlFor="dateOfBirth" className="text-sm font-light">
+                Date of Birth
+              </Label>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -148,7 +151,9 @@ export const Signup = () => {
             </div>
 
             <div className="grid gap-2 w-full">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="text-sm font-light">
+                Email Address
+              </Label>
               <Input
                 id="email"
                 className="w-full"
@@ -165,7 +170,9 @@ export const Signup = () => {
           {/* passwords */}
           <div className="flex flex-col gap-0 md:flex-row md:items-center md:w-full md:col-span-2 md:gap-x-5">
             <div className="grid gap-2 w-full">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-sm font-light">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -187,7 +194,9 @@ export const Signup = () => {
             </div>
 
             <div className="grid gap-2 w-full">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-sm font-light">
+                Confirm Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -217,13 +226,13 @@ export const Signup = () => {
           {isSuccess && (
             <Message
               variant="success"
-              message="✅ Signup successful! Please check your email to verify."
+              message="Signup successful! Please check your email to verify."
             />
           )}
 
           {isError && (
             <Message
-              message={`❌ ${
+              message={`${
                 error?.response?.data?.message || "Signup failed. Try again."
               }`}
             />

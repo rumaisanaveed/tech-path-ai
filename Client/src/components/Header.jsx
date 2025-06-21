@@ -102,7 +102,11 @@ const Header = () => {
 
               {user ? (
                 <Link
-                  to={user.role === "admin" ? "/admin-dashboard" : "/dashboard"}
+                  to={
+                    user.role === "admin"
+                      ? "/admin/dashboard"
+                      : "/user/dashboard"
+                  }
                   className="border border-custom-black-dark text-sm md:text-base font-normal rounded-full text-custom-black-dark anonymous-font px-3 py-1 md:px-6 md:py-2"
                 >
                   Dashboard

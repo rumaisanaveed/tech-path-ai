@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/buttons/BackButton";
-import { useForgotPassword } from "@/services/auth/auth.service";
+import { useForgotPassword } from "@/apis/auth/auth.service";
 import { useForm } from "react-hook-form";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
-import { useNavigate } from "react-router-dom";
 
 export const ForgotPassword = () => {
   usePageTitle("Forgot Password");
@@ -34,13 +32,7 @@ export const ForgotPassword = () => {
     if (!email) return;
     console.log("Submitting forgot password request for email:", email);
 
-    forgotPassword(email, {
-      onSuccess: () => {
-        console.log("Reset email sent successfully");
-        // navigate through the email to reset password page
-        alert("Please check your email for the reset link.");
-      },
-    });
+    forgotPassword(email);
   };
 
   return (
@@ -63,7 +55,7 @@ export const ForgotPassword = () => {
               type="email"
               placeholder="johndoe@gmail.com"
               className="rounded-md"
-              {...register("email", validations.email)} // ✅ Use only this
+              {...register("email", validations.email)}
             />
             <div className="min-h-[1.25rem] md:min-h-[35px]">
               <Message message={errors.email?.message} />
@@ -73,13 +65,13 @@ export const ForgotPassword = () => {
           {isSuccess && (
             <Message
               variant="success"
-              message={"✅ Reset email sent successfully!"}
+              message={"Reset email sent successfully!"}
             />
           )}
 
           {isError && (
             <Message
-              message={`❌ ${
+              message={`${
                 error?.response?.data?.message ||
                 "Email couldn't be sent! Please try again."
               }`}

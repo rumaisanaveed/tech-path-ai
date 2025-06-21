@@ -99,7 +99,7 @@ const UserBlogs = () => {
 
   const handleAddNew = () => {
     console.log("Add new blog clicked");
-    navigate("/dashboard/add-new-blogs");
+    navigate("/user/dashboard/add-new-blog");
   };
 
   return (

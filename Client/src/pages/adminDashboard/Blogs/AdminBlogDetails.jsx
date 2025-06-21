@@ -13,11 +13,11 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { 
-  ArrowLeft, 
-  Calendar, 
-  User, 
-  Eye, 
+import {
+  ArrowLeft,
+  Calendar,
+  User,
+  Eye,
   Tag,
   Clock,
   CheckCircle,
@@ -26,28 +26,28 @@ import {
   BookOpen,
   MessageSquare,
   TrendingUp,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import { format } from "date-fns";
 
 const statusConfig = {
-  pending: { 
-    color: "bg-amber-50 text-amber-700 border-amber-200", 
+  pending: {
+    color: "bg-amber-50 text-amber-700 border-amber-200",
     icon: Clock,
     label: "Pending Review",
-    description: "This blog is awaiting review and approval."
+    description: "This blog is awaiting review and approval.",
   },
-  approved: { 
-    color: "bg-emerald-50 text-emerald-700 border-emerald-200", 
+  approved: {
+    color: "bg-emerald-50 text-emerald-700 border-emerald-200",
     icon: CheckCircle,
     label: "Approved",
-    description: "This blog has been approved and is live."
+    description: "This blog has been approved and is live.",
   },
-  rejected: { 
-    color: "bg-red-50 text-red-700 border-red-200", 
+  rejected: {
+    color: "bg-red-50 text-red-700 border-red-200",
     icon: XCircle,
     label: "Rejected",
-    description: "This blog has been rejected and needs revision."
+    description: "This blog has been rejected and needs revision.",
   },
 };
 
@@ -58,7 +58,8 @@ const mockBlogData = [
     title: "Web Development Best Practices for Modern Applications",
     coverImage:
       "https://careermentor-blogs.s3.eu-north-1.amazonaws.com/blogs/296eb834-aa38-4907-a632-f26d1fa48bc9.png",
-    shortDesc: "A comprehensive guide covering essential web development practices, from responsive design to performance optimization, helping developers create scalable and maintainable applications.",
+    shortDesc:
+      "A comprehensive guide covering essential web development practices, from responsive design to performance optimization, helping developers create scalable and maintainable applications.",
     longDesc:
       "<p>Web development is a dynamic and fast-evolving field that encompasses the creation and maintenance of websites and web applications. It involves a combination of programming, design, content creation, and server-side configuration to deliver functional and visually appealing digital experiences to users across various devices and platforms.</p><p>Modern web development requires understanding of multiple technologies including HTML5, CSS3, JavaScript frameworks like React or Vue.js, backend technologies, databases, and deployment strategies. This comprehensive approach ensures applications are not only functional but also performant, accessible, and user-friendly.</p><p>Key areas covered include responsive design principles, performance optimization techniques, security best practices, and modern development workflows that enhance productivity and code quality.</p>",
     author: "Abdul Wasay",
@@ -71,14 +72,14 @@ const mockBlogData = [
     authorInfo: {
       firstName: "Abdul",
       lastName: "Wasay",
-      bio: "Full-stack developer with 2+ years of experience in modern web technologies."
+      bio: "Full-stack developer with 2+ years of experience in modern web technologies.",
     },
     Tags: [
-      { name: "Backend" }, 
-      { name: "Frontend" }, 
+      { name: "Backend" },
+      { name: "Frontend" },
       { name: "Web Development" },
       { name: "JavaScript" },
-      { name: "React" }
+      { name: "React" },
     ],
   },
 ];
@@ -119,10 +120,10 @@ const AdminBlogDetails = () => {
         <Skeleton className="w-10 h-10 rounded-lg" />
         <Skeleton className="w-32 h-6" />
       </div>
-      
+
       {/* Cover Image */}
       <Skeleton className="w-full h-80 rounded-2xl" />
-      
+
       {/* Title and meta */}
       <div className="space-y-4">
         <Skeleton className="w-3/4 h-10" />
@@ -131,7 +132,7 @@ const AdminBlogDetails = () => {
           <Skeleton className="w-24 h-6 rounded-full" />
         </div>
       </div>
-      
+
       {/* Content areas */}
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-6">
@@ -169,7 +170,7 @@ const AdminBlogDetails = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/admin-dashboard/blogs')}
+              onClick={() => navigate("/admin/dashboard/blogs")}
               className="flex items-center gap-2 hover:bg-blue-50 border-gray-200"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -213,7 +214,6 @@ const AdminBlogDetails = () => {
               <Card className="border-0 shadow-sm">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
-                    
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <User className="w-4 h-4 text-gray-500" />
@@ -221,12 +221,16 @@ const AdminBlogDetails = () => {
                           {blog.authorInfo.firstName} {blog.authorInfo.lastName}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">{blog.authorInfo.bio}</p>
+                      <p className="text-sm text-gray-600">
+                        {blog.authorInfo.bio}
+                      </p>
                     </div>
                     <div className="text-right text-sm text-gray-500">
                       <div className="flex items-center gap-1 mb-1">
                         <Calendar className="w-4 h-4" />
-                        <span>{format(new Date(blog.publishedAt), "MMM dd, yyyy")}</span>
+                        <span>
+                          {format(new Date(blog.publishedAt), "MMM dd, yyyy")}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <BookOpen className="w-4 h-4" />
@@ -236,8 +240,6 @@ const AdminBlogDetails = () => {
                   </div>
                 </CardContent>
               </Card>
-
-            
 
               {/* Short Description */}
               <Card className="border-0 shadow-sm">
@@ -276,9 +278,11 @@ const AdminBlogDetails = () => {
                     <AlertTriangle className="w-5 h-5 text-blue-600" />
                     Blog Status
                   </h3>
-                  
+
                   <div className="space-y-4">
-                    <div className={`p-4 rounded-lg border ${statusInfo.color}`}>
+                    <div
+                      className={`p-4 rounded-lg border ${statusInfo.color}`}
+                    >
                       <div className="flex items-center gap-2 mb-2">
                         <StatusIcon className="w-5 h-5" />
                         <span className="font-medium">{statusInfo.label}</span>
@@ -292,8 +296,8 @@ const AdminBlogDetails = () => {
                       <label className="text-sm font-medium text-gray-700">
                         Change Status
                       </label>
-                      <Select 
-                        value={blog.status} 
+                      <Select
+                        value={blog.status}
                         onValueChange={handleStatusChange}
                         disabled={statusLoading}
                       >
@@ -342,9 +346,9 @@ const AdminBlogDetails = () => {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {blog.Tags.map((tag, i) => (
-                      <Badge 
-                        key={i} 
-                        variant="secondary" 
+                      <Badge
+                        key={i}
+                        variant="secondary"
                         className="bg-blue-50 text-blue-700 hover:bg-blue-100 cursor-pointer transition-colors"
                       >
                         {tag.name}
@@ -368,7 +372,9 @@ const AdminBlogDetails = () => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                      <span className="text-sm text-gray-600">Last Updated</span>
+                      <span className="text-sm text-gray-600">
+                        Last Updated
+                      </span>
                       <span className="text-sm font-medium text-gray-900">
                         {format(new Date(blog.updatedAt), "MMM dd, yyyy")}
                       </span>
@@ -402,25 +408,25 @@ const AdminBlogDetails = () => {
                     Quick Actions
                   </h3>
                   <div className="space-y-3">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full justify-start hover:bg-blue-50 border-gray-200"
-                      onClick={() => window.open(blog.coverImage, '_blank')}
+                      onClick={() => window.open(blog.coverImage, "_blank")}
                     >
                       <Eye className="w-4 h-4 mr-2" />
                       Preview Cover Image
                     </Button>
-                    
-                    <Button 
-                      variant="outline" 
+
+                    <Button
+                      variant="outline"
                       className="w-full justify-start hover:bg-purple-50 border-gray-200"
                     >
                       <Share2 className="w-4 h-4 mr-2" />
                       Share Blog
                     </Button>
                     <Separator className="my-4" />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 border-red-200"
                     >
                       <XCircle className="w-4 h-4 mr-2" />

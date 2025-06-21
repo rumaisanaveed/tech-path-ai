@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import * as AuthAPI from "./auth.api";
 import { useAuth } from "@/context/AuthContext";
+import { saveItemToStorage } from "@/utils/helpers/storage/localStorage";
 
 export const useSignup = () => {
   return useMutation({
@@ -15,7 +16,7 @@ export const useLogin = () => {
     mutationFn: AuthAPI.login,
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      saveItemToStorage("user", data.user);
       console.log("Login successful, user data:", data.user);
     },
   });
@@ -27,17 +28,14 @@ export const useVerifyOtp = (options = {}) => {
   return useMutation({
     mutationFn: AuthAPI.verifyIdentity,
     onSuccess: (data) => {
-      console.log(data.user);
       setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      saveItemToStorage("user", data.user);
       console.log("OTP verification successful, user data:", data.user);
-    },
-    onError: (error) => {
-      console.log(error);
     },
     ...options,
   });
 };
+
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: AuthAPI.forgotPassword,

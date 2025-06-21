@@ -151,19 +151,19 @@ export const testimonials = [
 ];
 
 export const sidebarItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/user/dashboard" },
   {
     label: "Career Assessment",
     icon: BadgeCheck,
-    href: "/dashboard/career-assessment",
+    href: "/user/dashboard/career-assessment",
   },
   { label: "Career Explorer", icon: Compass, href: "/careers" },
   {
     label: "Skill Tracker",
     icon: BarChart3,
-    href: "/dashboard/skill-tracker",
+    href: "/user/dashboard/skill-tracker",
   },
-  { label: "Mentorship", icon: Users, href: "/dashboard/mentorship" },
+  { label: "Mentorship", icon: Users, href: "/user/dashboard/mentorship" },
   {
     label: "Events",
     icon: Calendar,
@@ -174,11 +174,11 @@ export const sidebarItems = [
     icon: Newspaper,
     href: "/blogs",
     children: [
-      { label: "My Blogs", href: "/dashboard/my-blogs" },
+      { label: "My Blogs", href: "/user/dashboard/my-blogs" },
       { label: "View All Blogs", href: "/blogs" },
     ],
   },
-  { label: "Achievements", icon: Trophy, href: "/dashboard/achievements" },
+  { label: "Achievements", icon: Trophy, href: "/user/dashboard/achievements" },
 ];
 
 export const initialAssessmentFeaturesListData = [
@@ -483,31 +483,30 @@ export const careers = [
   "Mobile App Developer",
 ];
 
-
 export const adminSidebarItems = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,
-    href: "/admin-dashboard",
+    href: "/admin/dashboard",
   },
   {
     label: "Blogs Management",
     icon: Newspaper,
-    href: "/admin-dashboard/blogs", 
+    href: "/admin/dashboard/blogs",
   },
   {
     label: "Events Management",
     icon: Calendar,
-    href: "/admin-dashboard/events", 
+    href: "/admin/dashboard/events",
   },
   {
     label: "Career Assessment Management",
     icon: BadgeCheck,
-    href: "/admin-dashboard/career-assessment",
+    href: "/admin/dashboard/career-assessment",
   },
   {
     label: "Career Explorer Management",
     icon: Compass,
-    href: "/admin-dashboard/career-explorer",
+    href: "/admin/dashboard/career-explorer",
   },
 ];

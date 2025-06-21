@@ -5,22 +5,15 @@ import AuthLayout from "../../layouts/AuthLayout";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/buttons/BackButton";
-import {
-  useForgotPassword,
-  useResendVerificationEmail,
-} from "@/services/auth/auth.service";
+import { useResendVerificationEmail } from "@/apis/auth/auth.service";
 import { useForm } from "react-hook-form";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
 import { useNavigate } from "react-router-dom";
 
 export const ResendOtp = () => {
-  // email will be sent to the user to get the otp
-  // and on success redirect the user to the otp page
-
   usePageTitle("Resend Otp");
 
-  const [email, setEmail] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const navigate = useNavigate();
 
@@ -55,6 +48,7 @@ export const ResendOtp = () => {
     });
   };
 
+  // timer
   useEffect(() => {
     if (cooldown > 0) {
       const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
@@ -82,7 +76,6 @@ export const ResendOtp = () => {
               type="email"
               placeholder="johndoe@gmail.com"
               className="rounded-md"
-              onChange={(e) => setEmail(e.target.value)}
               {...register("email", validations.email)}
             />
             <div className="min-h-[1.25rem] md:min-h-[35px]">
@@ -93,15 +86,15 @@ export const ResendOtp = () => {
           {isSuccess && (
             <Message
               variant="success"
-              message={"✅ OTP sent! Please check your email."}
+              message={"OTP sent! Please check your email."}
             />
           )}
 
           {isError && (
             <Message
-              message={`❌ ${
+              message={`${
                 error?.response?.data?.message ||
-                "Email couldn't be sent! Please try again."
+                "Otp email couldn't be sent! Please try again."
               }`}
             />
           )}

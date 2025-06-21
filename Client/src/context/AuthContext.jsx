@@ -1,27 +1,26 @@
-import { createContext, useContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import * as authAPI from "@/services/auth/auth.api";
-import { useLogout } from "@/services/auth/auth.service";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useLogout } from "@/apis/auth/auth.service";
+import {
+  getItemFromStorage,
+  removeItemFromStorage,
+  saveItemToStorage,
+} from "@/utils/helpers/storage/localStorage";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [user, setUser] = useState(() => getItemFromStorage("user"));
 
-  // const { data, isLoading } = useQuery({
-  //   queryKey: ["me"],
-  //   queryFn: authAPI.verifyToken,
-  //   retry: false,
-  //   onSuccess: (data) => setUser(data.user),
-  //   onError: () => setUser(null),
-  // });
+  useEffect(() => {
+    if (user) {
+      saveItemToStorage("user", user);
+    }
+  }, [user]);
 
   const logoutMutation = useLogout({
     onSuccess: () => {
-      localStorage.removeItem("user");
+      console.log("user logged out successfully");
+      removeItemFromStorage("user");
       setUser(null);
       window.location.replace("/auth/login");
     },

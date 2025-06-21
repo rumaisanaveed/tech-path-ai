@@ -37,7 +37,7 @@ export default function Sidebar({ items, variant = "sidebar" }) {
             // handling active states differently on mobile menu and sidebar
             const isActive =
               variant === "sidebar"
-                ? item.href === "/dashboard"
+                ? item.href === "/user/dashboard"
                   ? location.pathname === item.href
                   : location.pathname.startsWith(item.href)
                 : location.pathname === item.href;
@@ -54,7 +54,7 @@ export default function Sidebar({ items, variant = "sidebar" }) {
             <SidebarItem
               item={{
                 label: "Settings",
-                href: "/dashboard/settings",
+                href: "/user/dashboard/settings",
                 icon: Settings,
                 isActive: location.pathname === "/dashboard/settings",
               }}

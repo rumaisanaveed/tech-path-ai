@@ -9,10 +9,12 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
-import { useVerifyOtp } from "@/services/auth/auth.service";
-import { verifyIdentity } from "@/services/auth/auth.api";
+import { useVerifyOtp } from "@/apis/auth/auth.service";
+import { useEffect } from "react";
+import { Message } from "@/components/Message";
+import { USER_DASHBOARD_ROUTES } from "@/constants/navigation";
 
-export const VerifyIdentity = () => {
+export const Otp = () => {
   usePageTitle("Verify Your Identity");
   const navigate = useNavigate();
 
@@ -29,15 +31,27 @@ export const VerifyIdentity = () => {
     },
   });
 
-  const otp = watch("otp"); // Watch OTP value
+  const otp = watch("otp");
 
-  const { mutate: verifyIdentity, isLoading, isError, error } = useVerifyOtp();
+  const {
+    mutate: verifyIdentity,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useVerifyOtp();
 
   const onSubmit = (data) => {
     if (data.otp.length === 6) {
       verifyIdentity({ code: data.otp });
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/user/dashboard");
+    }
+  }, [navigate, isSuccess]);
 
   return (
     <AuthLayout
@@ -87,6 +101,13 @@ export const VerifyIdentity = () => {
                 },
               })}
             />
+
+            {isSuccess && (
+              <Message
+                variant="success"
+                message="Otp sent successfully! Check your email."
+              />
+            )}
 
             {(errors.otp || isError) && (
               <p className="text-sm text-red-500 mt-1">

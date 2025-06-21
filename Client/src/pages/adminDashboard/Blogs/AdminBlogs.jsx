@@ -377,7 +377,7 @@ const AdminBlogs = () => {
                         variant="outline"
                         className="w-full mt-4 text-sm hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors"
                         onClick={() =>
-                          navigate(`/admin-dashboard/blogs/${blog.id}`)
+                          navigate(`/admin/dashboard/blogs/${blog.id}`)
                         }
                       >
                         <Eye className="w-4 h-4 mr-2" />
