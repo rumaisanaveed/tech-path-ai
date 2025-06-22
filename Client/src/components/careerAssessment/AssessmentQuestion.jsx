@@ -15,6 +15,8 @@ import {
 
 export const AssessmentQuestion = () => {
   // TODO : show the skeleton if question is loading
+  // Show some interactive screen on completion of a section
+  // Now, save the questions and category of the next section questions
   const { setBreadcrumbSuffix } = useGlobalContext();
   const [loadedQuestions, setLoadedQuestions] = useState([]);
   // on component mount, the value shouldn't be reset to 0

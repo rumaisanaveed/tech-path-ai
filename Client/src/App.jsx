@@ -58,7 +58,6 @@ import {
 function App() {
   return (
     <>
-      {/* TODO : avoid repetition here and store the routes in separate file */}
       <BrowserRouter>
         <Routes>
           {/* Public Routes - Accessible to everyone */}
