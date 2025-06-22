@@ -1,4 +1,5 @@
 const authController = "/auth/";
+const assessmentController = "/assessments/";
 
 export const API_ROUTES = {
   AUTH: {
@@ -9,5 +10,12 @@ export const API_ROUTES = {
     VERIFY_EMAIL: `${authController}verify-email`,
     VERIFY_TOKEN: `${authController}reset-password`,
     LOGOUT: `${authController}logout`,
+  },
+  ASSESSMENT: {
+    START_ASSESSMENT: `${assessmentController}session`,
+    GET_CURRENT_QUESTION: (sessionId) =>
+      `${assessmentController}session/${sessionId}`,
+    SUBMIT_ANSWER: (sessionId) =>
+      `${assessmentController}session/${sessionId}/answer`,
   },
 };

@@ -8,13 +8,22 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
 import { SecondaryButton } from "../buttons/SecondaryButton";
 import { Info } from "lucide-react";
+import { StartAssessment } from "@/apis/assessment/assessment.service";
 
 export const AssessmentInitialUi = () => {
   const { setBreadcrumbSuffix } = useGlobalContext();
+  const { mutate: startAssessment } = StartAssessment();
 
   useEffect(() => {
-    setBreadcrumbSuffix();
+    setBreadcrumbSuffix("");
   }, []);
+
+  const handleStartAssessment = () => {
+    // TODO : show skeleton on start of assessment
+    startAssessment({
+      category: "critical-thinking",
+    });
+  };
 
   return (
     <div className="flex flex-col 2xl:justify-center 2xl:items-center xl:flex-row justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7">
@@ -43,7 +52,11 @@ export const AssessmentInitialUi = () => {
         </div>
 
         {/* CTA Button */}
-        <SecondaryButton className="mt-2" title="Begin Assessment" />
+        <SecondaryButton
+          className="mt-2"
+          title="Begin Assessment"
+          onClickHandler={handleStartAssessment}
+        />
       </div>
 
       {/* Right Section - Image Placeholder */}

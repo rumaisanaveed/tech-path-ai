@@ -5,6 +5,9 @@ import App from "./App.jsx";
 import { GlobalContextProvider } from "./context/GlobalContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
+import { AssessmentContextProvider } from "./context/AssessmentContext";
+
+// TODO : show the skeletons on dashboard
 
 const queryClient = new QueryClient();
 
@@ -13,7 +16,9 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <GlobalContextProvider>
-          <App />
+          <AssessmentContextProvider>
+            <App />
+          </AssessmentContextProvider>
         </GlobalContextProvider>
       </AuthProvider>
     </QueryClientProvider>

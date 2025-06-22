@@ -1,14 +1,8 @@
 import React from "react";
 import { Progress } from "./ui/progress";
 
-export const CustomProgressBar = ({
-  questionNo = 1,
-  totalQuestions = 20,
-  value = 50,
-}) => {
-  // out of 100%
-  const progressValue = Math.min(100, Math.max(0, value));
-
+export const CustomProgressBar = ({ questionNo, totalQuestions }) => {
+  const progressValue = (questionNo / totalQuestions) * 100;
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 mt-8 w-full 3xl:w-[650px]">
       <p className="text-black font-normal text-sm whitespace-nowrap">

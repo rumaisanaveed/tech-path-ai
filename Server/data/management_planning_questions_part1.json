@@ -48,7 +48,10 @@
       { "optionText": "Divide the work into daily tasks.", "score": 4 },
       { "optionText": "Start the night before the deadline.", "score": 2 },
       { "optionText": "Do everything in one sitting.", "score": 1 },
-      { "optionText": "Ask someone for help and follow their schedule.", "score": 3 }
+      {
+        "optionText": "Ask someone for help and follow their schedule.",
+        "score": 3
+      }
     ]
   },
   {
@@ -71,7 +74,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Talk to them privately to understand the issue.", "score": 4 },
+      {
+        "optionText": "Talk to them privately to understand the issue.",
+        "score": 4
+      },
       { "optionText": "Do their work yourself.", "score": 2 },
       { "optionText": "Complain to someone else.", "score": 1 },
       { "optionText": "Ignore it and hope they improve.", "score": 3 }
@@ -110,7 +116,10 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Divide tasks based on skill and availability.", "score": 4 },
+      {
+        "optionText": "Divide tasks based on skill and availability.",
+        "score": 4
+      },
       { "optionText": "Do most of the work yourself.", "score": 2 },
       { "optionText": "Ask everyone to do everything.", "score": 3 },
       { "optionText": "Delay decisions and start late.", "score": 1 }
@@ -123,7 +132,10 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Listen to all sides and find a middle ground.", "score": 4 },
+      {
+        "optionText": "Listen to all sides and find a middle ground.",
+        "score": 4
+      },
       { "optionText": "Avoid taking responsibility.", "score": 1 },
       { "optionText": "Ignore the disagreement.", "score": 2 },
       { "optionText": "Take the side of your close friends.", "score": 3 }
@@ -139,7 +151,10 @@
       { "optionText": "People's needs are more important to me.", "score": 4 },
       { "optionText": "I try to balance both.", "score": 3 },
       { "optionText": "It depends on the context.", "score": 2 },
-      { "optionText": "I focus entirely on the system's performance.", "score": 1 }
+      {
+        "optionText": "I focus entirely on the system's performance.",
+        "score": 1
+      }
     ]
   },
   {
@@ -201,10 +216,16 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "I listen to their point first, then explain mine.", "score": 4 },
+      {
+        "optionText": "I listen to their point first, then explain mine.",
+        "score": 4
+      },
       { "optionText": "I find a middle ground to keep peace.", "score": 3 },
       { "optionText": "I try to avoid conflict and stay quiet.", "score": 2 },
-      { "optionText": "I strongly defend my view until they agree.", "score": 1 }
+      {
+        "optionText": "I strongly defend my view until they agree.",
+        "score": 1
+      }
     ]
   },
   {
@@ -214,8 +235,14 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "I explain clearly and ask if they have questions.", "score": 4 },
-      { "optionText": "I send a written summary after explaining.", "score": 3 },
+      {
+        "optionText": "I explain clearly and ask if they have questions.",
+        "score": 4
+      },
+      {
+        "optionText": "I send a written summary after explaining.",
+        "score": 3
+      },
       { "optionText": "I repeat my points several times.", "score": 2 },
       { "optionText": "I assume they'll ask if they're confused.", "score": 1 }
     ]
@@ -227,8 +254,14 @@
     "bloomLevel": "create",
     "bloomWeight": 1.5,
     "options": [
-      { "optionText": "I create a friendly environment where all feel safe to speak.", "score": 4 },
-      { "optionText": "I start the discussion and invite others to join.", "score": 3 },
+      {
+        "optionText": "I create a friendly environment where all feel safe to speak.",
+        "score": 4
+      },
+      {
+        "optionText": "I start the discussion and invite others to join.",
+        "score": 3
+      },
       { "optionText": "I let the most active members lead.", "score": 2 },
       { "optionText": "I don't usually participate much.", "score": 1 }
     ]
@@ -253,7 +286,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "I listen first, then present my view calmly.", "score": 4 },
+      {
+        "optionText": "I listen first, then present my view calmly.",
+        "score": 4
+      },
       { "optionText": "I try to merge both ideas.", "score": 3 },
       { "optionText": "I avoid the topic.", "score": 2 },
       { "optionText": "I argue to prove mine is better.", "score": 1 }
@@ -266,9 +302,15 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Break down the problem into smaller parts.", "score": 4 },
+      {
+        "optionText": "Break down the problem into smaller parts.",
+        "score": 4
+      },
       { "optionText": "Search for ready-made solutions online.", "score": 3 },
-      { "optionText": "Guess the solution based on past experience.", "score": 2 },
+      {
+        "optionText": "Guess the solution based on past experience.",
+        "score": 2
+      },
       { "optionText": "Ask someone else to solve it.", "score": 1 }
     ]
   },
@@ -279,9 +321,15 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Trace the error step-by-step through the code.", "score": 4 },
+      {
+        "optionText": "Trace the error step-by-step through the code.",
+        "score": 4
+      },
       { "optionText": "Restart the program without debugging.", "score": 2 },
-      { "optionText": "Copy code from others without understanding.", "score": 1 },
+      {
+        "optionText": "Copy code from others without understanding.",
+        "score": 1
+      },
       { "optionText": "Ignore the error and hope it resolves.", "score": 0 }
     ]
   },
@@ -292,7 +340,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Test them thoroughly under different scenarios.", "score": 4 },
+      {
+        "optionText": "Test them thoroughly under different scenarios.",
+        "score": 4
+      },
       { "optionText": "Check only the obvious cases.", "score": 2 },
       { "optionText": "Trust that it works if it runs once.", "score": 1 },
       { "optionText": "Skip testing to save time.", "score": 0 }
@@ -305,9 +356,15 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Divide the problem and test each part independently.", "score": 4 },
+      {
+        "optionText": "Divide the problem and test each part independently.",
+        "score": 4
+      },
       { "optionText": "Randomly change parts until it works.", "score": 2 },
-      { "optionText": "Replace the whole system without analysis.", "score": 1 },
+      {
+        "optionText": "Replace the whole system without analysis.",
+        "score": 1
+      },
       { "optionText": "Ask someone else to fix it.", "score": 0 }
     ]
   },
@@ -318,7 +375,10 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Prioritize and find the most efficient solution.", "score": 4 },
+      {
+        "optionText": "Prioritize and find the most efficient solution.",
+        "score": 4
+      },
       { "optionText": "Try everything you can think of.", "score": 2 },
       { "optionText": "Use the most complex solution available.", "score": 1 },
       { "optionText": "Avoid the problem.", "score": 0 }
@@ -331,7 +391,10 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Organize data systematically and look for trends.", "score": 4 },
+      {
+        "optionText": "Organize data systematically and look for trends.",
+        "score": 4
+      },
       { "optionText": "Look at data briefly and guess patterns.", "score": 2 },
       { "optionText": "Ignore data irregularities.", "score": 1 },
       { "optionText": "Wait for someone else to explain.", "score": 0 }
@@ -344,7 +407,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Reassess your assumptions and adjust your reasoning.", "score": 4 },
+      {
+        "optionText": "Reassess your assumptions and adjust your reasoning.",
+        "score": 4
+      },
       { "optionText": "Ignore contradictions and proceed.", "score": 2 },
       { "optionText": "Change the data to fit assumptions.", "score": 1 },
       { "optionText": "Avoid analyzing the data.", "score": 0 }
@@ -357,7 +423,10 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Map out each step clearly before proceeding.", "score": 4 },
+      {
+        "optionText": "Map out each step clearly before proceeding.",
+        "score": 4
+      },
       { "optionText": "Jump straight to the end.", "score": 2 },
       { "optionText": "Skip steps to save time.", "score": 1 },
       { "optionText": "Avoid complex problems.", "score": 0 }
@@ -370,7 +439,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Evaluate the source and evidence for each clue.", "score": 4 },
+      {
+        "optionText": "Evaluate the source and evidence for each clue.",
+        "score": 4
+      },
       { "optionText": "Choose the easiest to believe.", "score": 2 },
       { "optionText": "Ignore contradictions.", "score": 1 },
       { "optionText": "Ask someone else to decide.", "score": 0 }
@@ -383,7 +455,10 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Form hypotheses and test them systematically.", "score": 4 },
+      {
+        "optionText": "Form hypotheses and test them systematically.",
+        "score": 4
+      },
       { "optionText": "Accept initial guesses without testing.", "score": 2 },
       { "optionText": "Avoid testing hypotheses.", "score": 1 },
       { "optionText": "Let others test.", "score": 0 }
@@ -396,7 +471,10 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Set clear goals and outline a step-by-step plan.", "score": 5 },
+      {
+        "optionText": "Set clear goals and outline a step-by-step plan.",
+        "score": 5
+      },
       { "optionText": "Start immediately without planning.", "score": 3 },
       { "optionText": "Wait for instructions.", "score": 2 },
       { "optionText": "Delegate the task to others.", "score": 1 }
@@ -409,7 +487,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Evaluate pros and cons and pick the most effective.", "score": 5 },
+      {
+        "optionText": "Evaluate pros and cons and pick the most effective.",
+        "score": 5
+      },
       { "optionText": "Choose the easiest or fastest solution.", "score": 3 },
       { "optionText": "Pick randomly.", "score": 2 },
       { "optionText": "Avoid decision-making.", "score": 1 }
@@ -435,9 +516,15 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Collaborate and gather diverse input before deciding.", "score": 5 },
+      {
+        "optionText": "Collaborate and gather diverse input before deciding.",
+        "score": 5
+      },
       { "optionText": "Work alone to save time.", "score": 3 },
-      { "optionText": "Follow others' instructions without input.", "score": 2 },
+      {
+        "optionText": "Follow others' instructions without input.",
+        "score": 2
+      },
       { "optionText": "Avoid teamwork.", "score": 1 }
     ]
   },
@@ -461,7 +548,10 @@
     "bloomLevel": "apply",
     "bloomWeight": 1.2,
     "options": [
-      { "optionText": "Stay calm and rely on previous experience.", "score": 5 },
+      {
+        "optionText": "Stay calm and rely on previous experience.",
+        "score": 5
+      },
       { "optionText": "Make quick guesses without thinking.", "score": 3 },
       { "optionText": "Delay decision until pressure eases.", "score": 2 },
       { "optionText": "Avoid decisions.", "score": 1 }
@@ -487,8 +577,14 @@
     "bloomLevel": "analyze",
     "bloomWeight": 1.3,
     "options": [
-      { "optionText": "Assess urgency and impact to decide order.", "score": 5 },
-      { "optionText": "Deal with problems as they appear randomly.", "score": 3 },
+      {
+        "optionText": "Assess urgency and impact to decide order.",
+        "score": 5
+      },
+      {
+        "optionText": "Deal with problems as they appear randomly.",
+        "score": 3
+      },
       { "optionText": "Avoid handling multiple problems.", "score": 1 },
       { "optionText": "Delegate everything.", "score": 2 }
     ]
@@ -500,7 +596,10 @@
     "bloomLevel": "evaluate",
     "bloomWeight": 1.4,
     "options": [
-      { "optionText": "Consider values and choose the most ethical option.", "score": 5 },
+      {
+        "optionText": "Consider values and choose the most ethical option.",
+        "score": 5
+      },
       { "optionText": "Choose the easiest way out.", "score": 2 },
       { "optionText": "Ignore ethics.", "score": 1 },
       { "optionText": "Avoid making the decision.", "score": 1 }
