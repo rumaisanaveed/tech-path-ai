@@ -54,6 +54,8 @@ import {
   HOME_ROUTE,
   USER_DASHBOARD_ROUTES,
 } from "./constants/navigation";
+import { CareerDetail } from "./pages/careers/CareerDetail";
+import { EventDetails } from "./pages/events/EventDetails";
 
 function Router() {
   return (
@@ -66,8 +68,18 @@ function Router() {
             <Route index element={<Blogs />} />
             <Route path={BLOG_ROUTES.DETAILS} element={<BlogDetail />} />
           </Route>
-          <Route path={EVENTS_ROUTE} element={<Events />} />
-          <Route path={CAREERS_ROUTE} element={<Careers />} />
+
+          {/* events route */}
+          <Route path={EVENTS_ROUTE.INDEX}>
+            <Route index element={<Events />} />
+            <Route path={EVENTS_ROUTE.DETAILS} element={<EventDetails />} />
+          </Route>
+
+          {/* career explorer */}
+          <Route path={CAREERS_ROUTE.INDEX}>
+            <Route index element={<Careers />} />
+            <Route path={CAREERS_ROUTE.DETAILS} element={<CareerDetail />} />
+          </Route>
 
           {/* Auth Routes - Only for guests (redirects logged-in users) */}
           <Route path={AUTH_ROUTES.INDEX}>

@@ -11,6 +11,8 @@ export default {
         "custom-orange-light": "#F3B34E",
         "custom-light-blue": "#59A4C0",
         "custom-black-dark": "#252525",
+        "custom-off-white": "#F4F4F4",
+        "custom-gray": "#D9D9D9",
         "custom-gray-dark": "#707070",
         "custom-gray-light": "#676767",
         "custom-orange-dark": " #F7BC59",

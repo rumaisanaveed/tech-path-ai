@@ -5,9 +5,15 @@ export const BLOG_ROUTES = {
   DETAILS: ":id",
 };
 
-export const EVENTS_ROUTE = "/events";
+export const EVENTS_ROUTE = {
+  INDEX: "/events",
+  DETAILS: ":id",
+};
 
-export const CAREERS_ROUTE = "/careers";
+export const CAREERS_ROUTE = {
+  INDEX: "/careers",
+  DETAILS: ":id",
+};
 
 export const AUTH_ROUTES = {
   INDEX: "/auth",

@@ -5,6 +5,10 @@ export const truncateText = (text, maxLength = 32) => {
     : text;
 };
 
+// this function is designed to format the category text from
+// the api format to the readable format.
+// Example : if the category is stored as "critical-thinking",
+// then the function will return "Critical Thinking"
 export const getCategory = (category = "") => {
   return category
     .split("-")
