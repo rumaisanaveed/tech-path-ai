@@ -48,7 +48,7 @@ const Header = () => {
             {/* Mobile Logo */}
             <img
               src={Logo}
-              alt="logo"
+              alt="mobile menu"
               className="cursor-pointer md:cursor-default"
               onClick={
                 isAuthPage
@@ -63,7 +63,7 @@ const Header = () => {
             {/* else the auth pages won't be visible to authenticated users */}
             <Link
               className="text-2xl hidden md:block font-medium anonymous-font text-logo"
-              to={isAuthPage ? "/" : ""}
+              to={isAuthPage ? "/" : "/"}
             >
               <span className="font-semibold">C</span>areer
               <span className="font-semibold">M</span>entor

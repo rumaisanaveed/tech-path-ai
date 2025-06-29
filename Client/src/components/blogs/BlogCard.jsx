@@ -1,5 +1,5 @@
 import { useScreenSize } from "@/hooks/useScreenSize";
-import { truncateText } from "@/utils/helpers/truncateText";
+import { truncateText } from "@/utils/helpers";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -11,7 +11,11 @@ export default function AuthLayout({ mainHeading, text, formText, children }) {
             {mainHeading}
           </h1>
           <p className="lg:text-xl font-light text-base lg:max-w-xl">{text}</p>
-          <img src={AuthImage} alt="auth" className="hidden md:block" />
+          <img
+            src={AuthImage}
+            alt="auth background"
+            className="hidden md:block"
+          />
         </div>
         <div className="flex flex-col flex-grow 3xl:flex-grow-0 gap-4">
           <h2 className="lg:font-light font-medium text-xl lg:text-3xl lg:max-w-2xl">

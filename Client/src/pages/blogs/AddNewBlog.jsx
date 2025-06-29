@@ -148,7 +148,7 @@ const AddNewBlog = () => {
                   <div className="relative">
                     <img
                       src={imagePreview}
-                      alt="Preview"
+                      alt="preview"
                       className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-lg shadow-md"
                     />
                     <Button

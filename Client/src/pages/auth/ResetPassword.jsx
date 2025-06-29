@@ -11,6 +11,7 @@ import { Message } from "@/components/Message";
 import { useVerifyToken } from "@/apis/auth/auth.service";
 import { EyeButton } from "@/components/buttons/EyeButton";
 import { useState } from "react";
+import { AppButton } from "@/components/buttons/AppButton";
 
 export const ResetPassword = () => {
   usePageTitle("Reset Password");
@@ -27,7 +28,13 @@ export const ResetPassword = () => {
     formState: { errors },
   } = useForm();
 
-  const { mutate: verifyToken, isSuccess, isError, error } = useVerifyToken();
+  const {
+    mutate: verifyToken,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useVerifyToken();
 
   const password = watch("password");
 
@@ -131,12 +138,12 @@ export const ResetPassword = () => {
           {/* add error or success msgs here */}
           <div className="col-span-2 flex gap-3 justify-end">
             <BackButton />
-            <Button
-              type="submit"
-              className="anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6 self-end"
-            >
-              Reset Password
-            </Button>
+            <AppButton
+              className="w-40"
+              isPending={isPending}
+              title="Reset Password"
+              loadingTitle="Resetting"
+            />
           </div>
         </form>
       </div>

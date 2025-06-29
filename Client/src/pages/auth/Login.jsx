@@ -11,6 +11,8 @@ import { validations } from "@/validations/auth/validations";
 import { useEffect, useState } from "react";
 import { EyeButton } from "@/components/buttons/EyeButton";
 import { USER_DASHBOARD_ROUTES } from "@/constants/navigation";
+import { AppButton } from "@/components/buttons/AppButton";
+import { AuthFooter } from "@/components/auth/AuthFooter";
 
 export const Login = () => {
   usePageTitle("Login");
@@ -116,28 +118,21 @@ export const Login = () => {
             >
               forgot password?
             </Link>
-            <Button
-              type="submit"
-              className="anonymous-font font-medium text-base text-white rounded-full w-28 md:w-40 py-3 md:py-6 self-end"
-              disabled={isPending}
-            >
-              {isPending ? "Signing in..." : "Sign in"}
-            </Button>
+            <AppButton
+              className="w-28 md:w-40"
+              isPending={isPending}
+              title="Sign in"
+              loadingTitle="Signing in"
+            />
           </div>
         </form>
 
         {/* Link to signup */}
-        <div className="flex justify-center place-items-end mt-5 mb-4">
-          <p className="text-sm font-normal flex items-center">
-            Don't have an account?&nbsp;
-            <Link
-              to="/auth/signup"
-              className="text-custom-light-blue font-medium"
-            >
-              Sign up
-            </Link>
-          </p>
-        </div>
+        <AuthFooter
+          text="Don't have an account?"
+          title="Sign up"
+          href="/auth/signup"
+        />
       </div>
     </AuthLayout>
   );

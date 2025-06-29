@@ -31,7 +31,7 @@ const DashboardHeader = () => {
             onClick={() => setOpen(!open)}
             className="flex items-center justify-center"
           >
-            <img src={Logo} alt="Mobile Menu" />
+            <img src={Logo} alt="mobile menu" />
           </Button>
         </div>
         <header className="flex items-center justify-between w-full">
@@ -58,7 +58,11 @@ const DashboardHeader = () => {
               <Bell color="#000000" size={17} />
             </button>
             <div className="h-8 w-8 md:h-10 md:w-10">
-              <img src={PersonProfile} alt="profile" />
+              <img
+                src={PersonProfile}
+                alt="profile"
+                className="h-8 w-8 md:h-10 md:w-10"
+              />
             </div>
           </div>
         </header>

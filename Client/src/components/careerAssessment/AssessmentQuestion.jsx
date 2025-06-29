@@ -12,6 +12,10 @@ import {
   getItemFromStorage,
   saveItemToStorage,
 } from "@/utils/helpers/storage/localStorage";
+import { useMutation } from "@tanstack/react-query";
+import { submitAnswer } from "@/apis/assessment/assessment.api";
+import { SubmitAssessmentAnswer } from "@/apis/assessment/assessment.service";
+import { toast } from "sonner";
 
 export const AssessmentQuestion = () => {
   // TODO : show the skeleton if question is loading
@@ -26,6 +30,16 @@ export const AssessmentQuestion = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [answers, setAnswers] = useState({});
   const { questions } = useAssessmentContext();
+  const { mutate: answerSubmission, isPending } = SubmitAssessmentAnswer({
+    onSuccess: (res) => {
+      console.log("On success", res);
+    },
+    onError: (error) => {
+      const errorMsg =
+        error?.response?.data?.message || "Something went wrong! Try again.";
+      toast.error(errorMsg);
+    },
+  });
 
   useEffect(() => {
     setBreadcrumbSuffix("Assessment");
@@ -57,6 +71,9 @@ export const AssessmentQuestion = () => {
     if (!selectedOption) return;
 
     // TODO : call the submit answer api on each question
+
+    answerSubmission({ optionId: parseInt(selectedOption) });
+
     const newAnswers = {
       ...answers,
       [currentQuestion.id]: selectedOption,
@@ -123,7 +140,7 @@ export const AssessmentQuestion = () => {
             className="w-28 md:w-36"
             onClickHandler={handleNext}
             // disable until an option is not selected
-            disabled={!selectedOption}
+            disabled={isPending || !selectedOption}
           />
           {currentIndex > 0 && (
             <BackButton

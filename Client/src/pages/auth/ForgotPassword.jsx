@@ -8,6 +8,7 @@ import { useForgotPassword } from "@/apis/auth/auth.service";
 import { useForm } from "react-hook-form";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
+import { AppButton } from "@/components/buttons/AppButton";
 
 export const ForgotPassword = () => {
   usePageTitle("Forgot Password");
@@ -80,13 +81,12 @@ export const ForgotPassword = () => {
 
           <div className="col-span-2 flex gap-3 justify-end">
             <BackButton />
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="text-white anonymous-font font-medium text-base rounded-full w-40 py-3 md:py-6 self-end"
-            >
-              {isPending ? "Sending..." : "Send Reset Link"}
-            </Button>
+            <AppButton
+              className="w-40"
+              isPending={isPending}
+              title="Send Reset Link"
+              loadingTitle="Sending"
+            />
           </div>
         </form>
       </div>

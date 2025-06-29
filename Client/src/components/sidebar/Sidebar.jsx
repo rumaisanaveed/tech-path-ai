@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Logo from "@/assets/icons/logo.svg";
@@ -26,10 +26,13 @@ export default function Sidebar({ items, variant = "sidebar" }) {
         )}
       >
         {/* Logo */}
-        <div className="text-base font-normal flex items-center gap-2 pl-4">
-          <img src={Logo} alt="logo" className="w-6 h-6" />
+        <Link
+          className="text-base font-normal flex items-center gap-2 pl-4"
+          to="/"
+        >
+          <img src={Logo} alt="career mentor" className="w-6 h-6" />
           Career Mentor
-        </div>
+        </Link>
 
         {/* Nav Links */}
         <nav className="space-y-1">

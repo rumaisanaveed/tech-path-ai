@@ -42,7 +42,7 @@ export const AssessmentInitialUi = () => {
         <div className="flex flex-col gap-3 text-custom-black-dark">
           {initialAssessmentFeaturesListData.map((item, index) => (
             <div className="flex gap-3 items-start" key={index}>
-              <img src={item.icon} className="w-5 h-5 mt-1" alt="icon" />
+              <img src={item.icon} className="w-5 h-5 mt-1" alt="feature" />
               <div>
                 <p className="font-bold text-base lg:text-lg">{item.title}</p>
                 <p className="text-sm">{item.text}</p>

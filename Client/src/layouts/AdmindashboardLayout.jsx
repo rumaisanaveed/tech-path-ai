@@ -35,7 +35,7 @@ const DashboardHeader = () => {
             onClick={() => setOpen(!open)}
             className="flex items-center justify-center"
           >
-            <img src={Logo} alt="Menu" className="h-6 w-6" />
+            <img src={Logo} alt="menu" className="h-6 w-6" />
           </Button>
         </div>
 
@@ -64,4 +64,3 @@ const DashboardHeader = () => {
     </div>
   );
 };
-

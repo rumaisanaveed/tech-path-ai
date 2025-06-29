@@ -4,3 +4,10 @@ export const truncateText = (text, maxLength = 32) => {
     ? text.slice(0, maxLength).trim() + "..."
     : text;
 };
+
+export const getCategory = (category = "") => {
+  return category
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};

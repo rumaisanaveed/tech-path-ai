@@ -16,6 +16,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Message } from "@/components/Message";
 import { EyeButton } from "@/components/buttons/EyeButton";
 import { validations } from "@/validations/auth/validations";
+import { AppButton } from "@/components/buttons/AppButton";
+import { AuthFooter } from "@/components/auth/AuthFooter";
 
 export const Signup = () => {
   usePageTitle("Signup");
@@ -239,27 +241,19 @@ export const Signup = () => {
           )}
 
           <div className="md:col-span-2 flex justify-end mt-4">
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="anonymous-font font-medium text-base text-white rounded-full"
-            >
-              {isPending ? "Creating..." : "Create Account"}
-            </Button>
+            <AppButton
+              title="Create Account"
+              isPending={isPending}
+              loadingTitle="Creating"
+            />
           </div>
         </form>
 
-        <div className="flex justify-center place-items-end mt-5 mb-4">
-          <p className="text-sm font-normal flex items-center">
-            Already have an account?&nbsp;
-            <Link
-              to="/auth/login"
-              className="text-custom-light-blue font-medium"
-            >
-              Sign in
-            </Link>
-          </p>
-        </div>
+        <AuthFooter
+          text="Already have an account?"
+          title="Sign in"
+          href="/auth/login"
+        />
       </div>
     </AuthLayout>
   );

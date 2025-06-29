@@ -13,6 +13,8 @@ import { useVerifyOtp } from "@/apis/auth/auth.service";
 import { useEffect } from "react";
 import { Message } from "@/components/Message";
 import { USER_DASHBOARD_ROUTES } from "@/constants/navigation";
+import { AppButton } from "@/components/buttons/AppButton";
+import BackButton from "@/components/buttons/BackButton";
 
 export const Otp = () => {
   usePageTitle("Verify Your Identity");
@@ -132,19 +134,13 @@ export const Otp = () => {
             </div>
 
             <div className="flex gap-3 items-center self-end mt-4">
-              <Link
-                className="text-base font-light w-24 flex items-center justify-center border border-custom-black-dark rounded-full py-2 md:py-2.5"
-                to=""
-              >
-                Back
-              </Link>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="anonymous-font font-medium text-base text-white rounded-full w-40 py-3 md:py-6"
-              >
-                {isLoading ? "Verifying..." : "Verify"}
-              </Button>
+              <BackButton />
+              <AppButton
+                className="w-40"
+                isPending={isLoading}
+                title="Verify"
+                loadingTitle="Verifying"
+              />
             </div>
           </div>
         </form>

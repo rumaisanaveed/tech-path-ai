@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { Message } from "@/components/Message";
 import { validations } from "@/validations/auth/validations";
 import { useNavigate } from "react-router-dom";
+import { AppButton } from "@/components/buttons/AppButton";
 
 export const ResendOtp = () => {
   usePageTitle("Resend Otp");
@@ -101,17 +102,13 @@ export const ResendOtp = () => {
 
           <div className="col-span-2 flex gap-3 justify-end">
             <BackButton />
-            <Button
-              type="submit"
-              disabled={isPending || cooldown > 0}
-              className="text-white anonymous-font font-medium text-base rounded-full w-40 py-3 md:py-6 self-end"
-            >
-              {isPending
-                ? "Sending..."
-                : cooldown > 0
-                ? `Wait ${cooldown}s`
-                : "Resend OTP"}
-            </Button>
+            <AppButton
+              className="w-40"
+              isPending={isPending}
+              isDisabled={cooldown > 0}
+              title={cooldown > 0 ? `Wait ${cooldown}s` : "Resend OTP"}
+              loadingTitle="Sending"
+            />
           </div>
         </form>
       </div>

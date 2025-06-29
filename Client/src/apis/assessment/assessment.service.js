@@ -17,3 +17,10 @@ export const StartAssessment = () => {
     },
   });
 };
+
+export const SubmitAssessmentAnswer = (options = {}) => {
+  return useMutation({
+    mutationFn: AssessmentAPI.submitAnswer,
+    ...options,
+  });
+};
