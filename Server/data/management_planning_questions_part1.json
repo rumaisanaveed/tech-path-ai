@@ -1,5 +1,4 @@
 [
-  // Category 1: Cognitive and Analytical Thinking
   {
     "id": 1,
     "questionText": "Which of the following best describes logical reasoning?",
@@ -301,7 +300,6 @@
     ]
   },
 
-  //  Category 2: Creative and Adaptive Thinking
   {
     "id": 13,
     "questionText": "What is brainstorming primarily used for?",
@@ -603,7 +601,6 @@
     ]
   },
 
-  // Category 3: Self-Awareness and Career Preference
   {
     "id": 25,
     "questionText": "What are core values in the context of career development?",

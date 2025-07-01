@@ -1,39 +1,32 @@
 import { sequelize } from "../config/connectDB.js";
-import AssessmentOption from "../models/AssessmentOptionModel.js";
-import AssessmentQuestion from "../models/assestmentQuestionModel.js";
+import {AssessmentQuestion, AssessmentOptions} from "../models/index.js";
 import questionsData from "../data/management_planning_questions_part1.json" with { type: "json" };
 
 export const insertQuestions = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("✅ Database connected...");
-
+ try {
     for (const question of questionsData) {
-      // Insert the question first
+      // Insert question
       const createdQuestion = await AssessmentQuestion.create({
-        category: question.category,
-        subcategory: question.subcategory,
-        questionText: question.questionText,
-        bloomLevel: question.bloomLevel.toLowerCase(), // just in case it's uppercase like "Apply"
+        text: question.questionText,
+        bloomLevel: question.bloomLevel,
         bloomWeight: question.bloomWeight,
+        categoryId: question.categoryId,
       });
 
-      // Insert related options
-      const optionsWithQuestionId = question.options.map((option) => ({
-        optionText: option.optionText || option.text, // handles both "optionText" and "text"
-        score: option.score,
+      // Prepare options with questionId
+      const optionsToInsert = question.options.map((opt) => ({
+        optionText: opt.text,
+        score: opt.score,
         questionId: createdQuestion.id,
       }));
 
-      await AssessmentOption.bulkCreate(optionsWithQuestionId);
-      console.log(`✅ Inserted question: ${question.questionText}`);
+      // Bulk insert options
+      await AssessmentOptions.bulkCreate(optionsToInsert);
     }
 
-    console.log("🎉 All questions inserted successfully!");
-    process.exit(0);
+    console.log("✅ All questions and options inserted successfully.");
   } catch (error) {
-    console.error("❌ Error inserting data:", error);
-    process.exit(1);
+    console.error("❌ Failed to insert questions:", error.message);
   }
 };
 
