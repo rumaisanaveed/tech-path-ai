@@ -3,6 +3,7 @@ import AssessmentQuestion from "./assessment/assessmentQuestionsModel.js";
 import AssessmentOptions from "./assessment/assessmentOptionsModel.js";
 import AssessmentSession from "./assessment/assessmentSessionModel.js";
 import AssessmentSessionAns from "./assessment/assessmentSessionAns.js";
+import AssessmentSessionQuestion from "./assessment/assessmentSessionQuestion.js";
 import Blogs from "./blogModel.js";
 import Tag from "./tagModel.js";
 import User from "./userModel.js";
@@ -79,6 +80,30 @@ AssessmentSessionAns.belongsTo(AssessmentOptions, {
   foreignKey: "optionId",
 });
 
+
+// Session → SessionQuestion
+AssessmentSessionQuestion.belongsTo(AssessmentSession, {
+  foreignKey: "sessionId",
+});
+
+// Question → SessionQuestion
+AssessmentQuestion.hasMany(AssessmentSessionQuestion, {
+  foreignKey: "questionId",
+  onDelete: "CASCADE",
+});
+AssessmentSessionQuestion.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+});
+AssessmentSessionQuestion.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+  as: "question",
+});
+AssessmentQuestion.hasMany(AssessmentOptions, {
+  foreignKey: "questionId",
+  as: "options",
+});
+
+
 export {
   Blogs,
   Tag,
@@ -87,5 +112,6 @@ export {
   AssessmentOptions,
   AssessmentSession,
   AssessmentSessionAns,
+  AssessmentSessionQuestion,
   category,
 };

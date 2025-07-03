@@ -8,8 +8,7 @@ import connectDB from "./config/connectDB.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 
-import authRoutes from "./routes/authRoute.js";
-import blogsRoutes from "./routes/blogsRoutes.js";
+import routes from "./routes/routes.js";
 import adminRoutes from "./routes/admin/adminRoute.js";
 import assessmentsRoutes from "./routes/assessmentsRoute.js";
 
@@ -34,9 +33,7 @@ app.use(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/blogs", blogsRoutes);
-app.use("/api/assessments", assessmentsRoutes);
+app.use("/api", routes);
 
 app.use("/api/admin", adminRoutes);
 
