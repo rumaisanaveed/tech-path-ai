@@ -7,6 +7,8 @@ import AssessmentSessionQuestion from "./assessment/assessmentSessionQuestion.js
 import Blogs from "./blogModel.js";
 import Tag from "./tagModel.js";
 import User from "./userModel.js";
+import categoryScoreGame from "./gamification/categoryScore.js";
+import trainingSample from "./trainingSample.js";
 
 // 🔁 Define relationships here
 
@@ -33,6 +35,7 @@ category.hasMany(AssessmentQuestion, {
 });
 AssessmentQuestion.belongsTo(category, {
   foreignKey: "categoryId",
+  as: "category",
 });
 
 // Question → Option
@@ -80,7 +83,6 @@ AssessmentSessionAns.belongsTo(AssessmentOptions, {
   foreignKey: "optionId",
 });
 
-
 // Session → SessionQuestion
 AssessmentSessionQuestion.belongsTo(AssessmentSession, {
   foreignKey: "sessionId",
@@ -103,6 +105,15 @@ AssessmentQuestion.hasMany(AssessmentOptions, {
   as: "options",
 });
 
+// SessionQuestion → RESULT
+AssessmentSessionAns.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+  as: "question",
+});
+AssessmentSessionAns.belongsTo(AssessmentOptions, {
+  foreignKey: "optionId",
+  as: "option",
+});
 
 export {
   Blogs,
@@ -114,4 +125,6 @@ export {
   AssessmentSessionAns,
   AssessmentSessionQuestion,
   category,
+  categoryScoreGame,
+  trainingSample,
 };
