@@ -2,7 +2,9 @@ import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 import {
   createAssessmentSession,
+  generateQuestionsByCategory,
   getAssessmentSession,
+  predictionResult,
   submitAnswer,
 } from "../controllers/assessmentQuestionsController.js";
 
@@ -10,10 +12,11 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/assessment/session:
+ * /session:
  *   post:
- *     summary: Start a new assessment session
- *     tags: [Assessment]
+ *     summary: Create a new assessment session
+ *     tags:
+ *       - Assessments
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -23,38 +26,23 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               category:
+ *               userId:
  *                 type: string
- *                 example: critical-thinking
  *     responses:
- *       200:
- *         description: Assessment session created
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 sessionId:
- *                   type: string
- *                 questions:
- *                   type: array
- *                   items:
- *                     type: object
- *       400:
- *         description: No subcategories found
- *       500:
- *         description: Server error
+ *       201:
+ *         description: Assessment session created successfully
+ *       401:
+ *         description: Unauthorized
  */
 router.post("/session", verifyToken, createAssessmentSession);
 
 /**
  * @swagger
- * /api/assessment/session/{sessionId}:
- *   get:
- *     summary: Get current question in assessment session
- *     tags: [Assessment]
+ * /generatequestions/{sessionId}/{categoryId}:
+ *   post:
+ *     summary: Generate questions by category for a session
+ *     tags:
+ *       - Assessments
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -63,38 +51,32 @@ router.post("/session", verifyToken, createAssessmentSession);
  *         required: true
  *         schema:
  *           type: string
- *         description: Unique ID of the assessment session
+ *         description: The session ID
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category ID
  *     responses:
  *       200:
- *         description: Returns current question
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 currentIndex:
- *                   type: number
- *                 totalQuestions:
- *                   type: number
- *                 isFinished:
- *                   type: boolean
- *                 question:
- *                   type: object
- *       404:
- *         description: Session or question not found
- *       500:
- *         description: Server error
+ *         description: Questions generated successfully
+ *       401:
+ *         description: Unauthorized
  */
-router.get("/session/:sessionId", verifyToken, getAssessmentSession);
+router.post(
+  "/generatequestions/:sessionId/:categoryId",
+  verifyToken,
+  generateQuestionsByCategory
+);
 
 /**
  * @swagger
- * /api/assessment/session/{sessionId}/answer:
- *   post:
- *     summary: Submit answer to current question
- *     tags: [Assessment]
+ * /session/{sessionId}/{categoryId}:
+ *   get:
+ *     summary: Get assessment session questions by category
+ *     tags:
+ *       - Assessments
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -103,7 +85,41 @@ router.get("/session/:sessionId", verifyToken, getAssessmentSession);
  *         required: true
  *         schema:
  *           type: string
- *         description: Unique ID of the assessment session
+ *         description: The session ID
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category ID
+ *     responses:
+ *       200:
+ *         description: Assessment session data
+ *       401:
+ *         description: Unauthorized
+ */
+router.get(
+  "/session/:sessionId/:categoryId",
+  verifyToken,
+  getAssessmentSession
+);
+
+/**
+ * @swagger
+ * /session/{sessionId}/answer:
+ *   post:
+ *     summary: Submit an answer for a session
+ *     tags:
+ *       - Assessments
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The session ID
  *     requestBody:
  *       required: true
  *       content:
@@ -111,19 +127,40 @@ router.get("/session/:sessionId", verifyToken, getAssessmentSession);
  *           schema:
  *             type: object
  *             properties:
- *               selectedOptionId:
- *                 type: integer
- *                 example: 5
+ *               questionId:
+ *                 type: string
+ *               answer:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Answer submitted successfully
- *       400:
- *         description: Invalid option selected
- *       404:
- *         description: Session not found
- *       500:
- *         description: Server error
+ *       401:
+ *         description: Unauthorized
  */
 router.post("/session/:sessionId/answer", verifyToken, submitAnswer);
+
+/**
+ * @swagger
+ * /session/result/{sessionId}:
+ *   post:
+ *     summary: Get prediction result for a session
+ *     tags:
+ *       - Assessments
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The session ID
+ *     responses:
+ *       200:
+ *         description: Prediction result returned
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/session/result/:sessionId", verifyToken, predictionResult);
 
 export default router;

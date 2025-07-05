@@ -1,8 +1,14 @@
-import AssessmentOption from "./AssessmentOptionModel.js";
-import AssessmentQuestion from "./assestmentQuestionModel.js";
+import category from "./assessment/assessmentCategoryModel.js";
+import AssessmentQuestion from "./assessment/assessmentQuestionsModel.js";
+import AssessmentOptions from "./assessment/assessmentOptionsModel.js";
+import AssessmentSession from "./assessment/assessmentSessionModel.js";
+import AssessmentSessionAns from "./assessment/assessmentSessionAns.js";
+import AssessmentSessionQuestion from "./assessment/assessmentSessionQuestion.js";
 import Blogs from "./blogModel.js";
 import Tag from "./tagModel.js";
 import User from "./userModel.js";
+import categoryScoreGame from "./gamification/categoryScore.js";
+import trainingSample from "./trainingSample.js";
 
 // 🔁 Define relationships here
 
@@ -22,15 +28,103 @@ Tag.belongsToMany(Blogs, {
   otherKey: "blogId",
 });
 
-// 🔁 AssessmentQuestion → AssessmentOption (One-to-Many)
-AssessmentQuestion.hasMany(AssessmentOption, {
-  foreignKey: "questionId",
-  as: "options",
+// Category → Question
+category.hasMany(AssessmentQuestion, {
+  foreignKey: "categoryId",
   onDelete: "CASCADE",
 });
-AssessmentOption.belongsTo(AssessmentQuestion, {
+AssessmentQuestion.belongsTo(category, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+// Question → Option
+AssessmentQuestion.hasMany(AssessmentOptions, {
+  foreignKey: "questionId",
+  onDelete: "CASCADE",
+});
+AssessmentOptions.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+});
+
+// User → AssessmentSession
+User.hasMany(AssessmentSession, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+AssessmentSession.belongsTo(User, {
+  foreignKey: "userId",
+});
+
+// Session → Answer
+AssessmentSession.hasMany(AssessmentSessionAns, {
+  foreignKey: "sessionId",
+  onDelete: "CASCADE",
+});
+AssessmentSessionAns.belongsTo(AssessmentSession, {
+  foreignKey: "sessionId",
+});
+
+// Question → Answer
+AssessmentQuestion.hasMany(AssessmentSessionAns, {
+  foreignKey: "questionId",
+  onDelete: "CASCADE",
+});
+AssessmentSessionAns.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+});
+
+// Option → Answer
+AssessmentOptions.hasMany(AssessmentSessionAns, {
+  foreignKey: "optionId",
+  onDelete: "CASCADE",
+});
+AssessmentSessionAns.belongsTo(AssessmentOptions, {
+  foreignKey: "optionId",
+});
+
+// Session → SessionQuestion
+AssessmentSessionQuestion.belongsTo(AssessmentSession, {
+  foreignKey: "sessionId",
+});
+
+// Question → SessionQuestion
+AssessmentQuestion.hasMany(AssessmentSessionQuestion, {
+  foreignKey: "questionId",
+  onDelete: "CASCADE",
+});
+AssessmentSessionQuestion.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+});
+AssessmentSessionQuestion.belongsTo(AssessmentQuestion, {
   foreignKey: "questionId",
   as: "question",
 });
+AssessmentQuestion.hasMany(AssessmentOptions, {
+  foreignKey: "questionId",
+  as: "options",
+});
 
-export { Blogs, Tag, User, AssessmentQuestion, AssessmentOption };
+// SessionQuestion → RESULT
+AssessmentSessionAns.belongsTo(AssessmentQuestion, {
+  foreignKey: "questionId",
+  as: "question",
+});
+AssessmentSessionAns.belongsTo(AssessmentOptions, {
+  foreignKey: "optionId",
+  as: "option",
+});
+
+export {
+  Blogs,
+  Tag,
+  User,
+  AssessmentQuestion,
+  AssessmentOptions,
+  AssessmentSession,
+  AssessmentSessionAns,
+  AssessmentSessionQuestion,
+  category,
+  categoryScoreGame,
+  trainingSample,
+};

@@ -1,621 +1,904 @@
 [
   {
-    "category": "critical-thinking",
-    "subcategory": "management-and-planning",
-    "questionText": "When faced with multiple tasks, how do you decide which one to do first?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      { "optionText": "I start with the most urgent task.", "score": 4 },
-      { "optionText": "I do the easiest task first.", "score": 3 },
-      { "optionText": "I randomly pick one and start.", "score": 2 },
-      { "optionText": "I wait until I feel motivated.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "management-and-planning",
-    "questionText": "How would you plan a group trip with limited time and budget?",
-    "bloomLevel": "create",
-    "bloomWeight": 1.5,
-    "options": [
-      { "optionText": "Create a checklist and assign roles.", "score": 4 },
-      { "optionText": "Let everyone decide what they want to do.", "score": 3 },
-      { "optionText": "Wait and see what others suggest.", "score": 2 },
-      { "optionText": "Focus on the cheapest option only.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "management-and-planning",
-    "questionText": "What's the first step you take when starting a new project?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      { "optionText": "Understand the goal and make a plan.", "score": 4 },
-      { "optionText": "Start working immediately.", "score": 3 },
-      { "optionText": "Wait for others to begin.", "score": 2 },
-      { "optionText": "Collect all resources without planning.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "management-and-planning",
-    "questionText": "You're given a week to complete a report. How would you plan your time?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      { "optionText": "Divide the work into daily tasks.", "score": 4 },
-      { "optionText": "Start the night before the deadline.", "score": 2 },
-      { "optionText": "Do everything in one sitting.", "score": 1 },
-      {
-        "optionText": "Ask someone for help and follow their schedule.",
-        "score": 3
-      }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "management-and-planning",
-    "questionText": "What do you do when your plan doesn't go as expected?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "Re-evaluate and adjust quickly.", "score": 4 },
-      { "optionText": "Get frustrated and stop.", "score": 1 },
-      { "optionText": "Blame others and move on.", "score": 2 },
-      { "optionText": "Wait until things settle.", "score": 3 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "leadership-and-organization",
-    "questionText": "You're leading a small team. One member isn't performing well. What do you do?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "Talk to them privately to understand the issue.",
-        "score": 4
-      },
-      { "optionText": "Do their work yourself.", "score": 2 },
-      { "optionText": "Complain to someone else.", "score": 1 },
-      { "optionText": "Ignore it and hope they improve.", "score": 3 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "leadership-and-organization",
-    "questionText": "How do you ensure everyone in your team is on the same page?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      { "optionText": "Regular updates and clear communication.", "score": 4 },
-      { "optionText": "Only talk when there's a problem.", "score": 2 },
-      { "optionText": "Assume everyone understands.", "score": 3 },
-      { "optionText": "Let others handle communication.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "leadership-and-organization",
-    "questionText": "What do you do if your decision leads to a mistake?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "Take responsibility and try to fix it.", "score": 4 },
-      { "optionText": "Ignore the mistake.", "score": 1 },
-      { "optionText": "Pretend it wasn't your decision.", "score": 2 },
-      { "optionText": "Blame someone else.", "score": 3 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "leadership-and-organization",
-    "questionText": "You're in charge of organizing a seminar. How would you delegate tasks?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Divide tasks based on skill and availability.",
-        "score": 4
-      },
-      { "optionText": "Do most of the work yourself.", "score": 2 },
-      { "optionText": "Ask everyone to do everything.", "score": 3 },
-      { "optionText": "Delay decisions and start late.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "leadership-and-organization",
-    "questionText": "How do you handle disagreement in a group setting?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Listen to all sides and find a middle ground.",
-        "score": 4
-      },
-      { "optionText": "Avoid taking responsibility.", "score": 1 },
-      { "optionText": "Ignore the disagreement.", "score": 2 },
-      { "optionText": "Take the side of your close friends.", "score": 3 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "interest-in-people-vs-systems",
-    "questionText": "When solving a problem, do you focus more on people's needs or the system's efficiency?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      { "optionText": "People's needs are more important to me.", "score": 4 },
-      { "optionText": "I try to balance both.", "score": 3 },
-      { "optionText": "It depends on the context.", "score": 2 },
-      {
-        "optionText": "I focus entirely on the system's performance.",
-        "score": 1
-      }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "interest-in-people-vs-systems",
-    "questionText": "Are you more interested in understanding how a machine works or how a person thinks?",
-    "bloomLevel": "understand",
+    "id": 1,
+    "questionText": "Which of the following best describes logical reasoning?",
+    "bloomLevel": "Remember",
     "bloomWeight": 1.1,
-    "options": [
-      { "optionText": "How a person thinks.", "score": 4 },
-      { "optionText": "Both are equally interesting.", "score": 3 },
-      { "optionText": "How a machine works.", "score": 2 },
-      { "optionText": "Neither really interests me much.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "interest-in-people-vs-systems",
-    "questionText": "You're given the choice between managing a team or analyzing a system—what do you choose?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "Managing the team.", "score": 4 },
-      { "optionText": "I enjoy both roles.", "score": 3 },
-      { "optionText": "Analyzing the system.", "score": 2 },
-      { "optionText": "I don't feel ready for either.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "interest-in-people-vs-systems",
-    "questionText": "Would you rather help resolve a team conflict or improve a workflow process?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "Resolve a team conflict.", "score": 4 },
-      { "optionText": "Improve a workflow process.", "score": 2 },
-      { "optionText": "It depends on which is more urgent.", "score": 3 },
-      { "optionText": "I'd avoid both if possible.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "interest-in-people-vs-systems",
-    "questionText": "What makes you more satisfied: a well-functioning process or a well-motivated team?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "A well-motivated team.", "score": 4 },
-      { "optionText": "Both are equally satisfying.", "score": 3 },
-      { "optionText": "A smooth, functioning process.", "score": 2 },
-      { "optionText": "I don't think about this much.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "communication-and-teamwork",
-    "questionText": "You disagree with a teammate. What's your approach?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "I listen to their point first, then explain mine.",
+        "text": "Making decisions based on emotions",
+        "score": 1
+      },
+      {
+        "text": "Using facts and evidence to reach conclusions",
         "score": 4
       },
-      { "optionText": "I find a middle ground to keep peace.", "score": 3 },
-      { "optionText": "I try to avoid conflict and stay quiet.", "score": 2 },
       {
-        "optionText": "I strongly defend my view until they agree.",
+        "text": "Following popular opinions",
+        "score": 2
+      },
+      {
+        "text": "Relying on first impressions",
         "score": 1
       }
     ]
   },
   {
-    "category": "critical-thinking",
-    "subcategory": "communication-and-teamwork",
-    "questionText": "How do you ensure your team understands your ideas?",
-    "bloomLevel": "apply",
+    "id": 2,
+    "questionText": "When faced with a complex problem, what does 'breaking it down into smaller parts' mean?",
+    "bloomLevel": "Understand",
     "bloomWeight": 1.2,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "I explain clearly and ask if they have questions.",
+        "text": "Ignoring the problem completely",
+        "score": 1
+      },
+      {
+        "text": "Dividing the problem into manageable components to solve systematically",
         "score": 4
       },
       {
-        "optionText": "I send a written summary after explaining.",
-        "score": 3
+        "text": "Asking others to solve it for you",
+        "score": 2
       },
-      { "optionText": "I repeat my points several times.", "score": 2 },
-      { "optionText": "I assume they'll ask if they're confused.", "score": 1 }
+      {
+        "text": "Solving only the easiest part",
+        "score": 2
+      }
     ]
   },
   {
-    "category": "critical-thinking",
-    "subcategory": "communication-and-teamwork",
-    "questionText": "How do you encourage open dialogue in a group setting?",
-    "bloomLevel": "create",
+    "id": 3,
+    "questionText": "You're given sales data for the past 6 months. How would you use this information to predict next month's sales?",
+    "bloomLevel": "Apply",
+    "bloomWeight": 1.3,
+    "categoryId": 1,
+    "options": [
+      {
+        "text": "Ignore the data and guess randomly",
+        "score": 1
+      },
+      {
+        "text": "Analyze trends, patterns, and seasonal variations to make informed predictions",
+        "score": 4
+      },
+      {
+        "text": "Use only the most recent month's data",
+        "score": 2
+      },
+      {
+        "text": "Copy last year's sales figures",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "questionText": "A company's productivity has decreased by 15% over the last quarter. What factors would you examine to identify the root cause?",
+    "bloomLevel": "Analyze",
+    "bloomWeight": 1.4,
+    "categoryId": 1,
+    "options": [
+      {
+        "text": "Only look at employee attendance",
+        "score": 2
+      },
+      {
+        "text": "Examine multiple factors: employee morale, training, resources, processes, and external factors",
+        "score": 4
+      },
+      {
+        "text": "Blame the management immediately",
+        "score": 1
+      },
+      {
+        "text": "Focus only on the financial reports",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "questionText": "Two different marketing strategies are proposed for launching a new product. How would you determine which strategy is better?",
+    "bloomLevel": "Evaluate",
     "bloomWeight": 1.5,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "I create a friendly environment where all feel safe to speak.",
-        "score": 4
-      },
-      {
-        "optionText": "I start the discussion and invite others to join.",
-        "score": 3
-      },
-      { "optionText": "I let the most active members lead.", "score": 2 },
-      { "optionText": "I don't usually participate much.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "communication-and-teamwork",
-    "questionText": "You're working with a quiet team member. How do you engage them?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      { "optionText": "I ask for their input directly.", "score": 4 },
-      { "optionText": "I check with them privately later.", "score": 3 },
-      { "optionText": "I let them be, they might be shy.", "score": 2 },
-      { "optionText": "I speak for them if they seem unsure.", "score": 1 }
-    ]
-  },
-  {
-    "category": "critical-thinking",
-    "subcategory": "communication-and-teamwork",
-    "questionText": "What do you do when someone's idea conflicts with yours?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "I listen first, then present my view calmly.",
-        "score": 4
-      },
-      { "optionText": "I try to merge both ideas.", "score": 3 },
-      { "optionText": "I avoid the topic.", "score": 2 },
-      { "optionText": "I argue to prove mine is better.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "technical-inclination-logic",
-    "questionText": "When faced with a technical problem, what is your first step?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Break down the problem into smaller parts.",
-        "score": 4
-      },
-      { "optionText": "Search for ready-made solutions online.", "score": 3 },
-      {
-        "optionText": "Guess the solution based on past experience.",
+        "text": "Choose the cheaper option",
         "score": 2
       },
-      { "optionText": "Ask someone else to solve it.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "technical-inclination-logic",
-    "questionText": "You encounter a coding error. How do you proceed?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
       {
-        "optionText": "Trace the error step-by-step through the code.",
+        "text": "Compare strategies based on target audience, budget, expected ROI, timeline, and risk factors",
         "score": 4
       },
-      { "optionText": "Restart the program without debugging.", "score": 2 },
       {
-        "optionText": "Copy code from others without understanding.",
-        "score": 1
-      },
-      { "optionText": "Ignore the error and hope it resolves.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "technical-inclination-logic",
-    "questionText": "How do you verify your technical solutions?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "Test them thoroughly under different scenarios.",
-        "score": 4
-      },
-      { "optionText": "Check only the obvious cases.", "score": 2 },
-      { "optionText": "Trust that it works if it runs once.", "score": 1 },
-      { "optionText": "Skip testing to save time.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "technical-inclination-logic",
-    "questionText": "When debugging, how do you isolate the cause?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Divide the problem and test each part independently.",
-        "score": 4
-      },
-      { "optionText": "Randomly change parts until it works.", "score": 2 },
-      {
-        "optionText": "Replace the whole system without analysis.",
-        "score": 1
-      },
-      { "optionText": "Ask someone else to fix it.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "technical-inclination-logic",
-    "questionText": "You have limited resources to solve a problem. What's your approach?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      {
-        "optionText": "Prioritize and find the most efficient solution.",
-        "score": 4
-      },
-      { "optionText": "Try everything you can think of.", "score": 2 },
-      { "optionText": "Use the most complex solution available.", "score": 1 },
-      { "optionText": "Avoid the problem.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "analytical-reasoning",
-    "questionText": "Given a set of data, how do you identify patterns?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Organize data systematically and look for trends.",
-        "score": 4
-      },
-      { "optionText": "Look at data briefly and guess patterns.", "score": 2 },
-      { "optionText": "Ignore data irregularities.", "score": 1 },
-      { "optionText": "Wait for someone else to explain.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "analytical-reasoning",
-    "questionText": "What do you do when data contradicts your initial assumptions?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "Reassess your assumptions and adjust your reasoning.",
-        "score": 4
-      },
-      { "optionText": "Ignore contradictions and proceed.", "score": 2 },
-      { "optionText": "Change the data to fit assumptions.", "score": 1 },
-      { "optionText": "Avoid analyzing the data.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "analytical-reasoning",
-    "questionText": "How do you handle problems requiring multiple steps of reasoning?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      {
-        "optionText": "Map out each step clearly before proceeding.",
-        "score": 4
-      },
-      { "optionText": "Jump straight to the end.", "score": 2 },
-      { "optionText": "Skip steps to save time.", "score": 1 },
-      { "optionText": "Avoid complex problems.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "analytical-reasoning",
-    "questionText": "When given contradictory clues, how do you decide which to trust?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "Evaluate the source and evidence for each clue.",
-        "score": 4
-      },
-      { "optionText": "Choose the easiest to believe.", "score": 2 },
-      { "optionText": "Ignore contradictions.", "score": 1 },
-      { "optionText": "Ask someone else to decide.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "analytical-reasoning",
-    "questionText": "What is your approach to hypothesis testing?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      {
-        "optionText": "Form hypotheses and test them systematically.",
-        "score": 4
-      },
-      { "optionText": "Accept initial guesses without testing.", "score": 2 },
-      { "optionText": "Avoid testing hypotheses.", "score": 1 },
-      { "optionText": "Let others test.", "score": 0 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "strategic-thinking",
-    "questionText": "When planning to solve a problem, what is your first step?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      {
-        "optionText": "Set clear goals and outline a step-by-step plan.",
-        "score": 5
-      },
-      { "optionText": "Start immediately without planning.", "score": 3 },
-      { "optionText": "Wait for instructions.", "score": 2 },
-      { "optionText": "Delegate the task to others.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "strategic-thinking",
-    "questionText": "How do you decide which solution to implement among several options?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      {
-        "optionText": "Evaluate pros and cons and pick the most effective.",
-        "score": 5
-      },
-      { "optionText": "Choose the easiest or fastest solution.", "score": 3 },
-      { "optionText": "Pick randomly.", "score": 2 },
-      { "optionText": "Avoid decision-making.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "strategic-thinking",
-    "questionText": "When a strategy fails, what is your response?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
-    "options": [
-      { "optionText": "Analyze causes and revise the strategy.", "score": 5 },
-      { "optionText": "Blame external factors and give up.", "score": 2 },
-      { "optionText": "Repeat the same strategy.", "score": 3 },
-      { "optionText": "Avoid responsibility.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "strategic-thinking",
-    "questionText": "How do you involve others in strategic problem solving?",
-    "bloomLevel": "analyze",
-    "bloomWeight": 1.3,
-    "options": [
-      {
-        "optionText": "Collaborate and gather diverse input before deciding.",
-        "score": 5
-      },
-      { "optionText": "Work alone to save time.", "score": 3 },
-      {
-        "optionText": "Follow others' instructions without input.",
+        "text": "Pick the one that looks more creative",
         "score": 2
       },
-      { "optionText": "Avoid teamwork.", "score": 1 }
+      {
+        "text": "Ask friends for their opinion",
+        "score": 1
+      }
     ]
   },
   {
-    "category": "problem-solving-skills",
-    "subcategory": "strategic-thinking",
-    "questionText": "You have limited time to solve a problem. What is your strategy?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
-    "options": [
-      { "optionText": "Focus on high-impact actions first.", "score": 5 },
-      { "optionText": "Work on any task that seems doable.", "score": 3 },
-      { "optionText": "Rush everything without planning.", "score": 2 },
-      { "optionText": "Avoid the problem due to time pressure.", "score": 1 }
-    ]
-  },
-  {
-    "category": "problem-solving-skills",
-    "subcategory": "practical-decision-making",
-    "questionText": "When making a decision under pressure, how do you act?",
-    "bloomLevel": "apply",
-    "bloomWeight": 1.2,
+    "id": 6,
+    "questionText": "Design a systematic approach to solve recurring customer complaints in a service business.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "Stay calm and rely on previous experience.",
-        "score": 5
+        "text": "Ignore complaints to avoid confrontation",
+        "score": 1
       },
-      { "optionText": "Make quick guesses without thinking.", "score": 3 },
-      { "optionText": "Delay decision until pressure eases.", "score": 2 },
-      { "optionText": "Avoid decisions.", "score": 1 }
+      {
+        "text": "Develop a multi-step process: complaint categorization, root cause analysis, solution implementation, and feedback loop",
+        "score": 4
+      },
+      {
+        "text": "Handle each complaint individually without any system",
+        "score": 2
+      },
+      {
+        "text": "Redirect all complaints to management",
+        "score": 2
+      }
     ]
   },
   {
-    "category": "problem-solving-skills",
-    "subcategory": "practical-decision-making",
-    "questionText": "What do you do if you realize your decision was wrong?",
-    "bloomLevel": "evaluate",
-    "bloomWeight": 1.4,
+    "id": 7,
+    "questionText": "What is the primary purpose of data analysis in decision-making?",
+    "bloomLevel": "Remember",
+    "bloomWeight": 1.1,
+    "categoryId": 1,
     "options": [
-      { "optionText": "Admit and correct it quickly.", "score": 5 },
-      { "optionText": "Ignore mistakes and continue.", "score": 2 },
-      { "optionText": "Blame others.", "score": 1 },
-      { "optionText": "Avoid admitting fault.", "score": 1 }
+      {
+        "text": "To make data look complicated",
+        "score": 1
+      },
+      {
+        "text": "To extract meaningful insights and patterns from raw information",
+        "score": 4
+      },
+      {
+        "text": "To create colorful charts",
+        "score": 2
+      },
+      {
+        "text": "To avoid making decisions",
+        "score": 1
+      }
     ]
   },
   {
-    "category": "problem-solving-skills",
-    "subcategory": "practical-decision-making",
-    "questionText": "How do you prioritize decisions when multiple problems arise?",
-    "bloomLevel": "analyze",
+    "id": 8,
+    "questionText": "Explain why critical thinking is important in problem-solving.",
+    "bloomLevel": "Understand",
+    "bloomWeight": 1.2,
+    "categoryId": 1,
+    "options": [
+      {
+        "text": "It makes problems more complicated",
+        "score": 1
+      },
+      {
+        "text": "It helps evaluate information objectively, identify biases, and make well-reasoned decisions",
+        "score": 4
+      },
+      {
+        "text": "It's only useful for academic purposes",
+        "score": 2
+      },
+      {
+        "text": "It slows down the decision-making process",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "questionText": "Your team needs to prioritize 10 different projects with limited resources. Which approach would you use?",
+    "bloomLevel": "Apply",
     "bloomWeight": 1.3,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "Assess urgency and impact to decide order.",
-        "score": 5
+        "text": "Work on all projects simultaneously",
+        "score": 1
       },
       {
-        "optionText": "Deal with problems as they appear randomly.",
-        "score": 3
+        "text": "Use a prioritization matrix considering impact, urgency, resources, and strategic alignment",
+        "score": 4
       },
-      { "optionText": "Avoid handling multiple problems.", "score": 1 },
-      { "optionText": "Delegate everything.", "score": 2 }
+      {
+        "text": "Choose projects randomly",
+        "score": 1
+      },
+      {
+        "text": "Start with the most interesting projects",
+        "score": 2
+      }
     ]
   },
   {
-    "category": "problem-solving-skills",
-    "subcategory": "practical-decision-making",
-    "questionText": "When faced with an ethical dilemma, how do you decide?",
-    "bloomLevel": "evaluate",
+    "id": 10,
+    "questionText": "A new competitor has entered your market and is gaining market share rapidly. What would you analyze to develop a competitive response?",
+    "bloomLevel": "Analyze",
     "bloomWeight": 1.4,
+    "categoryId": 1,
     "options": [
       {
-        "optionText": "Consider values and choose the most ethical option.",
-        "score": 5
+        "text": "Only their pricing strategy",
+        "score": 2
       },
-      { "optionText": "Choose the easiest way out.", "score": 2 },
-      { "optionText": "Ignore ethics.", "score": 1 },
-      { "optionText": "Avoid making the decision.", "score": 1 }
+      {
+        "text": "Comprehensive analysis of their strengths, weaknesses, marketing approach, target customers, and value proposition",
+        "score": 4
+      },
+      {
+        "text": "Copy their exact strategy",
+        "score": 2
+      },
+      {
+        "text": "Ignore the competition",
+        "score": 1
+      }
     ]
   },
   {
-    "category": "problem-solving-skills",
-    "subcategory": "practical-decision-making",
-    "questionText": "How often do you review past decisions to improve?",
-    "bloomLevel": "remember",
-    "bloomWeight": 1.0,
+    "id": 11,
+    "questionText": "Assess the effectiveness of implementing AI automation in a manufacturing process.",
+    "bloomLevel": "Evaluate",
+    "bloomWeight": 1.5,
+    "categoryId": 1,
     "options": [
-      { "optionText": "Regularly reflect and learn.", "score": 5 },
-      { "optionText": "Rarely look back.", "score": 3 },
-      { "optionText": "Never review.", "score": 1 },
-      { "optionText": "Avoid thinking about past decisions.", "score": 1 }
+      {
+        "text": "Assume it's always beneficial",
+        "score": 1
+      },
+      {
+        "text": "Evaluate cost-benefit analysis, impact on quality, employee displacement, training needs, and long-term sustainability",
+        "score": 4
+      },
+      {
+        "text": "Reject it due to fear of change",
+        "score": 1
+      },
+      {
+        "text": "Implement it because it's trendy",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "questionText": "Develop a framework for continuous improvement in team performance.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 1,
+    "options": [
+      {
+        "text": "Stick to traditional methods only",
+        "score": 2
+      },
+      {
+        "text": "Design a comprehensive system with regular assessments, skill development, feedback mechanisms, and goal setting",
+        "score": 4
+      },
+      {
+        "text": "Hope performance improves naturally",
+        "score": 1
+      },
+      {
+        "text": "Focus only on individual performance",
+        "score": 2
+      }
+    ]
+  },
+
+  {
+    "id": 13,
+    "questionText": "What is brainstorming primarily used for?",
+    "bloomLevel": "Remember",
+    "bloomWeight": 1.1,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Criticizing ideas immediately",
+        "score": 1
+      },
+      {
+        "text": "Generating multiple creative solutions without initial judgment",
+        "score": 4
+      },
+      {
+        "text": "Following strict rules and procedures",
+        "score": 2
+      },
+      {
+        "text": "Avoiding new ideas",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "questionText": "Why is adaptability important in today's work environment?",
+    "bloomLevel": "Understand",
+    "bloomWeight": 1.2,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "It's not important at all",
+        "score": 1
+      },
+      {
+        "text": "It helps individuals and organizations respond effectively to changing circumstances and opportunities",
+        "score": 4
+      },
+      {
+        "text": "It makes work more complicated",
+        "score": 2
+      },
+      {
+        "text": "It's only needed in certain industries",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "questionText": "Your project requirements have changed significantly halfway through. How would you adapt your approach?",
+    "bloomLevel": "Apply",
+    "bloomWeight": 1.3,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Continue with the original plan regardless",
+        "score": 1
+      },
+      {
+        "text": "Reassess goals, modify timelines, reallocate resources, and communicate changes to stakeholders",
+        "score": 4
+      },
+      {
+        "text": "Abandon the project completely",
+        "score": 1
+      },
+      {
+        "text": "Complain about the changes",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "questionText": "A traditional business model is no longer profitable due to digital transformation. What factors would you analyze to adapt?",
+    "bloomLevel": "Analyze",
+    "bloomWeight": 1.4,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Only look at financial losses",
+        "score": 2
+      },
+      {
+        "text": "Analyze market trends, customer behavior, competitor strategies, technology adoption, and new business models",
+        "score": 4
+      },
+      {
+        "text": "Blame external factors only",
+        "score": 1
+      },
+      {
+        "text": "Stick to the traditional model",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "questionText": "Compare the benefits and drawbacks of remote work versus traditional office work for creative collaboration.",
+    "bloomLevel": "Evaluate",
+    "bloomWeight": 1.5,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Assume one is always better than the other",
+        "score": 1
+      },
+      {
+        "text": "Evaluate factors like communication effectiveness, creativity stimulation, work-life balance, and productivity",
+        "score": 4
+      },
+      {
+        "text": "Choose based on personal preference only",
+        "score": 2
+      },
+      {
+        "text": "Follow what other companies are doing",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "questionText": "Design an innovative solution for reducing plastic waste in your community.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Ignore the problem",
+        "score": 1
+      },
+      {
+        "text": "Develop a multi-faceted approach combining education, alternative materials, recycling programs, and community engagement",
+        "score": 4
+      },
+      {
+        "text": "Wait for someone else to solve it",
+        "score": 1
+      },
+      {
+        "text": "Use only traditional methods",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "questionText": "What does 'thinking outside the box' mean in creative problem-solving?",
+    "bloomLevel": "Remember",
+    "bloomWeight": 1.1,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Avoiding conventional solutions and exploring unconventional approaches",
+        "score": 4
+      },
+      {
+        "text": "Using only proven methods",
+        "score": 2
+      },
+      {
+        "text": "Following established procedures",
+        "score": 2
+      },
+      {
+        "text": "Thinking in a literal box",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "questionText": "How does diversity in teams contribute to creative thinking?",
+    "bloomLevel": "Understand",
+    "bloomWeight": 1.2,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "It creates unnecessary conflicts",
+        "score": 1
+      },
+      {
+        "text": "It brings different perspectives, experiences, and approaches that enhance innovative solutions",
+        "score": 4
+      },
+      {
+        "text": "It complicates decision-making",
+        "score": 2
+      },
+      {
+        "text": "It has no impact on creativity",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "questionText": "Your company needs to engage younger customers who aren't responding to traditional marketing. What creative approach would you take?",
+    "bloomLevel": "Apply",
+    "bloomWeight": 1.3,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Increase traditional advertising spend",
+        "score": 2
+      },
+      {
+        "text": "Develop innovative digital campaigns using social media, interactive content, and influencer partnerships",
+        "score": 4
+      },
+      {
+        "text": "Stop targeting younger customers",
+        "score": 1
+      },
+      {
+        "text": "Use the same methods more aggressively",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "questionText": "Why do some innovative ideas fail in the market while others succeed?",
+    "bloomLevel": "Analyze",
+    "bloomWeight": 1.4,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "It's purely based on luck",
+        "score": 1
+      },
+      {
+        "text": "Success depends on market timing, execution quality, customer needs alignment, and resource allocation",
+        "score": 4
+      },
+      {
+        "text": "All innovative ideas eventually succeed",
+        "score": 1
+      },
+      {
+        "text": "Innovation is not important for success",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "questionText": "Assess the potential of implementing a flexible work schedule policy in your organization.",
+    "bloomLevel": "Evaluate",
+    "bloomWeight": 1.5,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Reject it without consideration",
+        "score": 1
+      },
+      {
+        "text": "Evaluate impact on productivity, employee satisfaction, operational requirements, and company culture",
+        "score": 4
+      },
+      {
+        "text": "Implement it immediately without analysis",
+        "score": 2
+      },
+      {
+        "text": "Copy what competitors are doing",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "questionText": "Develop a creative strategy to improve employee engagement and retention.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 2,
+    "options": [
+      {
+        "text": "Increase salaries for everyone",
+        "score": 2
+      },
+      {
+        "text": "Design a comprehensive program with career development, recognition systems, flexible benefits, and meaningful work opportunities",
+        "score": 4
+      },
+      {
+        "text": "Ignore employee feedback",
+        "score": 1
+      },
+      {
+        "text": "Use only traditional HR practices",
+        "score": 2
+      }
+    ]
+  },
+
+  {
+    "id": 25,
+    "questionText": "What are core values in the context of career development?",
+    "bloomLevel": "Remember",
+    "bloomWeight": 1.1,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "The salary you want to earn",
+        "score": 2
+      },
+      {
+        "text": "Fundamental beliefs and principles that guide your decisions and behavior",
+        "score": 4
+      },
+      {
+        "text": "Skills you need to learn",
+        "score": 2
+      },
+      {
+        "text": "Popular career trends",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "questionText": "Why is self-reflection important for career growth?",
+    "bloomLevel": "Understand",
+    "bloomWeight": 1.2,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "It wastes time that could be spent working",
+        "score": 1
+      },
+      {
+        "text": "It helps identify strengths, weaknesses, goals, and alignment between personal values and career choices",
+        "score": 4
+      },
+      {
+        "text": "It's only useful for therapy",
+        "score": 2
+      },
+      {
+        "text": "It makes you overthink everything",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "questionText": "You're considering two job offers - one with higher pay but longer hours, another with better work-life balance but lower pay. How would you decide?",
+    "bloomLevel": "Apply",
+    "bloomWeight": 1.3,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Always choose the higher-paying job",
+        "score": 2
+      },
+      {
+        "text": "Evaluate based on personal values, career goals, family situation, and long-term satisfaction",
+        "score": 4
+      },
+      {
+        "text": "Flip a coin",
+        "score": 1
+      },
+      {
+        "text": "Ask others to decide for you",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "questionText": "What factors contribute to job satisfaction and career fulfillment?",
+    "bloomLevel": "Analyze",
+    "bloomWeight": 1.4,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Only salary matters",
+        "score": 1
+      },
+      {
+        "text": "Multiple factors including meaningful work, growth opportunities, work environment, compensation, and work-life balance",
+        "score": 4
+      },
+      {
+        "text": "Job satisfaction is not important",
+        "score": 1
+      },
+      {
+        "text": "It's the same for everyone",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "questionText": "How would you assess whether your current career path aligns with your long-term goals?",
+    "bloomLevel": "Evaluate",
+    "bloomWeight": 1.5,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Assume it's automatically aligned",
+        "score": 1
+      },
+      {
+        "text": "Regularly review progress, evaluate skill development, assess satisfaction levels, and compare with original goals",
+        "score": 4
+      },
+      {
+        "text": "Never question your career path",
+        "score": 1
+      },
+      {
+        "text": "Change careers frequently",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "questionText": "Design a personal development plan for the next 5 years.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Don't plan for the future",
+        "score": 1
+      },
+      {
+        "text": "Create a comprehensive plan with specific goals, skill development targets, timeline, and regular review checkpoints",
+        "score": 4
+      },
+      {
+        "text": "Copy someone else's plan",
+        "score": 2
+      },
+      {
+        "text": "Focus only on short-term goals",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "questionText": "What is emotional intelligence in the workplace?",
+    "bloomLevel": "Remember",
+    "bloomWeight": 1.1,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Being overly emotional at work",
+        "score": 1
+      },
+      {
+        "text": "The ability to understand and manage your emotions and effectively interact with others",
+        "score": 4
+      },
+      {
+        "text": "Avoiding emotions completely",
+        "score": 2
+      },
+      {
+        "text": "Only focusing on technical skills",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "questionText": "How do personal strengths and weaknesses impact career choices?",
+    "bloomLevel": "Understand",
+    "bloomWeight": 1.2,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "They have no impact on career success",
+        "score": 1
+      },
+      {
+        "text": "Strengths guide career opportunities while weaknesses indicate areas for development or roles to avoid",
+        "score": 4
+      },
+      {
+        "text": "Everyone has the same strengths and weaknesses",
+        "score": 1
+      },
+      {
+        "text": "Weaknesses should be ignored",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "questionText": "You've identified that you work best in collaborative environments but your current job is very independent. What would you do?",
+    "bloomLevel": "Apply",
+    "bloomWeight": 1.3,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Quit immediately",
+        "score": 1
+      },
+      {
+        "text": "Seek opportunities for collaboration within your role, consider team projects, or explore career transitions",
+        "score": 4
+      },
+      {
+        "text": "Complain constantly",
+        "score": 1
+      },
+      {
+        "text": "Force yourself to enjoy independent work",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "questionText": "What role does feedback play in personal and professional development?",
+    "bloomLevel": "Analyze",
+    "bloomWeight": 1.4,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Feedback is always criticism",
+        "score": 1
+      },
+      {
+        "text": "Feedback provides insights into performance, identifies blind spots, and guides improvement efforts",
+        "score": 4
+      },
+      {
+        "text": "Feedback should be avoided",
+        "score": 1
+      },
+      {
+        "text": "Only positive feedback is useful",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "questionText": "Assess the importance of work-life balance in career decision-making.",
+    "bloomLevel": "Evaluate",
+    "bloomWeight": 1.5,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Work-life balance is not important",
+        "score": 1
+      },
+      {
+        "text": "Evaluate its impact on mental health, relationships, productivity, and long-term career sustainability",
+        "score": 4
+      },
+      {
+        "text": "Always prioritize work over personal life",
+        "score": 1
+      },
+      {
+        "text": "It's the same priority for everyone",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "questionText": "Develop a strategy for continuous learning and skill development throughout your career.",
+    "bloomLevel": "Create",
+    "bloomWeight": 1.6,
+    "categoryId": 3,
+    "options": [
+      {
+        "text": "Stop learning after graduation",
+        "score": 1
+      },
+      {
+        "text": "Create a systematic approach with industry trend monitoring, skill gap analysis, learning resources, and practical application",
+        "score": 4
+      },
+      {
+        "text": "Learn only when required by employer",
+        "score": 2
+      },
+      {
+        "text": "Focus on one skill for your entire career",
+        "score": 2
+      }
     ]
   }
 ]
