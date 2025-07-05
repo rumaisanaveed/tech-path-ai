@@ -6,6 +6,7 @@ import { AssessmentQuestion } from "@/components/careerAssessment/AssessmentQues
 import { AssessmentResult } from "@/components/careerAssessment/AssessmentResult";
 import { AssessmentInitialUi } from "@/components/careerAssessment/AssessmentInitialUi";
 import { useAssessmentContext } from "@/context/AssessmentContext";
+import { SectionCompleteScreen } from "@/components/careerAssessment/SectionCompleteUi";
 
 export const AssessmentFlowManager = () => {
   usePageTitle("Assessment");
@@ -13,9 +14,11 @@ export const AssessmentFlowManager = () => {
 
   return (
     <DashboardLayout>
-      {step === "start" && <AssessmentInitialUi />}
+      {/* {step === "start" && <AssessmentInitialUi />}
       {step === "question" && <AssessmentQuestion />}
-      {step === "result" && <AssessmentResult />}
+      {step === "result" && <AssessmentResult />} */}
+      {/* <AssessmentInitialUi /> */}
+      <SectionCompleteScreen />
     </DashboardLayout>
   );
 };
