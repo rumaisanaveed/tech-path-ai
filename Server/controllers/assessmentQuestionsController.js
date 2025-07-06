@@ -241,6 +241,8 @@ export const getAssessmentSession = async (req, res) => {
         id: question.id,
         text: question.text,
         categoryId: question.categoryId,
+        isAnswered: answeredMap.hasOwnProperty(question.id), // ✅ Boolean
+        selectedOptionId: answeredMap[question.id] || null, // Optional, for pre-selection
         options: question.options.map((opt) => ({
           id: opt.id,
           optionText: opt.optionText,
