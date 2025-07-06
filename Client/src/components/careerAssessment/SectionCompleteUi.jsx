@@ -1,19 +1,19 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import React, { useEffect } from "react";
 import { SecondaryButton } from "../buttons/SecondaryButton";
-import { AssessmentBreadcrumb } from "./AssessmentBreadcrumb";
+import { BreadCrumb } from "./BreadCrumb";
 
 export const SectionCompleteScreen = () => {
-  const { setBreadcrumbSuffix } = useGlobalContext();
+  const { setBreadcrumbText } = useGlobalContext();
 
   useEffect(() => {
-    setBreadcrumbSuffix("Assessment");
+    setBreadcrumbText("Career Assessment/Assessment");
   }, []);
 
   return (
     <div className="h-full flex flex-col grow 3xl:max-w-7xl 3xl:mx-auto justify-between 3xl:items-center 3xl:justify-center px-6 md:px-10 py-4 md:py-7">
       <div className="flex flex-col gap-3">
-        <AssessmentBreadcrumb />
+        <BreadCrumb />
         <h1 className="text-black text-3xl lg:text-5xl font-bold">
           Section Completed Successfully!
         </h1>

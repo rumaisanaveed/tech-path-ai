@@ -29,6 +29,8 @@ import {
   Mentors,
   Settings,
   SkillTracking,
+  SkillAssessment,
+  DomainTracker,
 } from "./pages/dashboard";
 
 // blogs
@@ -56,6 +58,8 @@ import {
 } from "./constants/navigation";
 import { CareerDetail } from "./pages/careers/CareerDetail";
 import { EventDetails } from "./pages/events/EventDetails";
+
+// TODO : lazy load the pages
 
 function Router() {
   return (
@@ -142,6 +146,22 @@ function Router() {
               element={
                 <UserProtectedRoute>
                   <SkillTracking />
+                </UserProtectedRoute>
+              }
+            />
+            <Route
+              path={USER_DASHBOARD_ROUTES.DOMAIN_TRACKER}
+              element={
+                <UserProtectedRoute>
+                  <DomainTracker />
+                </UserProtectedRoute>
+              }
+            />
+            <Route
+              path={USER_DASHBOARD_ROUTES.SKILL_ASSESSMENT}
+              element={
+                <UserProtectedRoute>
+                  <SkillAssessment />
                 </UserProtectedRoute>
               }
             />

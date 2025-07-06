@@ -476,6 +476,80 @@ export const traits = [
   { name: "Creative Thinking", value: 60 },
 ];
 
+// individual skills data
+export const individualSkills = [
+  {
+    name: "Javascript",
+    value: 80,
+  },
+  {
+    name: "Python",
+    value: 70,
+  },
+  {
+    name: "Git",
+    value: 60,
+  },
+];
+
+// dropdown items
+
+export const projectDropdownItems = [
+  {
+    label: "Edit",
+    key: "edit",
+  },
+  {
+    label: "Delete",
+    key: "delete",
+  },
+];
+
+export const domainSkillDropdownItems = [
+  {
+    label: "Take Quiz",
+    key: "quiz",
+  },
+  {
+    label: "Delete",
+    key: "delete",
+  },
+];
+
+export const careerDomainDropdownItem = [
+  {
+    label: "Delete",
+    key: "delete",
+  },
+];
+
+export const careerDomains = [
+  "Backend Developer",
+  "Full Stack Developer",
+  "Mobile App Developer",
+  "Game Developer",
+  "Data Analyst",
+  "Data Scientist",
+  "AI Engineer",
+  "ML Engineer",
+  "DevOps Engineer",
+  "Cloud Engineer",
+  "System Administrator",
+];
+
+export const skillDropDownItems = [
+  "TypeScript",
+  "React.js",
+  "Next.js",
+  "Firebase",
+  "Node.js",
+  "Next.js",
+  "JavaScript",
+  "MySQL",
+  "Supabase",
+  "React Native",
+];
+
 // Dummy recommended careers
 export const careers = [
   "Frontend Developer",

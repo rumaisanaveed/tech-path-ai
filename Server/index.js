@@ -42,7 +42,7 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   connectDB();
   startApp();
-  //insertQuestions();
+  // insertQuestions();
   console.log(`Server is running on port ${PORT}`);
   console.log(
     `📚 Swagger docs available at: http://localhost:${PORT}/api-docs`

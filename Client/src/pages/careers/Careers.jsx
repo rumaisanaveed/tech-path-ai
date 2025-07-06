@@ -52,7 +52,10 @@ const CareerCard = ({ career }) => {
     navigate("/careers/2");
   };
   return (
-    <div className="flex flex-col gap-3 hover:scale-90 transition-transform duration-300 ">
+    <div
+      className="flex flex-col gap-3 cursor-pointer transition-transform duration-300"
+      onClick={handleNavigate}
+    >
       <img src={Career} alt="career" />
       <div className="flex flex-col gap-1">
         <h2 className="text-xl font-medium">UI/UX Designer</h2>

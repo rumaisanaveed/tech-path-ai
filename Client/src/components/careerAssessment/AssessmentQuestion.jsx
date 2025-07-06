@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { AssessmentBreadcrumb } from "./AssessmentBreadcrumb";
 import { Label } from "../ui/label";
 import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
 import BackButton from "../buttons/BackButton";
@@ -16,12 +15,10 @@ import { useMutation } from "@tanstack/react-query";
 import { submitAnswer } from "@/apis/assessment/assessment.api";
 import { SubmitAssessmentAnswer } from "@/apis/assessment/assessment.service";
 import { toast } from "sonner";
+import { BreadCrumb } from "./BreadCrumb";
 
 export const AssessmentQuestion = () => {
-  // TODO : show the skeleton if question is loading
-  // Show some interactive screen on completion of a section
-  // Now, save the questions and category of the next section questions
-  const { setBreadcrumbSuffix } = useGlobalContext();
+  const { setBreadcrumbText } = useGlobalContext();
   const [loadedQuestions, setLoadedQuestions] = useState([]);
   // on component mount, the value shouldn't be reset to 0
   const [currentIndex, setCurrentIndex] = useState(
@@ -42,7 +39,7 @@ export const AssessmentQuestion = () => {
   });
 
   useEffect(() => {
-    setBreadcrumbSuffix("Assessment");
+    setBreadcrumbText("Career Assessment/Assessment");
   }, []);
 
   // load answers, current question index
@@ -102,16 +99,16 @@ export const AssessmentQuestion = () => {
     <p>Loading question</p>;
   }
 
+  // TODO : Make a reusable component for both skill assessment and assessment for handling the questions
   return (
     <div className="h-full flex flex-col grow 3xl:max-w-7xl 3xl:mx-auto justify-between 3xl:items-center 3xl:justify-center px-6 md:px-10 py-4 md:py-7">
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-3">
-          <AssessmentBreadcrumb />
+          <BreadCrumb />
           <AssessmentSectionHeading />
           <p className="text-xl md:text-3xl font-medium max-w-2xl">
             {currentQuestion?.questionText}
           </p>
-
           <RadioGroup
             value={selectedOption}
             onValueChange={(val) => setSelectedOption(val)}

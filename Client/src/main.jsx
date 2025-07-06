@@ -8,8 +8,6 @@ import { AuthProvider } from "./context/AuthContext";
 import { AssessmentContextProvider } from "./context/AssessmentContext";
 import { Toaster } from "./components/ui/sonner";
 
-// TODO : show the skeletons on dashboard
-
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(

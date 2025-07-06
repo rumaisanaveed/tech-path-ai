@@ -1,4 +1,3 @@
-import { AssessmentBreadcrumb } from "@/components/careerAssessment/AssessmentBreadcrumb";
 import React, { useEffect } from "react";
 import {
   assessmentSectionsNames,
@@ -9,13 +8,14 @@ import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
 import { SecondaryButton } from "../buttons/SecondaryButton";
 import { Info } from "lucide-react";
 import { StartAssessment } from "@/apis/assessment/assessment.service";
+import { BreadCrumb } from "./BreadCrumb";
 
 export const AssessmentInitialUi = () => {
-  const { setBreadcrumbSuffix } = useGlobalContext();
+  const { setBreadcrumbText } = useGlobalContext();
   const { mutate: startAssessment } = StartAssessment();
 
   useEffect(() => {
-    setBreadcrumbSuffix("");
+    setBreadcrumbText("");
   }, []);
 
   const handleStartAssessment = () => {
@@ -29,7 +29,7 @@ export const AssessmentInitialUi = () => {
     <div className="flex flex-col 3xl:justify-center 3xl:items-center xl:flex-row justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7">
       {/* Left Section */}
       <div className="flex flex-col gap-4 max-w-xl">
-        <AssessmentBreadcrumb />
+        <BreadCrumb />
 
         <AssessmentSectionHeading heading="Find Your Fit in Tech" />
 
