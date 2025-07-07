@@ -6,15 +6,19 @@ const AssessmentContext = createContext();
 export const AssessmentContextProvider = ({ children }) => {
   // save step, category and questions in the local storage
   const [step, setStep] = useState(() => getItemFromStorage("step") || "start");
+  const [sessionId, setSessionId] = useState(
+    () => getItemFromStorage("sessionId") || ""
+  );
   const [questions, setQuestions] = useState(
     () => getItemFromStorage("questions") || []
   );
-  const [category, setCategory] = useState(
-    () => getItemFromStorage("category") || "Critical thinking"
+  const [categoryName, setCategoryName] = useState(
+    () => getItemFromStorage("category") || ""
   );
   const [section, setSection] = useState(
     () => getItemFromStorage("section") || 1
   );
+  const [categoryNo, setCategoryNo] = useState(1);
 
   return (
     <AssessmentContext.Provider
@@ -23,10 +27,14 @@ export const AssessmentContextProvider = ({ children }) => {
         setStep,
         questions,
         setQuestions,
-        category,
-        setCategory,
+        categoryName,
+        setCategoryName,
+        sessionId,
+        setSessionId,
         section,
         setSection,
+        categoryNo,
+        setCategoryNo,
       }}
     >
       {children}

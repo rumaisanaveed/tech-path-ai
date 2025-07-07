@@ -14,11 +14,10 @@ export const AssessmentFlowManager = () => {
 
   return (
     <DashboardLayout>
-      {/* {step === "start" && <AssessmentInitialUi />}
+      {step === "start" && <AssessmentInitialUi />}
       {step === "question" && <AssessmentQuestion />}
-      {step === "result" && <AssessmentResult />} */}
-      {/* <AssessmentInitialUi /> */}
-      <SectionCompleteScreen />
+      {step === "complete" && <SectionCompleteScreen />}
+      {step === "result" && <AssessmentResult />}
     </DashboardLayout>
   );
 };

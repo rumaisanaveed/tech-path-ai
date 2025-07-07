@@ -12,10 +12,17 @@ export const API_ROUTES = {
     LOGOUT: `${authController}logout`,
   },
   ASSESSMENT: {
-    START_ASSESSMENT: `${assessmentController}session`,
-    GET_CURRENT_QUESTION: (sessionId) =>
-      `${assessmentController}session/${sessionId}`,
-    SUBMIT_ANSWER: (sessionId) =>
+    START_SESSION: `${assessmentController}session`,
+    POST_SESSION_BY_CATEGORY: (sessionId, categoryId) =>
+      `${assessmentController}generatequestions/${sessionId}/${categoryId}`,
+    GET_QUESTIONS_BY_CATEGORY: (sessionId, categoryId) =>
+      `${assessmentController}session/${sessionId}/${categoryId}`,
+    SUBMIT_ANSWER_BY_CATEGORY: (sessionId) =>
       `${assessmentController}session/${sessionId}/answer`,
+    POST_RESULTS: (sessionId) =>
+      `${assessmentController}session/result/${sessionId}`,
+    GET_RESULTS: (sessionId) =>
+      `${assessmentController}result/current-results/${sessionId}`,
+    GET_PREVIOUS_RESULTS: `${assessmentController}result/past-results/`,
   },
 };

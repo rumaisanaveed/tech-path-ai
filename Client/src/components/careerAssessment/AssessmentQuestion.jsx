@@ -9,53 +9,38 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useAssessmentContext } from "@/context/AssessmentContext";
 import {
   getItemFromStorage,
+  removeItemFromStorage,
   saveItemToStorage,
 } from "@/utils/helpers/storage/localStorage";
-import { useMutation } from "@tanstack/react-query";
-import { submitAnswer } from "@/apis/assessment/assessment.api";
-import { SubmitAssessmentAnswer } from "@/apis/assessment/assessment.service";
-import { toast } from "sonner";
+import { SubmitAnswer } from "@/apis/assessment/assessment.service";
 import { BreadCrumb } from "./BreadCrumb";
 
 export const AssessmentQuestion = () => {
   const { setBreadcrumbText } = useGlobalContext();
+  const { questions, setQuestions, categoryNo, setStep, sessionId } =
+    useAssessmentContext();
+
   const [loadedQuestions, setLoadedQuestions] = useState([]);
-  // on component mount, the value shouldn't be reset to 0
   const [currentIndex, setCurrentIndex] = useState(
     () => getItemFromStorage("currentQuestionIndex") || 0
   );
   const [selectedOption, setSelectedOption] = useState("");
-  const [answers, setAnswers] = useState({});
-  const { questions } = useAssessmentContext();
-  const { mutate: answerSubmission, isPending } = SubmitAssessmentAnswer({
-    onSuccess: (res) => {
-      console.log("On success", res);
-    },
-    onError: (error) => {
-      const errorMsg =
-        error?.response?.data?.message || "Something went wrong! Try again.";
-      toast.error(errorMsg);
-    },
-  });
-
-  useEffect(() => {
-    setBreadcrumbText("Career Assessment/Assessment");
-  }, []);
-
-  // load answers, current question index
-  useEffect(() => {
-    const savedAnswers = getItemFromStorage("assessmentAnswers") || {};
-    setLoadedQuestions(questions);
-    setAnswers(savedAnswers);
-  }, [questions]);
+  const [answers, setAnswers] = useState(
+    () => getItemFromStorage("assessmentAnswers") || {}
+  );
+  const { mutate: submitAnswer, isPending } = SubmitAnswer();
 
   const currentQuestion = loadedQuestions[currentIndex];
 
-  // show the already selected options on question change or on refresh
+  useEffect(() => {
+    setBreadcrumbText("Career Assessment/Assessment");
+    setLoadedQuestions(questions);
+  }, [questions]);
+
   useEffect(() => {
     if (currentQuestion?.id) {
       const prevAnswer = answers[currentQuestion.id];
-      setSelectedOption(prevAnswer.toString() || "");
+      setSelectedOption(prevAnswer?.toString() || "");
     }
   }, [currentQuestion?.id]);
 
@@ -64,41 +49,36 @@ export const AssessmentQuestion = () => {
   }, [currentIndex]);
 
   const handleNext = () => {
-    // don't move forward until the option is selected
     if (!selectedOption) return;
 
-    // TODO : call the submit answer api on each question
+    const questionId = currentQuestion.id;
+    submitAnswer({ sessionId, questionId, optionId: parseInt(selectedOption) });
 
-    answerSubmission({ optionId: parseInt(selectedOption) });
-
-    const newAnswers = {
+    const updatedAnswers = {
       ...answers,
-      [currentQuestion.id]: selectedOption,
+      [questionId]: selectedOption,
     };
 
-    setAnswers(newAnswers);
-    saveItemToStorage("assessmentAnswers", newAnswers);
+    setAnswers(updatedAnswers);
+    saveItemToStorage("assessmentAnswers", updatedAnswers);
 
-    // if the last question
     if (currentIndex < loadedQuestions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
+    } else {
+      // All questions in the category answered
+      setStep("complete");
+      saveItemToStorage("step", "complete");
+      removeItemFromStorage("assessmentAnswers");
+      removeItemFromStorage("questions");
+      removeItemFromStorage("currentQuestionIndex");
     }
   };
 
   const handlePrev = () => {
-    // if not the first question
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
+    if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
-  const totalQuestionsAnswered = Object.keys(answers).length;
-
-  // TODO : replace with skeleton
-  if (!currentQuestion) {
-    <p>Loading question</p>;
-  }
-
+  if (!currentQuestion) return <p>Loading questions...</p>;
   // TODO : Make a reusable component for both skill assessment and assessment for handling the questions
   return (
     <div className="h-full flex flex-col grow 3xl:max-w-7xl 3xl:mx-auto justify-between 3xl:items-center 3xl:justify-center px-6 md:px-10 py-4 md:py-7">
@@ -149,8 +129,8 @@ export const AssessmentQuestion = () => {
       </div>
 
       <CustomProgressBar
-        questionNo={totalQuestionsAnswered}
-        totalQuestions={questions.length}
+        questionNo={currentIndex + 1}
+        totalQuestions={loadedQuestions.length}
       />
     </div>
   );

@@ -134,7 +134,7 @@ export const Otp = () => {
             </div>
 
             <div className="flex gap-3 items-center self-end mt-4">
-              <BackButton />
+              <BackButton className="py-3" />
               <AppButton
                 className="w-40"
                 isPending={isLoading}

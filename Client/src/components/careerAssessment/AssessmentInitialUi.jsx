@@ -7,22 +7,48 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
 import { SecondaryButton } from "../buttons/SecondaryButton";
 import { Info } from "lucide-react";
-import { StartAssessment } from "@/apis/assessment/assessment.service";
+import {
+  GenerateQuestionsByCategory,
+  StartSession,
+} from "@/apis/assessment/assessment.service";
 import { BreadCrumb } from "./BreadCrumb";
+import { useAssessmentContext } from "@/context/AssessmentContext";
+import { saveItemToStorage } from "@/utils/helpers/storage/localStorage";
+import { toast } from "sonner";
 
 export const AssessmentInitialUi = () => {
   const { setBreadcrumbText } = useGlobalContext();
-  const { mutate: startAssessment } = StartAssessment();
+  const { setSessionId, setStep, setCategoryNo } = useAssessmentContext();
+  const startSession = StartSession();
+  const generateQuestions = GenerateQuestionsByCategory();
 
   useEffect(() => {
     setBreadcrumbText("");
   }, []);
 
-  const handleStartAssessment = () => {
-    // TODO : show skeleton on start of assessment
-    startAssessment({
-      category: "critical-thinking",
-    });
+  const handleStartAssessment = async () => {
+    try {
+      const sessionRes = await startSession.mutateAsync();
+      const sessionId = sessionRes.sessionId;
+
+      setSessionId(sessionId);
+      saveItemToStorage("sessionId", sessionId);
+
+      // Post questions for category 1 → 2 → 3 sequentially
+      await generateQuestions.mutateAsync({ sessionId, categoryId: 1 });
+      await generateQuestions.mutateAsync({ sessionId, categoryId: 2 });
+      await generateQuestions.mutateAsync({ sessionId, categoryId: 3 });
+
+      saveItemToStorage("categoryNo", 1);
+      setCategoryNo(1);
+
+      setStep("question");
+      saveItemToStorage("step", "start");
+
+      toast.success("Assessment started successfully!");
+    } catch (error) {
+      console.error("❌ Error in starting assessment flow:", error.message);
+    }
   };
 
   return (
@@ -31,7 +57,9 @@ export const AssessmentInitialUi = () => {
       <div className="flex flex-col gap-4 max-w-xl">
         <BreadCrumb />
 
-        <AssessmentSectionHeading heading="Find Your Fit in Tech" />
+        <h1 className="text-black text-3xl lg:text-5xl font-bold">
+          Find your fit in tech
+        </h1>
 
         <p className="text-base lg:text-lg font-normal text-custom-black-light">
           This short AI-driven assessment helps you understand where you thrive
