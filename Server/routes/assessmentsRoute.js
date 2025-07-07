@@ -14,25 +14,15 @@ const router = express.Router();
 
 /**
  * @swagger
- * /session:
+ * /assessment/session:
  *   post:
  *     summary: Create a new assessment session
- *     tags:
- *       - Assessments
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
+ *     tags: [Assessment]
  *     responses:
  *       201:
- *         description: Assessment session created successfully
+ *         description: Session created
  *       401:
  *         description: Unauthorized
  */
@@ -40,31 +30,28 @@ router.post("/session", verifyToken, createAssessmentSession);
 
 /**
  * @swagger
- * /generatequestions/{sessionId}/{categoryId}:
+ * /assessment/generatequestions/{sessionId}/{categoryId}:
  *   post:
  *     summary: Generate questions by category for a session
- *     tags:
- *       - Assessments
  *     security:
  *       - bearerAuth: []
+ *     tags: [Assessment]
  *     parameters:
  *       - in: path
  *         name: sessionId
  *         required: true
  *         schema:
  *           type: string
- *         description: The session ID
  *       - in: path
  *         name: categoryId
  *         required: true
  *         schema:
- *           type: string
- *         description: The category ID
+ *           type: integer
  *     responses:
- *       200:
- *         description: Questions generated successfully
- *       401:
- *         description: Unauthorized
+ *       201:
+ *         description: Questions generated
+ *       400:
+ *         description: Bad Request or Questions already exist
  */
 router.post(
   "/generatequestions/:sessionId/:categoryId",
@@ -74,31 +61,28 @@ router.post(
 
 /**
  * @swagger
- * /session/{sessionId}/{categoryId}:
+ * /assessment/session/{sessionId}/{categoryId}:
  *   get:
- *     summary: Get assessment session questions by category
- *     tags:
- *       - Assessments
+ *     summary: Get all questions for a session and category
  *     security:
  *       - bearerAuth: []
+ *     tags: [Assessment]
  *     parameters:
  *       - in: path
  *         name: sessionId
  *         required: true
  *         schema:
  *           type: string
- *         description: The session ID
  *       - in: path
  *         name: categoryId
  *         required: true
  *         schema:
- *           type: string
- *         description: The category ID
+ *           type: integer
  *     responses:
  *       200:
- *         description: Assessment session data
- *       401:
- *         description: Unauthorized
+ *         description: Questions retrieved
+ *       404:
+ *         description: Session or category not found
  */
 router.get(
   "/session/:sessionId/:categoryId",
@@ -108,20 +92,18 @@ router.get(
 
 /**
  * @swagger
- * /session/{sessionId}/answer:
+ * /assessment/session/{sessionId}/answer:
  *   post:
- *     summary: Submit an answer for a session
- *     tags:
- *       - Assessments
+ *     summary: Submit answer to a question
  *     security:
  *       - bearerAuth: []
+ *     tags: [Assessment]
  *     parameters:
  *       - in: path
  *         name: sessionId
  *         required: true
  *         schema:
  *           type: string
- *         description: The session ID
  *     requestBody:
  *       required: true
  *       content:
@@ -130,43 +112,77 @@ router.get(
  *             type: object
  *             properties:
  *               questionId:
- *                 type: string
- *               answer:
- *                 type: string
+ *                 type: integer
+ *               optionId:
+ *                 type: integer
  *     responses:
- *       200:
+ *       201:
  *         description: Answer submitted successfully
- *       401:
- *         description: Unauthorized
+ *       409:
+ *         description: Duplicate answer
  */
 router.post("/session/:sessionId/answer", verifyToken, submitAnswer);
 
 /**
  * @swagger
- * /session/result/{sessionId}:
+ * /assessment/session/result/{sessionId}:
  *   post:
- *     summary: Get prediction result for a session
- *     tags:
- *       - Assessments
+ *     summary: Predict career based on completed answers
  *     security:
  *       - bearerAuth: []
+ *     tags: [Assessment]
  *     parameters:
  *       - in: path
  *         name: sessionId
  *         required: true
  *         schema:
  *           type: string
- *         description: The session ID
  *     responses:
  *       200:
- *         description: Prediction result returned
- *       401:
- *         description: Unauthorized
+ *         description: Prediction result
+ *       400:
+ *         description: Prediction already completed
  */
 router.post("/session/result/:sessionId", verifyToken, predictionResult);
 
-router.get("/result/current-results/:sessionId", verifyToken, currentPredictionResult)
+/**
+ * @swagger
+ * /assessment/result/current-results/{sessionId}:
+ *   get:
+ *     summary: Get current prediction result by session ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Assessment]
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Current prediction retrieved
+ *       404:
+ *         description: Not found
+ */
+router.get(
+  "/result/current-results/:sessionId",
+  verifyToken,
+  currentPredictionResult
+);
 
+/**
+ * @swagger
+ * /assessment/result/past-results:
+ *   get:
+ *     summary: Get all past prediction sessions of the logged-in user
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Assessment]
+ *     responses:
+ *       200:
+ *         description: List of past predictions
+ */
 router.get("/result/past-results", verifyToken, pastPredictionResult);
 
 export default router;
