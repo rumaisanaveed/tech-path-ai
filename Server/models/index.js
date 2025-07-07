@@ -9,6 +9,9 @@ import Tag from "./tagModel.js";
 import User from "./userModel.js";
 import categoryScoreGame from "./gamification/categoryScore.js";
 import trainingSample from "./trainingSample.js";
+import CareerDomain from "./skilltracking/careerDomain.js";
+import DomainSkill from "./skilltracking/domainSkill.js";
+import UserDomainSkill from "./skilltracking/userDomainSkill.js";
 
 // 🔁 Define relationships here
 
@@ -115,6 +118,31 @@ AssessmentSessionAns.belongsTo(AssessmentOptions, {
   as: "option",
 });
 
+// domain ->skills
+CareerDomain.hasMany(DomainSkill, {
+  foreignKey: "domainId",
+  as: "skills",
+  onDelete: "CASCADE",
+});
+
+DomainSkill.belongsTo(CareerDomain, {
+  foreignKey: "domainId",
+  as: "domain",
+});
+
+// One DomainSkill can be tracked by many users
+DomainSkill.hasMany(UserDomainSkill, {
+  foreignKey: "domainSkillId",
+  as: "userProgress", // optional alias
+  onDelete: "CASCADE",
+});
+
+// Each UserDomainSkill entry belongs to one DomainSkill
+UserDomainSkill.belongsTo(DomainSkill, {
+  foreignKey: "domainSkillId",
+  as: "skillDetails", // optional alias
+});
+
 export {
   Blogs,
   Tag,
@@ -127,4 +155,7 @@ export {
   category,
   categoryScoreGame,
   trainingSample,
+  CareerDomain,
+  DomainSkill,
+  UserDomainSkill,
 };

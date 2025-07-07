@@ -35,7 +35,7 @@ export const upload = multer({
 // 3. Function to manually upload to S3
 export const uploadFileToS3 = async (file) => {
   const fileExtension = path.extname(file.originalname);
-  const uniqueFileName = `blogs/${uuidv4()}${fileExtension}`;
+  const uniqueFileName = `career-domains/${uuidv4()}${fileExtension}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,
