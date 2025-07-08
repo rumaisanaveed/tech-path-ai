@@ -1,9 +1,8 @@
 import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 import {
-  createAssessmentSession,
+  startSession,
   currentPredictionResult,
-  generateQuestionsByCategory,
   getAssessmentSession,
   pastPredictionResult,
   predictionResult,
@@ -12,52 +11,7 @@ import {
 
 const router = express.Router();
 
-/**
- * @swagger
- * /assessment/session:
- *   post:
- *     summary: Create a new assessment session
- *     security:
- *       - bearerAuth: []
- *     tags: [Assessment]
- *     responses:
- *       201:
- *         description: Session created
- *       401:
- *         description: Unauthorized
- */
-router.post("/session", verifyToken, createAssessmentSession);
-
-/**
- * @swagger
- * /assessment/generatequestions/{sessionId}/{categoryId}:
- *   post:
- *     summary: Generate questions by category for a session
- *     security:
- *       - bearerAuth: []
- *     tags: [Assessment]
- *     parameters:
- *       - in: path
- *         name: sessionId
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
- *         name: categoryId
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       201:
- *         description: Questions generated
- *       400:
- *         description: Bad Request or Questions already exist
- */
-router.post(
-  "/generatequestions/:sessionId",
-  verifyToken,
-  generateQuestionsByCategory
-);
+router.post("/session/startsession", verifyToken, startSession);
 
 /**
  * @swagger

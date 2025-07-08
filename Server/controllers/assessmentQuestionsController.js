@@ -29,49 +29,11 @@ const getBadge = (score) => {
   return "Platinum";
 };
 
-// Create Assessment Session
-export const createAssessmentSession = async (req, res) => {
-  try {
-    const userId = req.userId; // assuming verifyToken middleware adds this
-    console.log("Creating Assessment Session for user:", userId);
+//Create and Start new session with questions
 
-    // Check for existing incomplete session
-    const existingSession = await AssessmentSession.findOne({
-      where: {
-        userId,
-        isCompleted: false,
-      },
-    });
-
-    if (existingSession) {
-      return res.status(400).json({
-        message: "You already have an ongoing assessment session.",
-        sessionId: existingSession.sessionId,
-      });
-    }
-
-    // Create new session
-    const session = await AssessmentSession.create({
-      userId,
-      isCompleted: false,
-    });
-
-    return res.status(201).json({
-      message: "Assessment session created successfully",
-      sessionId: session.sessionId,
-    });
-  } catch (error) {
-    console.error("Error creating assessment session:", error);
-    return res.status(500).json({
-      message: "Failed to create assessment session",
-      error: error.message,
-    });
-  }
-};
-
-export const generateQuestionsByCategory = async (req, res) => {
-  const { sessionId } = req.params;
-  const categoryIds = [1, 2, 3];
+export const startSession = async (req, res) => {
+  const userId = req.userId;
+  const categoryIds = [1, 2, 3]; // Cognitive, Creative, Self-Awareness
   const bloomLevels = [
     "Remember",
     "Understand",
@@ -82,49 +44,48 @@ export const generateQuestionsByCategory = async (req, res) => {
   ];
 
   const t = await sequelize.transaction();
+
   try {
-    // Validate session
-    const session = await AssessmentSession.findOne({
-      where: { sessionId },
+    // Step 1: Check for existing session
+    const existingSession = await AssessmentSession.findOne({
+      where: { userId, isCompleted: false },
       transaction: t,
     });
-    if (!session) {
+
+    if (existingSession) {
       await t.rollback();
-      return res.status(404).json({ message: "Session not found" });
+      return res.status(400).json({
+        message: "You already have an ongoing assessment session.",
+        sessionId: existingSession.sessionId,
+      });
     }
 
+    // Step 2: Create a new session
+    const session = await AssessmentSession.create(
+      { userId, isCompleted: false },
+      { transaction: t }
+    );
+
+    const sessionId = session.sessionId;
     const results = [];
 
+    // Step 3: Loop through all categories
     for (const categoryId of categoryIds) {
-      // Check if category exists
-      const categoryObj = await category.findOne({
+      const categoryExists = await category.findOne({
         where: { id: categoryId },
         transaction: t,
       });
-      if (!categoryObj) {
+
+      if (!categoryExists) {
         results.push({
           categoryId,
           status: "error",
-          message: "Category not found in DB",
+          message: "Category not found",
         });
         continue;
       }
 
-      // Check if already assigned
-      const alreadyExists = await AssessmentSessionQuestion.findOne({
-        where: { sessionId, categoryId },
-        transaction: t,
-      });
-      if (alreadyExists) {
-        results.push({
-          categoryId,
-          status: "skipped",
-          message: "Questions already assigned for this category",
-        });
-        continue;
-      }
-
-      // Get one random question per Bloom level
+      // Fetch 1 question per Bloom level
       const questionPromises = bloomLevels.map((level) =>
         AssessmentQuestion.findOne({
           where: { categoryId, bloomLevel: level },
@@ -133,13 +94,14 @@ export const generateQuestionsByCategory = async (req, res) => {
           transaction: t,
         })
       );
+
       const questions = (await Promise.all(questionPromises)).filter(Boolean);
 
       if (questions.length < bloomLevels.length) {
         results.push({
           categoryId,
           status: "error",
-          message: `Not enough questions for all Bloom levels. Found ${questions.length}/${bloomLevels.length}.`,
+          message: `Not enough questions in DB for all Bloom levels.`,
           missingLevels: bloomLevels.filter(
             (level) => !questions.find((q) => q.bloomLevel === level)
           ),
@@ -147,14 +109,14 @@ export const generateQuestionsByCategory = async (req, res) => {
         continue;
       }
 
-      // Store selected questions
-      const questionLinks = questions.map((q) => ({
+      // Map questions into session
+      const links = questions.map((q) => ({
         sessionId,
         questionId: q.id,
         categoryId: q.categoryId,
       }));
 
-      await AssessmentSessionQuestion.bulkCreate(questionLinks, { transaction: t });
+      await AssessmentSessionQuestion.bulkCreate(links, { transaction: t });
 
       results.push({
         categoryId,
@@ -170,14 +132,15 @@ export const generateQuestionsByCategory = async (req, res) => {
     await t.commit();
 
     return res.status(201).json({
-      message: "Questions assignment for all categories complete.",
+      message: "Assessment session started and questions assigned.",
+      sessionId,
       results,
     });
   } catch (error) {
     await t.rollback();
-    console.error("Error in generateAllCategoryQuestions:", error);
+    console.error("❌ Error starting full assessment session:", error);
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Failed to start assessment session",
       error: error.message,
     });
   }
