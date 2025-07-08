@@ -1,5 +1,7 @@
 import { OutlinedActionButton } from "@/components/buttons/OutlinedActionButton";
 import { ActionDropdown } from "@/components/dropdowns/ActionDropdown";
+import CertificationModal from "@/components/modals/CertificationModal";
+import ProjectModal from "@/components/modals/ProjectModal";
 import { OrangeProgressBar } from "@/components/OrangeProgressBar";
 import {
   DropdownMenu,
@@ -8,20 +10,40 @@ import {
 import { domainSkillDropdownItems, individualSkills } from "@/constants";
 import { useScreenSize } from "@/hooks/useScreenSize";
 import { Ellipsis, Plus } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Tracker = () => {
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
+  const [isAddCertificationModalOpen, setIsAddCertificationModalOpen] =
+    useState(false);
   return (
     <div className="flex flex-col lg:flex-row justify-around gap-10">
       {/* domain tracker */}
-      <DomainTracker />
+      <DomainTracker
+        setIsAddProjectModalOpen={setIsAddProjectModalOpen}
+        setIsAddCertificationModalOpen={setIsAddCertificationModalOpen}
+      />
       {/* domain skill tracker */}
       <SkillTracker />
+      <ProjectModal
+        mode="add"
+        open={isAddProjectModalOpen}
+        setOpen={setIsAddProjectModalOpen}
+      />
+      <CertificationModal
+        mode="add"
+        open={isAddCertificationModalOpen}
+        setOpen={setIsAddCertificationModalOpen}
+      />
     </div>
   );
 };
 
-const DomainTracker = () => {
+const DomainTracker = ({
+  setIsAddProjectModalOpen,
+  setIsAddCertificationModalOpen,
+}) => {
   return (
     <div className="w-full md:w-[400px] flex flex-col gap-3">
       <div
@@ -50,8 +72,16 @@ const DomainTracker = () => {
           </div>
         </div>
       </div>
-      <OutlinedActionButton size="lg" title="Add Project" />
-      <OutlinedActionButton size="lg" title="Add Certification" />
+      <OutlinedActionButton
+        size="lg"
+        title="Add Project"
+        handleClick={() => setIsAddProjectModalOpen(true)}
+      />
+      <OutlinedActionButton
+        size="lg"
+        title="Add Certification"
+        handleClick={() => setIsAddCertificationModalOpen(true)}
+      />
     </div>
   );
 };
