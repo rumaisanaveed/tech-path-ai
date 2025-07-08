@@ -17,7 +17,7 @@ export const Careers = () => {
   const isLoading = false;
   return (
     <MainLayout>
-      <div className="flex flex-col gap-2 md:gap-5 px-5 md:px-10 py-5">
+      <div className="flex flex-col gap-2 md:gap-5 px-6 py-5 md:px-10 3xl:max-w-7xl 3xl:mx-auto">
         {/* header */}
         <ImageHeader bgImage={CareerBg} hide={true} />
         <h1 className="text-3xl text-black md:hidden font-medium">

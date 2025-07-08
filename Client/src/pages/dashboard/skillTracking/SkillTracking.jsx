@@ -109,8 +109,11 @@ const Domains = () => {
             variant="dark"
             title="View Domain"
             className="py-1"
+            textSmall
             onClickHandler={() =>
-              navigate("/user/dashboard/domain/frontend-development")
+              navigate(
+                "/user/dashboard/skill-tracker/domain/frontend-development"
+              )
             }
           />
         </div>
@@ -146,7 +149,9 @@ const IndividualSkills = () => {
             <div className="flex items-center gap-2 w-fit">
               <OutlinedActionButton
                 title="Take Quiz"
-                handleClick={() => navigate("/user/dashboard/skill-assessment")}
+                handleClick={() =>
+                  navigate("/user/dashboard/skill-tracker/skill-assessment")
+                }
                 className="px-3"
                 icon={
                   <BookOpenCheck size={isSmallScreen ? 15 : 18} color="black" />

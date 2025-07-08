@@ -26,10 +26,14 @@ export const Certifications = () => {
       <Heading heading="Certifications" />
       <div className="flex flex-col gap-9">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div key={index} className="flex justify-between">
-            <div className="flex items-center gap-3">
-              <img src={Certification} alt="certification" />
-              <div className="flex flex-col gap-1 text-black">
+          <div key={index} className="flex items-start justify-between">
+            <div className="flex flex-col items-center justify-center md:items-start md:flex-row md:justify-start gap-3">
+              <img
+                src={Certification}
+                alt="certification"
+                className="h-36 w-36 md:w-auto md:h-auto"
+              />
+              <div className="flex flex-col items-center justify-center text-center md:items-start md:justify-start md:text-left gap-1 text-black">
                 <h3 className="font-medium text-xs md:text-sm">Dec 19, 2022</h3>
                 <h2 className="text-2xl md:text-3xl font-medium">
                   CS50’s Introduction to Computer Science
@@ -46,8 +50,8 @@ export const Certifications = () => {
               </div>
             </div>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Ellipsis className="cursor-pointer" />
+              <DropdownMenuTrigger asChild className="w-12 md:w-auto">
+                <Ellipsis className="cursor-pointer" size={25} />
               </DropdownMenuTrigger>
               <ActionDropdown items={certificationDropdownMenuItems} />
             </DropdownMenu>

@@ -15,12 +15,14 @@ import { BreadCrumb } from "./BreadCrumb";
 import { useAssessmentContext } from "@/context/AssessmentContext";
 import { saveItemToStorage } from "@/utils/helpers/storage/localStorage";
 import { toast } from "sonner";
+import { useScreenSize } from "@/hooks/useScreenSize";
 
 export const AssessmentInitialUi = () => {
   const { setBreadcrumbText } = useGlobalContext();
   const { setSessionId, setStep, setCategoryNo } = useAssessmentContext();
   const startSession = StartSession();
   const generateQuestions = GenerateQuestionsByCategory();
+  const { isVeryLargeScreen } = useScreenSize();
 
   useEffect(() => {
     setBreadcrumbText("");
@@ -52,7 +54,11 @@ export const AssessmentInitialUi = () => {
   };
 
   return (
-    <div className="flex flex-col 3xl:justify-center 3xl:items-center xl:flex-row justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7">
+    <div
+      className={`flex flex-col 3xl:justify-center 3xl:items-center xl:flex-row justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7 ${
+        isVeryLargeScreen && "max-w-7xl mx-auto justify-center items-center"
+      }`}
+    >
       {/* Left Section */}
       <div className="flex flex-col gap-4 max-w-xl">
         <BreadCrumb />

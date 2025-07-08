@@ -26,10 +26,9 @@ export const AssessmentResult = () => {
       <div className="flex flex-col 3xl:items-center 3xl:justify-center gap-4 md:gap-6">
         <div className="text-left flex flex-col gap-3">
           <BreadCrumb />
-          <AssessmentSectionHeading
-            heading="You’ve completed the Career Assessment!"
-            className="max-w-3xl"
-          />
+          <h1 className="text-black text-3xl lg:text-5xl font-bold max-w-3xl">
+            You’ve completed the Career Assessment!
+          </h1>
           <p className="text-black font-medium text-xl md:text-2xl max-w-4xl">
             Based on your interests, personality, and goals, we’ll suggest top
             career paths tailored for you.

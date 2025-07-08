@@ -15,7 +15,7 @@ export const Events = () => {
   const isLoading = false;
   return (
     <MainLayout>
-      <div className="flex flex-col gap-4 md:gap-5 lg:gap-8 px-6 py-10 md:px-12 lg:px-24">
+      <div className="flex flex-col gap-4 md:gap-5 lg:gap-8 px-6 py-10 md:px-10 3xl:mx-auto 3xl:max-w-7xl">
         {/* header */}
         <div
           className="relative w-full h-40 sm:h-52 md:h-64 lg:h-72 rounded-2xl overflow-hidden"

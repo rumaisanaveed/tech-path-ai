@@ -141,30 +141,32 @@ function Router() {
                 </UserProtectedRoute>
               }
             />
-            <Route
-              path={USER_DASHBOARD_ROUTES.SKILL_TRACKER}
-              element={
-                <UserProtectedRoute>
-                  <SkillTracking />
-                </UserProtectedRoute>
-              }
-            />
-            <Route
-              path={USER_DASHBOARD_ROUTES.DOMAIN_TRACKER}
-              element={
-                <UserProtectedRoute>
-                  <DomainTracker />
-                </UserProtectedRoute>
-              }
-            />
-            <Route
-              path={USER_DASHBOARD_ROUTES.SKILL_ASSESSMENT}
-              element={
-                <UserProtectedRoute>
-                  <SkillAssessment />
-                </UserProtectedRoute>
-              }
-            />
+            <Route path={USER_DASHBOARD_ROUTES.SKILL_TRACKER}>
+              <Route
+                index
+                element={
+                  <UserProtectedRoute>
+                    <SkillTracking />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path={USER_DASHBOARD_ROUTES.DOMAIN_TRACKER}
+                element={
+                  <UserProtectedRoute>
+                    <DomainTracker />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path={USER_DASHBOARD_ROUTES.SKILL_ASSESSMENT}
+                element={
+                  <UserProtectedRoute>
+                    <SkillAssessment />
+                  </UserProtectedRoute>
+                }
+              />
+            </Route>
             <Route
               path={USER_DASHBOARD_ROUTES.MENTORSHIP}
               element={

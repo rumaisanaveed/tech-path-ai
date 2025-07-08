@@ -35,7 +35,8 @@ const mockBlogs = [
   {
     id: 3,
     title: "Career in Game Development: A Complete Guide",
-    coverImage: "https://source.unsplash.com/400x200/?gaming,career",
+    coverImage:
+      "https://careermentor-blogs.s3.eu-north-1.amazonaws.com/blogs/296eb834-aa38-4907-a632-f26d1fa48bc9.png",
     tags: ["GameDev", "Unity", "Career", "Cloud"],
     publishedAt: "2025-06-08",
     excerpt:
@@ -46,7 +47,8 @@ const mockBlogs = [
   {
     id: 4,
     title: "Cloud Computing Trends and Future Predictions",
-    coverImage: "https://source.unsplash.com/400x200/?cloud,technology",
+    coverImage:
+      "https://careermentor-blogs.s3.eu-north-1.amazonaws.com/blogs/2a82cae9-011a-4424-9d74-136aed18fe59.jpg",
     tags: ["Cloud", "Infrastructure", "AWS"],
     publishedAt: "2025-06-11",
     excerpt:
@@ -57,7 +59,8 @@ const mockBlogs = [
   {
     id: 6,
     title: "Machine Learning Fundamentals for Beginners",
-    coverImage: "https://source.unsplash.com/400x200/?machine-learning,ai",
+    coverImage:
+      "https://careermentor-blogs.s3.eu-north-1.amazonaws.com/blogs/296eb834-aa38-4907-a632-f26d1fa48bc9.png",
     tags: ["ML", "AI", "Python", "Data Science"],
     publishedAt: "2025-06-09",
     excerpt:
@@ -68,7 +71,8 @@ const mockBlogs = [
   {
     id: 7,
     title: "React Performance Optimization Techniques",
-    coverImage: "https://source.unsplash.com/400x200/?react,performance",
+    coverImage:
+      "https://careermentor-blogs.s3.eu-north-1.amazonaws.com/blogs/2a82cae9-011a-4424-9d74-136aed18fe59.jpg",
     tags: ["React", "Performance", "JavaScript", "Frontend"],
     publishedAt: "2025-06-07",
     excerpt:
@@ -194,7 +198,7 @@ const UserBlogs = () => {
           {/* Add New Blog Floating Button */}
           <button
             onClick={handleAddNew}
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-[#F4C430] to-[#E17B47] hover:brightness-110 text-white font-semibold px-6 py-4 
+            className="fixed bottom-6 right-6 z-50 bg-custom-orange-dark text-black hover:bg-custom-orange-light font-medium px-6 py-4 
              rounded-full shadow-xl hover:shadow-2xl transition-transform duration-300 
              hover:scale-110 flex items-center gap-2 group"
           >

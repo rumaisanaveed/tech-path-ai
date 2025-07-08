@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Tracker = () => {
   return (
-    <div className="flex justify-around gap-10">
+    <div className="flex flex-col lg:flex-row justify-around gap-10">
       {/* domain tracker */}
       <DomainTracker />
       {/* domain skill tracker */}
@@ -57,12 +57,12 @@ const DomainTracker = () => {
 };
 
 const SkillTracker = () => {
-  const { isSmallScreen } = useScreenSize();
+  const { isMediumScreen, isSmallScreen, isLargeScreen } = useScreenSize();
   const navigate = useNavigate();
   const handleActions = (action) => {
     switch (action) {
       case "quiz":
-        navigate("/user/dashboard/skill-assessment");
+        navigate("/user/dashboard/skill-tracker/skill-assessment");
         break;
       case "delete":
         // delete api call
@@ -78,7 +78,8 @@ const SkillTracker = () => {
         <OutlinedActionButton
           size="sm"
           icon={<Plus color="black" size={isSmallScreen ? 15 : 18} />}
-          title={isSmallScreen ? "Add" : "Add Skill"}
+          title={isLargeScreen ? "Add" : "Add Skill"}
+          className="text-xs md:text-sm"
         />
       </div>
       <div className="flex flex-col gap-2">

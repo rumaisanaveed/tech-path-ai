@@ -15,6 +15,13 @@ export const useScreenSize = () => {
   const isSmallScreen = screenSize < 600;
   const isMediumScreen = screenSize <= 768;
   const isLargeScreen = screenSize <= 1100;
+  const isVeryLargeScreen = screenSize > 1500;
 
-  return { screenSize, isSmallScreen, isMediumScreen, isLargeScreen };
+  return {
+    screenSize,
+    isSmallScreen,
+    isMediumScreen,
+    isLargeScreen,
+    isVeryLargeScreen,
+  };
 };
