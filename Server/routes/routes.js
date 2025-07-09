@@ -4,15 +4,14 @@ import authRoutes from "./authRoute.js";
 import blogsRoutes from "./blogsRoutes.js";
 import assessmentsRoutes from "./assessmentsRoute.js";
 import adminRoutes from "./admin/adminRoute.js";
-import skillProgressRoutes from "./skillProgressRoutes.js";
+import moduleProgressRoutes from "./moduleProgressRoutes.js";
 
 const router = express.Router();
 
 router.use("/auth", authRoutes)
 router.use("/blogs", blogsRoutes)
 router.use("/assessments", assessmentsRoutes)
-router.use("/careerdomain/skill", skillProgressRoutes)
-
+router.use("/skill-modules/", moduleProgressRoutes)
 
 router.use("/admin", adminRoutes)
 
