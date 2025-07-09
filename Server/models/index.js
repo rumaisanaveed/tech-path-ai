@@ -10,8 +10,8 @@ import User from "./userModel.js";
 import categoryScoreGame from "./gamification/categoryScore.js";
 import trainingSample from "./trainingSample.js";
 import CareerDomain from "./skilltracking/careerDomain.js";
-import DomainSkill from "./skilltracking/domainSkill.js";
-import UserDomainSkill from "./skilltracking/userDomainSkill.js";
+import Module from "./skilltracking/module.js";
+import Lesson from "./skilltracking/lesson.js";
 
 // 🔁 Define relationships here
 
@@ -118,30 +118,13 @@ AssessmentSessionAns.belongsTo(AssessmentOptions, {
   as: "option",
 });
 
-// domain ->skills
-CareerDomain.hasMany(DomainSkill, {
-  foreignKey: "domainId",
-  as: "skills",
-  onDelete: "CASCADE",
-});
+// One CareerDomain has many Modules
+CareerDomain.hasMany(Module, { foreignKey: "careerDomainId" });
+Module.belongsTo(CareerDomain, { foreignKey: "careerDomainId" });
 
-DomainSkill.belongsTo(CareerDomain, {
-  foreignKey: "domainId",
-  as: "domain",
-});
-
-// One DomainSkill can be tracked by many users
-DomainSkill.hasMany(UserDomainSkill, {
-  foreignKey: "domainSkillId",
-  as: "userProgress", // optional alias
-  onDelete: "CASCADE",
-});
-
-// Each UserDomainSkill entry belongs to one DomainSkill
-UserDomainSkill.belongsTo(DomainSkill, {
-  foreignKey: "domainSkillId",
-  as: "skillDetails", // optional alias
-});
+// One Module has many Lessons
+Module.hasMany(Lesson, { foreignKey: "moduleId" });
+Lesson.belongsTo(Module, { foreignKey: "moduleId" });
 
 export {
   Blogs,
@@ -156,6 +139,6 @@ export {
   categoryScoreGame,
   trainingSample,
   CareerDomain,
-  DomainSkill,
-  UserDomainSkill,
+  Module,
+  Lesson
 };

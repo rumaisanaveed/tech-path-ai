@@ -1,9 +1,13 @@
 import { sequelize } from "../config/connectDB.js";
 import {AssessmentQuestion, AssessmentOptions} from "../models/index.js";
 import questionsData from "../data/management_planning_questions_part1.json" with { type: "json" };
+import { seedCareerDomains } from "./SeedData/careerDomainSeed.js";
+import { seedModules } from "./SeedData/moduleSeed.js";
+import { seedLessons } from "./SeedData/lessonSeed.js";
 
 export const insertQuestions = async () => {
  try {
+  {/*
     for (const question of questionsData) {
       // Insert question
       const createdQuestion = await AssessmentQuestion.create({
@@ -24,7 +28,12 @@ export const insertQuestions = async () => {
       await AssessmentOptions.bulkCreate(optionsToInsert);
     }
 
-    console.log("✅ All questions and options inserted successfully.");
+    console.log("✅ All questions and options inserted successfully.");*/}
+    // await seedCareerDomains();
+    // await seedModules();
+    // await seedLessons();
+
+
   } catch (error) {
     console.error("❌ Failed to insert questions:", error.message);
   }
