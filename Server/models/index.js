@@ -13,6 +13,9 @@ import CareerDomain from "./skilltracking/careerDomain.js";
 import Module from "./skilltracking/module.js";
 import Lesson from "./skilltracking/lesson.js";
 import QuizQuestion from "./skilltracking/quizQuestion.js";
+import UserModuleProgress from "./skilltracking/userModuleProgress.js";
+import UserLessonProgress from "./skilltracking/userLessonProgress.js";
+import UserQuizAnswer from "./skilltracking/userQuizAnswer.js";
 
 // 🔁 Define relationships here
 
@@ -133,6 +136,34 @@ Lesson.hasMany(QuizQuestion, { foreignKey: "lessonId", onDelete: "CASCADE" });
 // Each QuizQuestion belongs to a Lesson
 QuizQuestion.belongsTo(Lesson, { foreignKey: "lessonId" });
 
+// User → UserModuleProgress (One-to-Many)
+User.hasMany(UserModuleProgress, { foreignKey: "userId", onDelete: "CASCADE" });
+UserModuleProgress.belongsTo(User, { foreignKey: "userId" });
+
+// Module → UserModuleProgress (One-to-Many)
+Module.hasMany(UserModuleProgress, { foreignKey: "moduleId", onDelete: "CASCADE" });
+UserModuleProgress.belongsTo(Module, { foreignKey: "moduleId" });
+
+// User → UserLessonProgress (One-to-Many)
+User.hasMany(UserLessonProgress, { foreignKey: "userId", onDelete: "CASCADE" });
+UserLessonProgress.belongsTo(User, { foreignKey: "userId" });
+
+// Lesson → UserLessonProgress (One-to-Many)
+Lesson.hasMany(UserLessonProgress, { foreignKey: "lessonId", onDelete: "CASCADE" });
+UserLessonProgress.belongsTo(Lesson, { foreignKey: "lessonId" });
+
+// User → UserQuizAnswer (One-to-Many)
+User.hasMany(UserQuizAnswer, { foreignKey: "userId", onDelete: "CASCADE" });
+UserQuizAnswer.belongsTo(User, { foreignKey: "userId" });
+
+// Lesson → UserQuizAnswer (One-to-Many)
+Lesson.hasMany(UserQuizAnswer, { foreignKey: "lessonId", onDelete: "CASCADE" });
+UserQuizAnswer.belongsTo(Lesson, { foreignKey: "lessonId" });
+
+// QuizQuestion → UserQuizAnswer (One-to-Many)
+QuizQuestion.hasMany(UserQuizAnswer, { foreignKey: "quizQuestionId", onDelete: "CASCADE" });
+UserQuizAnswer.belongsTo(QuizQuestion, { foreignKey: "quizQuestionId" });
+
 export {
   Blogs,
   Tag,
@@ -148,5 +179,8 @@ export {
   CareerDomain,
   Module,
   Lesson,
-  QuizQuestion
+  QuizQuestion,
+  UserModuleProgress,
+  UserLessonProgress,
+  UserQuizAnswer
 };
