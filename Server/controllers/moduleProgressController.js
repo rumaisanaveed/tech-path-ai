@@ -123,3 +123,14 @@ export const getAllModules = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error", error: err.message });
   }
 };
+
+export const getQuizzesForLesson = async (req, res) => {
+  try {
+    const { lessonId } = req.params;
+    if (!lessonId) return res.status(400).json({ success: false, message: "lessonId required" });
+    const quizzes = await QuizQuestion.findAll({ where: { lessonId }, order: [["sequence", "ASC"]] });
+    res.json({ success: true, quizzes });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error", error: err.message });
+  }
+};

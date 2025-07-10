@@ -7,6 +7,7 @@ import {
   submitQuizAnswer,
   getUserModuleProgress,
   getAllModules,
+  getQuizzesForLesson,
 } from "../controllers/moduleProgressController.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.get("/module/:moduleId/lessons", verifyToken, getLessonsForModule);
 router.post("/lesson/start", verifyToken, startOrGetLessonProgress);
 router.post("/quiz/answer", verifyToken, submitQuizAnswer);
 router.get("/module/:moduleId/progress", verifyToken, getUserModuleProgress);
+router.get("/lesson/:lessonId/quizzes", verifyToken, getQuizzesForLesson);
 
 export default router;
