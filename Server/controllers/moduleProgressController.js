@@ -4,6 +4,7 @@ import UserQuizAnswer from "../models/skilltracking/userQuizAnswer.js";
 import Module from "../models/skilltracking/module.js";
 import Lesson from "../models/skilltracking/lesson.js";
 import QuizQuestion from "../models/skilltracking/quizQuestion.js";
+import { Op } from "sequelize";
 
 // 1. Start or continue a module
 export const startOrGetModuleProgress = async (req, res) => {
@@ -126,12 +127,24 @@ export const submitQuizAnswer = async (req, res) => {
     }
     if (moduleProgress && xpAwarded > 0) {
       moduleProgress.obtainedXP += xpAwarded;
+      // Update badge if needed
+      const module = await Module.findByPk(lesson.moduleId);
+      if (module && module.totalXP) {
+        const percent = (moduleProgress.obtainedXP / module.totalXP) * 100;
+        let badge = "Bronze";
+        if (percent >= 66) badge = "Gold";
+        else if (percent >= 33) badge = "Silver";
+        else badge = "Bronze";
+        if (moduleProgress.badge !== badge) {
+          moduleProgress.badge = badge;
+        }
+      }
       await moduleProgress.save();
     }
 
     // 8. Check if all quizzes for this lesson are answered, mark lesson as completed if so
     const totalQuizzes = await QuizQuestion.count({ where: { lessonId } });
-    const answeredQuizzes = await UserQuizAnswer.count({ where: { userId, lessonId, selectedOption: { $ne: null } } });
+    const answeredQuizzes = await UserQuizAnswer.count({ where: { userId, lessonId, selectedOption: { [Op.ne]: null } } });
     if (lessonProgress && totalQuizzes > 0 && answeredQuizzes === totalQuizzes) {
       lessonProgress.isCompleted = true;
       lessonProgress.completedAt = new Date();
