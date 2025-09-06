@@ -2,82 +2,48 @@ import { BreadCrumb } from "@/components/careerAssessment/BreadCrumb";
 import { useGlobalContext } from "@/context/GlobalContext";
 import usePageTitle from "@/hooks/usePageTitle";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import React, { useEffect, useState } from "react";
 import { Heading } from "./components/Heading";
 import { OutlinedActionButton } from "@/components/buttons/OutlinedActionButton";
 import { BookOpenCheck, Ellipsis, Plus, Trash2 } from "lucide-react";
 import { SecondaryButton } from "@/components/buttons/SecondaryButton";
 import {
   careerDomainDropdownItem,
-  //careerDomains,
   individualSkills,
   skillDropDownItems,
 } from "@/constants";
 import { OrangeProgressBar } from "@/components/OrangeProgressBar";
-import Domain from "@/assets/images/domain.webp";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { useScreenSize } from "@/hooks/useScreenSize";
 import { SelectionDropdown } from "@/components/dropdowns/SelectionDropdown";
 import { ActionDropdown } from "@/components/dropdowns/ActionDropdown";
-import axiosReq from "@/services/axiosHelper";
-
 import {
-  DropdownMenuItem,
-  DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
+  useEnrollInCareerDomain,
+  useAllCareerDomains,
+  useUserEnrolledDomains,
+} from "@/apis/skillTracking/skillTracking.services";
+import { useEffect } from "react";
 
 export const SkillTracking = () => {
   usePageTitle("Skills Tracking");
   const { setBreadcrumbText } = useGlobalContext();
   const { isSmallScreen, isLargeScreen } = useScreenSize();
 
-  //state to hold all carrerDomain
-  const [careerDomains, setCareerDomains] = useState([]);
-
   useEffect(() => {
     setBreadcrumbText("Skill Tracker");
   }, []);
 
-  const fetchCareerDomains = async () => {
-    try {
-      const response = await axiosReq("GET", "/careerdomain/all");
-      //console.log(response.data);
-      setCareerDomains(response.data.careerDomains);
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-      console.log("Something went wrong on fetchCareerDomains", error.message);
-    }
-  };
-  const handleDomainSelect = async (domainId) => {
-    //console.log("Selected Domain ID:", domainId);
-    try {
-      const response = await axiosReq("POST", "/careerdomain/enroll", {
-        careerDomainId: domainId,
-      });
+  const { data } = useAllCareerDomains();
+  const { mutate: enrollDomain } = useEnrollInCareerDomain();
 
-      if (response.data.success) {
-        toast.success("Successfully enrolled in this domain!");
-      } else {
-        toast.warning(response.data.message); // Already exists etc.
-      }
-    } catch (error) {
-      toast.error("Enrollment failed. Please try again.");
-      console.error(
-        "Something went wrong on handleDomainSelect",
-        error.message
-      );
-    }
+  const handleDomainSelect = (domainId) => {
+    enrollDomain(domainId);
   };
-
-  useEffect(() => {
-    fetchCareerDomains();
-  }, []);
-  //console.log("Career Domains:", careerDomains);
 
   return (
     <DashboardLayout>
@@ -94,14 +60,13 @@ export const SkillTracking = () => {
                     icon={<Plus size={isSmallScreen ? 15 : 18} color="black" />}
                   />
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent>
-                  {careerDomains.length === 0 ? (
+                  {data?.careerDomains?.length === 0 ? (
                     <DropdownMenuItem disabled>
                       No domains available
                     </DropdownMenuItem>
                   ) : (
-                    careerDomains.map((domain) => (
+                    data?.careerDomains?.map((domain) => (
                       <DropdownMenuItem
                         key={domain.id}
                         onSelect={() => handleDomainSelect(domain.id)}
@@ -113,11 +78,9 @@ export const SkillTracking = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {/* domains */}
             <Domains />
           </div>
         </div>
-        {/* individual skills */}
         <IndividualSkills />
       </div>
     </DashboardLayout>
@@ -126,33 +89,13 @@ export const SkillTracking = () => {
 
 const Domains = () => {
   const navigate = useNavigate();
-  const [enrolledDomains, setEnrolledDomains] = useState([]);
-
-  const handleActions = (action) => {
-    switch (action) {
-      case "delete":
-        break;
+  const { data } = useUserEnrolledDomains();
+  const enrolledDomains = data?.careerDomains || [];
+  const handleActions = (action, id) => {
+    if (action === "delete") {
+      console.log("Delete domain with id:", id);
     }
   };
-
-  useEffect(() => {
-    const fetchEnrolledDomains = async () => {
-      try {
-        const response = await axiosReq("GET", "/careerdomain/current");
-        //console.log(response.data);
-        setEnrolledDomains(response.data.careerDomains);
-      } catch (error) {
-        toast.error("Something went wrong. Please try again.");
-        console.log(
-          "Something went wrong on fetchEnrolledDomains",
-          error.message
-        );
-      }
-    };
-    fetchEnrolledDomains();
-  }, [enrolledDomains]);
-
-  //console.log("enrolledDomains", enrolledDomains);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -182,14 +125,12 @@ const Domains = () => {
               />
             </DropdownMenu>
           </div>
-
           <div className="flex flex-col gap-1 p-4">
             <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {domain.description}
             </p>
           </div>
-
           <div className="px-4 pb-4">
             <SecondaryButton
               variant="dark"
@@ -210,6 +151,7 @@ const Domains = () => {
 const IndividualSkills = () => {
   const navigate = useNavigate();
   const { isSmallScreen } = useScreenSize();
+
   return (
     <div className="flex flex-col gap-3 w-full">
       <div className="flex items-center justify-between w-full">

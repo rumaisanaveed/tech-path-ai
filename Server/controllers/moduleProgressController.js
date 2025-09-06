@@ -25,13 +25,11 @@ export const startOrGetModuleProgress = async (req, res) => {
         .json({ success: false, message: "Module not found" });
     const userDomain = await UserCareerDomain.findOne({ where: { userId } });
     if (!userDomain || userDomain.careerDomainId !== module.careerDomainId) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message:
-            "User not enrolled in the required career domain for this module",
-        });
+      return res.status(403).json({
+        success: false,
+        message:
+          "User not enrolled in the required career domain for this module",
+      });
     }
     let progress = await UserModuleProgress.findOne({
       where: { userId, moduleId },
@@ -121,23 +119,19 @@ export const submitQuizAnswer = async (req, res) => {
     const { lessonId, quizQuestionId, selectedOption } = req.body;
     const userId = req.userId;
     if (!lessonId || !quizQuestionId || selectedOption === undefined) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "lessonId, quizQuestionId, and selectedOption required",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "lessonId, quizQuestionId, and selectedOption required",
+      });
     }
 
     // 1. Check if quiz question exists and belongs to the lesson
     const question = await QuizQuestion.findByPk(quizQuestionId);
     if (!question || question.lessonId !== lessonId) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Quiz question not found for this lesson",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Quiz question not found for this lesson",
+      });
     }
 
     // 2. Check if lesson exists
@@ -153,12 +147,10 @@ export const submitQuizAnswer = async (req, res) => {
       where: { userId, moduleId: lesson.moduleId },
     });
     if (!moduleProgress) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "User not enrolled in the module for this lesson",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "User not enrolled in the module for this lesson",
+      });
     }
 
     // 4. Check if user is enrolled in the lesson

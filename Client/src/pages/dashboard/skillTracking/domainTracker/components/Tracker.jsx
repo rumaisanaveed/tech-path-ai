@@ -113,7 +113,7 @@ const SkillTracker = () => {
           "GET",
           "/skill-modules/module/enrolled"
         );
-        console.log(response.data);
+        console.log("fetchAllModuleOfSkills",response.data);
         setModules(response.data.modules);
       } catch (error) {
         toast.error("Something went wrong. Please try again.");

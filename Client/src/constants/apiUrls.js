@@ -1,5 +1,6 @@
 const authController = "/auth/";
 const assessmentController = "/assessments/";
+const careerdomainController = "/careerdomain";
 
 export const API_ROUTES = {
   AUTH: {
@@ -23,4 +24,9 @@ export const API_ROUTES = {
     GET_PREVIOUS_RESULTS: `${assessmentController}result/past-results/`,
     POST_SESSION:()=> `${assessmentController}session/startsession`
   },
+  SKILLTRACKING:{
+    GET_ALL_CAREER_DOMAINS:`${careerdomainController}/all`,
+    GET_USER_CAREER_DOMAINS:`${careerdomainController}/current`,
+    ENROLL_CAREER_DOMAIN:`${careerdomainController}/enroll`
+  }
 };
