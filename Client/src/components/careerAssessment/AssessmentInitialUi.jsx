@@ -90,7 +90,7 @@ export const AssessmentInitialUi = () => {
       <div className="flex flex-col gap-4 max-w-xl">
         <BreadCrumb />
 
-        <h1 className="text-black text-3xl lg:text-5xl font-bold">
+        <h1 className="text-3xl lg:text-5xl font-bold">
           Find your fit in tech
         </h1>
 

@@ -3,6 +3,7 @@ const assessmentController = "/assessments/";
 const careerdomainController = "/careerdomain";
 const skillmoduleController = "/skill-modules/";
 const lessonController = "/skill-modules/";
+const roadmapController = "/roadmap/";
 
 export const API_ROUTES = {
   AUTH: {
@@ -38,5 +39,8 @@ export const API_ROUTES = {
     GET_MODULE_LESSONS: (moduleId) => `${lessonController}module/${moduleId}/enrolled-lessons`,
     GET_LESSON_QUIZZES: (lessonId) => `${lessonController}lesson/${lessonId}/user-quizzes`,
     SUBMIT_QUIZ_ANSWER: `${lessonController}quiz/answer`,
+  },
+  ROADMAPS: {
+    GET_ROADMAPS: (domainId)=> `${roadmapController}${domainId}`,
   },
 };

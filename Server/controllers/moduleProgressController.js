@@ -83,6 +83,7 @@ export const getLessonsForModule = async (req, res) => {
       order: [["sequence", "ASC"]],
     });
     res.json({ success: true, lessons });
+
   } catch (err) {
     res
       .status(500)

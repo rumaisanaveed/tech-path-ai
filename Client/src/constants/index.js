@@ -17,6 +17,7 @@ import {
   Trophy,
   User,
   Users,
+  Route
 } from "lucide-react";
 import Brain from "@/assets/icons/brain.svg";
 import CircleCheck from "@/assets/icons/circle-check.svg";
@@ -168,6 +169,11 @@ export const sidebarItems = [
     label: "Events",
     icon: Calendar,
     href: "/events",
+  },
+  {
+    label: "Road maps",
+    icon: Route,
+    href: "/user/dashboard/roadmaps",
   },
   {
     label: "Blogs",

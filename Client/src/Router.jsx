@@ -59,6 +59,8 @@ import {
 import { CareerDetail } from "./pages/careers/CareerDetail";
 import { EventDetails } from "./pages/events/EventDetails";
 import Lessons from "./pages/dashboard/skillTracking/domainTracker/components/Lessons";
+import Roadmap from "./pages/dashboard/roadmaps/Roadmap";
+import ViewRoadMap from "./pages/dashboard/roadmaps/ViewRoadMap";
 
 // TODO : lazy load the pages
 
@@ -181,6 +183,22 @@ function Router() {
               element={
                 <UserProtectedRoute>
                   <Mentors />
+                </UserProtectedRoute>
+              }
+            />
+            <Route
+              path={USER_DASHBOARD_ROUTES.ROADMAPS}
+              element={
+                <UserProtectedRoute>
+                  <Roadmap />
+                </UserProtectedRoute>
+              }
+            />
+            <Route
+              path={USER_DASHBOARD_ROUTES.VIEW_ROADMAP}
+              element={
+                <UserProtectedRoute>
+                  <ViewRoadMap />
                 </UserProtectedRoute>
               }
             />

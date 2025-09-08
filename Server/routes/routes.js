@@ -6,6 +6,7 @@ import assessmentsRoutes from "./assessmentsRoute.js";
 import adminRoutes from "./admin/adminRoute.js";
 import moduleProgressRoutes from "./moduleProgressRoutes.js";
 import careerDomainRoutes from "./careerDomainRoutes.js";
+import roadMapRoutes from "./roadMapRoutes.js";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use("/blogs", blogsRoutes)
 router.use("/assessments", assessmentsRoutes)
 router.use("/skill-modules/", moduleProgressRoutes)
 router.use("/careerdomain", careerDomainRoutes)
+router.use("/roadmap", roadMapRoutes)
 
 router.use("/admin", adminRoutes)
 
