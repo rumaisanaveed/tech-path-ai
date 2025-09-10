@@ -291,29 +291,30 @@ export const getAllModules = async (req, res) => {
   try {
     const { careerDomainId } = req.query;
 
-    let modules;
-    if (careerDomainId) {
-      // ✅ join with mapping
-      modules = await Module.findAll({
-        include: [
-          {
-            model: DomainModuleMapping,
-            where: { careerDomainId },
-          },
-        ],
-        order: [["sequence", "ASC"]],
-      });
-    } else {
-      modules = await Module.findAll({ order: [["sequence", "ASC"]] });
-    }
+    const modules = careerDomainId
+      ? await Module.findAll({
+          include: [
+            {
+              model: DomainModuleMapping,
+              as: "domainModuleMappings", // must match alias in model
+              where: { careerDomainId },
+            },
+          ],
+          order: [["sequence", "ASC"]],
+        })
+      : await Module.findAll({ order: [["sequence", "ASC"]] });
 
     res.json({ success: true, modules });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    console.error("Error fetching modules:", err); // optional, helpful in dev
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
+
 
 export const getQuizzesForLesson = async (req, res) => {
   try {
@@ -340,6 +341,13 @@ export const getUserEnrolledModules = async (req, res) => {
     const userId = req.userId;
     const { domainId } = req.params;
 
+    console.log(
+      "Fetching enrolled modules for userId:",
+      userId,
+      "domainId:",
+      domainId
+    );
+
     if (!domainId) {
       return res
         .status(400)
@@ -351,17 +359,15 @@ export const getUserEnrolledModules = async (req, res) => {
       include: [
         {
           model: Module,
-          required: true,
           include: [
             {
               model: DomainModuleMapping,
-              as: "domainModuleMappings",
-              required: true,
+              as: "domainModuleMappings", // must match association alias
               where: { careerDomainId: domainId },
               include: [
                 {
                   model: CareerDomain,
-                  as: "domain",
+                  as: "domain", // ✅ must match alias defined in belongsTo
                   attributes: ["id", "title"],
                 },
               ],
@@ -372,23 +378,17 @@ export const getUserEnrolledModules = async (req, res) => {
       order: [[{ model: Module }, "sequence", "ASC"]],
     });
 
-    // 🔍 check if user is not enrolled in this domain
-    if (!userModules || userModules.length === 0) {
-      return res.json({
-        success: false,
-        message: "User not enrolled in this domain",
-      });
-    }
-
-    const modules = userModules.map((um) => ({
-      ...um.Module.get(),
-      obtainedXP: um.obtainedXP,
-      badge: um.badge,
-      isCompleted: um.isCompleted,
-      completedAt: um.completedAt,
-      careerDomainTitle:
-        um.Module?.domainModuleMappings?.[0]?.domain?.title || null,
-    }));
+    const modules = userModules
+      .filter((um) => um.Module) // only keep if Module exists
+      .map((um) => ({
+        ...um.Module.get(),
+        obtainedXP: um.obtainedXP,
+        badge: um.badge,
+        isCompleted: um.isCompleted,
+        completedAt: um.completedAt,
+        careerDomainTitle:
+          um.Module?.domainModuleMappings?.[0]?.domain?.title || null,
+      }));
 
     res.json({ success: true, modules });
   } catch (err) {
@@ -426,30 +426,45 @@ export const getUserQuizzesForLessonWithStatus = async (req, res) => {
   try {
     const userId = req.userId;
     const { lessonId } = req.params;
-    if (!lessonId)
-      return res
-        .status(400)
-        .json({ success: false, message: "lessonId required" });
+
+    console.log("Fetching quizzes for lessonId:", lessonId, "userId:", userId);
+
+    if (!lessonId) {
+      return res.status(400).json({
+        success: false,
+        message: "lessonId required",
+      });
+    }
+
+    // Fetch all quizzes for lesson
     const quizzes = await QuizQuestion.findAll({
       where: { lessonId },
       order: [["sequence", "ASC"]],
     });
+
+    // Fetch user's answers
     const userAnswers = await UserQuizAnswer.findAll({
       where: { userId, lessonId },
     });
-    const answerMap = {};
-    userAnswers.forEach((a) => {
-      answerMap[a.quizQuestionId] = a.selectedOption !== null;
-    });
-    const quizzesWithStatus = quizzes.map((q) => ({
-      ...q.get(),
-      attempted: !!answerMap[q.id],
-    }));
-    res.json({ success: true, quizzes: quizzesWithStatus });
+
+    // Create a set of answered quizQuestionIds
+    const answeredSet = new Set(
+      userAnswers
+        .filter((a) => a.selectedOption !== null && a.selectedOption !== "")
+        .map((a) => a.quizQuestionId)
+    );
+
+    // Filter only unanswered quizzes
+    const unansweredQuizzes = quizzes.filter((q) => !answeredSet.has(q.id));
+
+    res.json({ success: true, quizzes: unansweredQuizzes });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    console.error("Error in getUnansweredQuizzesForLesson:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
 

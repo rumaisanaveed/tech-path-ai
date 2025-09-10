@@ -4,7 +4,7 @@ import {
   enrollCareerDomain,
   getAllCareerDomains,
   getCurrentCareerDomain,
-} from "../controllers/careerDomainController.js";
+} from "../controllers/domain/domainController.js";
 
 const router = express.Router();
 

@@ -49,7 +49,7 @@ const DomainTracker = ({
   setIsAddCertificationModalOpen,
 }) => {
   const { id: domainId } = useParams();
-  console.log("THIS IS DOMAIN ID", domainId);
+  //console.log("THIS IS DOMAIN ID", domainId);
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
   console.log("Enrolled modules data:", data);
 
@@ -142,7 +142,7 @@ const SkillTracker = () => {
   const { id: domainId } = useParams();
 
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
-  console.log("Enrolled modules data:", data);
+  //console.log("Enrolled modules data:", data);
 
   const handleActions = (action, moduleId) => {
     switch (action) {

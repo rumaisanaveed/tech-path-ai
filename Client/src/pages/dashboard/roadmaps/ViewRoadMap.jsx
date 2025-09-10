@@ -18,6 +18,7 @@ const ViewRoadMap = () => {
   const { isSmallScreen } = useScreenSize();
 
   const { data: roadmapData, isLoading } = useRoadmaps(id);
+  console.log("Roadmap Data:", roadmapData);
   const { mutate: enrollDomain, isPending: enrolling } =
     useEnrollInCareerDomain();
 

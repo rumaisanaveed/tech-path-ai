@@ -28,6 +28,7 @@ import {
   useUserEnrolledDomains,
 } from "@/apis/skillTracking/skillTracking.services";
 import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const SkillTracking = () => {
   usePageTitle("Skills Tracking");
@@ -39,6 +40,7 @@ export const SkillTracking = () => {
   }, []);
 
   const { data } = useAllCareerDomains();
+  //console.log("All career domains data:", data);
   const { mutate: enrollDomain } = useEnrollInCareerDomain();
 
   const handleDomainSelect = (domainId) => {
@@ -89,8 +91,9 @@ export const SkillTracking = () => {
 
 const Domains = () => {
   const navigate = useNavigate();
-  const { data } = useUserEnrolledDomains();
+  const { data, isLoading } = useUserEnrolledDomains();
   const enrolledDomains = data?.careerDomains || [];
+
   const handleActions = (action, id) => {
     if (action === "delete") {
       console.log("Delete domain with id:", id);
@@ -98,52 +101,90 @@ const Domains = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {enrolledDomains.map((domain) => (
-        <div
-          key={domain.id}
-          className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
-        >
-          <div className="relative h-40 w-full">
-            <img
-              alt={domain.title}
-              src={domain.coverImage || "/fallback.jpg"}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Ellipsis
-                  color="#FDFDFD"
-                  size={20}
-                  className="absolute top-2 right-2 cursor-pointer z-10"
-                />
-              </DropdownMenuTrigger>
-              <ActionDropdown
-                items={careerDomainDropdownItem}
-                onAction={(action) => handleActions(action, domain.id)}
-                variant="light"
-              />
-            </DropdownMenu>
-          </div>
-          <div className="flex flex-col gap-1 p-4">
-            <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {domain.description}
-            </p>
-          </div>
-          <div className="px-4 pb-4">
-            <SecondaryButton
-              variant="dark"
-              title="View Domain"
-              className="w-full py-1"
-              textSmall
-              onClickHandler={() =>
-                navigate(`/user/dashboard/skill-tracker/domain/${domain.id}`)
-              }
-            />
-          </div>
+    <div>
+      {isLoading ? (
+        // 🔹 Skeleton loader
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col bg-white rounded-2xl shadow-md overflow-hidden"
+            >
+              <Skeleton className="h-40 w-full" />
+              <div className="p-4 space-y-2">
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+              </div>
+              <div className="px-4 pb-4">
+                <Skeleton className="h-9 w-full rounded-md" />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      ) : enrolledDomains.length === 0 ? (
+        // 🔹 Empty state
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <img
+            src="/public/domainImageFallback.svg"
+            alt="No domains"
+            className="w-20 h-20 mb-4 opacity-80"
+          />
+          <h2 className="text-lg font-semibold">You're not enrolled in any field yet</h2>
+          <p className="text-sm text-muted-foreground">
+            Start exploring and enroll in a domain to begin your journey 🚀
+          </p>
+        </div>
+      ) : (
+        // 🔹 Actual data
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {enrolledDomains.map((domain) => (
+            <div
+              key={domain.id}
+              className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+            >
+              <div className="relative h-40 w-full">
+                <img
+                  alt={domain.title}
+                  src={domain.coverImage || "/fallback.jpg"}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Ellipsis
+                      color="#FDFDFD"
+                      size={20}
+                      className="absolute top-2 right-2 cursor-pointer z-10"
+                    />
+                  </DropdownMenuTrigger>
+                  <ActionDropdown
+                    items={careerDomainDropdownItem}
+                    onAction={(action) => handleActions(action, domain.id)}
+                    variant="light"
+                  />
+                </DropdownMenu>
+              </div>
+              <div className="flex flex-col gap-1 p-4">
+                <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {domain.description}
+                </p>
+              </div>
+              <div className="px-4 pb-4">
+                <SecondaryButton
+                  variant="dark"
+                  title="View Domain"
+                  className="w-full py-1"
+                  textSmall
+                  onClickHandler={() =>
+                    navigate(`/user/dashboard/skill-tracker/domain/${domain.id}`)
+                  }
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -185,6 +226,41 @@ const IndividualSkills = () => {
                 }
               />
               <Trash2 color="black" size={18} className="cursor-pointer" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+const DomainsSkeleton = () => {
+  return (
+    <div className="bg-white rounded-2xl shadow-md p-6">
+      {/* Title skeleton */}
+      <Skeleton className="h-6 w-40 mb-6" />
+
+      {/* Responsive skeleton grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="flex flex-col bg-gray-50 rounded-xl overflow-hidden"
+          >
+            {/* Image skeleton */}
+            <Skeleton className="h-40 w-full" />
+
+            {/* Text skeleton */}
+            <div className="p-4 flex flex-col gap-2">
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+            </div>
+
+            {/* Button skeleton */}
+            <div className="px-4 pb-4">
+              <Skeleton className="h-8 w-full rounded-md" />
             </div>
           </div>
         ))}

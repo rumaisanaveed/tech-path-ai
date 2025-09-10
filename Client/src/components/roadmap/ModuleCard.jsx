@@ -9,6 +9,9 @@ const ModuleCard = ({
   isSmallScreen,
   index,
 }) => {
+
+  console.log("Rendering ModuleCard for module:", module);
+
   const isLeft = index % 2 === 0;
   const circleColor = isLeft ? "#ED843B" : "#F3B34E";
 

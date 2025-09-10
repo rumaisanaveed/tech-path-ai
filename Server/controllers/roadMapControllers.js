@@ -1,16 +1,14 @@
 import { Module, Lesson, UserLessonProgress, CareerDomain } from "../models/index.js";
 import UserCareerDomain from "../models/skilltracking/userCareerDomain.js";
+import DomainModuleMapping from "../models/skilltracking/domainModuleMapping.js";
 
 export const getRoadMapByDomain = async (req, res) => {
   try {
     const { domainId } = req.params;
-    const userId = req.userId; 
+    const userId = req.userId;
 
-    if (!domainId || !userId) {
-      return res.status(400).json({
-        message: "Domain ID and User ID are required.",
-      });
-    }
+    if (!domainId || !userId)
+      return res.status(400).json({ message: "Domain ID and User ID are required." });
 
     console.log(`[Roadmap] Fetching roadmap for domainId=${domainId}, userId=${userId}`);
 
@@ -18,54 +16,50 @@ export const getRoadMapByDomain = async (req, res) => {
     const domain = await CareerDomain.findByPk(domainId, {
       attributes: ["id", "title", "description", "coverImage"],
     });
+    if (!domain) return res.status(404).json({ message: "Domain not found." });
 
-    if (!domain) {
-      return res.status(404).json({ message: "Domain not found." });
-    }
-
-    // 2. Check if user is enrolled in this domain
+    // 2. Check if user is enrolled
     const enrollment = await UserCareerDomain.findOne({
       where: { userId, careerDomainId: domainId },
     });
-
     const isEnrolled = !!enrollment;
 
-    // 3. Fetch modules + lessons
-    const modules = await Module.findAll({
+    // 3. Fetch modules via mapping
+    const mappings = await DomainModuleMapping.findAll({
       where: { careerDomainId: domainId },
-      attributes: ["id", "title", "description", "sequence"],
-      order: [["sequence", "ASC"]],
+      attributes: ["moduleId"], // only need moduleId
       include: [
         {
-          model: Lesson,
-          attributes: ["id", "title", "description", "sequence", "xp"],
-          order: [["sequence", "ASC"]],
+          model: Module,
+          as: "module",
+          attributes: ["id", "title", "description", "sequence", "totalXp"],
+          include: [
+            {
+              model: Lesson,
+              attributes: ["id", "title", "description", "sequence", "xp"],
+              order: [["sequence", "ASC"]],
+            },
+          ],
         },
       ],
+      order: [[{ model: Module, as: "module" }, "sequence", "ASC"]],
     });
 
-    if (!modules?.length) {
-      return res.status(404).json({
-        message: "No roadmap found for this domain.",
-        domain,
-        isEnrolled,
-      });
-    }
+    if (!mappings?.length)
+      return res.status(404).json({ message: "No roadmap found for this domain.", domain, isEnrolled });
 
-    // 4. Fetch user progress separately
+    // 4. Fetch user lesson progress
     const userProgress = await UserLessonProgress.findAll({
       where: { userId },
       attributes: ["lessonId", "obtainedXP", "isCompleted"],
       raw: true,
     });
+    const progressMap = Object.fromEntries(userProgress.map(p => [p.lessonId, p]));
 
-    const progressMap = Object.fromEntries(
-      userProgress.map((p) => [p.lessonId, p])
-    );
-
-    // 5. Merge lessons + progress
-    const roadmap = modules.map((mod) => {
-      const lessons = mod.Lessons.map((lesson) => {
+    // 5. Construct roadmap
+    const roadmap = mappings.map(mapping => {
+      const mod = mapping.module; // module alias from mapping
+      const lessons = mod.Lessons.map(lesson => {
         const progress = progressMap[lesson.id] || {};
         return {
           id: lesson.id,
@@ -81,15 +75,20 @@ export const getRoadMapByDomain = async (req, res) => {
       const totalXP = lessons.reduce((sum, l) => sum + (l.xp || 0), 0);
       const obtainedXP = lessons.reduce((sum, l) => sum + (l.obtainedXP || 0), 0);
 
+      console.log("mod", mod);
+      console.log("lessons", lessons);
+      console.log("totalXP", totalXP);
+      console.log("obtainedXP", obtainedXP);
+
       return {
         id: mod.id,
         title: mod.title,
         description: mod.description,
-        sequence: mod.sequence,
+        sequence: mod.sequence, // module sequence
         totalXP,
         obtainedXP,
         lessons,
-        completionRate: totalXP > 0 ? Math.round((obtainedXP / totalXP) * 100) : 0,
+        completionRate: totalXP ? Math.round((obtainedXP / totalXP) * 100) : 0,
       };
     });
 
