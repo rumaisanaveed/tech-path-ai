@@ -233,5 +233,7 @@ export {
   QuizQuestion,
   UserModuleProgress,
   UserLessonProgress,
+  UserCareerDomain,
   UserQuizAnswer,
+  DomainModuleMapping
 };

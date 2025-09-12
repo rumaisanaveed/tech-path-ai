@@ -12,6 +12,7 @@ import {
   getUserEnrolledModules,
   getUserEnrolledLessonsForModule,
   getUserQuizzesForLessonWithStatus,
+  patchModulesActive,
 } from "../controllers/modules/modulesController.js";
 
 const router = express.Router();
@@ -61,5 +62,16 @@ router.get(
 
 // @POST || submit or update quiz answer
 router.post("/quiz/answer", verifyToken, submitQuizAnswer);
+
+
+
+
+//_________________________________
+router.get("/module/:domainId", verifyToken, getAllModules);
+
+router.patch("/setActive/:moduleId", verifyToken, patchModulesActive);
+
+
+
 
 export default router;

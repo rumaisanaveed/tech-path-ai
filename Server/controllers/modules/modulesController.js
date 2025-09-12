@@ -1,3 +1,4 @@
+import { UserModuleProgress } from "../../models/index.js";
 import {
   successResponse,
   errorResponse,
@@ -17,9 +18,55 @@ import {
 
 export const getAllModules = async (req, res) => {
   try {
-    const { careerDomainId } = req.query;
-    const modules = await fetchModules(careerDomainId);
+    const { domainId } = req.params;
+    const modules = await fetchModules(domainId);
     return successResponse(res, { modules }, "Modules fetched successfully");
+  } catch (err) {
+    return errorResponse(res, err);
+  }
+};
+
+export const patchModulesActive = async (req, res) => {
+  try {
+    const { moduleId } = req.params;
+    const userId = req.userId; // from auth middleware
+    const { isActive } = req.body;
+
+    if (typeof isActive !== "boolean") {
+      return errorResponse(res, "isActive must be a boolean");
+    }
+
+    // Count how many active domains user already has
+    if (isActive === true) {
+      const activeModules = await UserModuleProgress.count({
+        where: { userId, isActive: true },
+      });
+
+      if (activeModules >= 3) {
+        return errorResponse(
+          res,
+          "You can only enroll into a maximum of 3 domains at the same time."
+        );
+      }
+    }
+
+    // Find progress for this user + module
+    const progress = await UserModuleProgress.findOne({
+      where: { userId, moduleId },
+    });
+
+    if (!progress) {
+      return errorResponse(res, "Progress record not found", 404);
+    }
+
+    // Update field
+    progress.isActive = isActive;
+    await progress.save();
+
+    return successResponse(res, {
+      message: `Module ${moduleId} isActive set to ${isActive}`,
+      data: progress,
+    });
   } catch (err) {
     return errorResponse(res, err);
   }

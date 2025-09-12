@@ -1,29 +1,40 @@
-import Module from "../../models/skilltracking/module.js";
-import DomainModuleMapping from "../../models/skilltracking/domainModuleMapping.js";
-import UserCareerDomain from "../../models/skilltracking/userCareerDomain.js";
-import UserModuleProgress from "../../models/skilltracking/userModuleProgress.js";
-import Lesson from "../../models/skilltracking/lesson.js";
-import UserLessonProgress from "../../models/skilltracking/userLessonProgress.js";
-import QuizQuestion from "../../models/skilltracking/quizQuestion.js";
-import UserQuizAnswer from "../../models/skilltracking/userQuizAnswer.js";
-import { CareerDomain } from "../../models/index.js";
+//import Module from "../../models/skilltracking/module.js";
+//import DomainModuleMapping from "../../models/skilltracking/domainModuleMapping.js";
+//import { CareerDomain } from "../../models/index.js";
 import { Op } from "sequelize";
 
+import {CareerDomain, DomainModuleMapping, Lesson, Module, QuizQuestion, UserCareerDomain, UserModuleProgress, UserQuizAnswer} from "../../models/index.js";
+
+
 export const fetchModules = async (careerDomainId) => {
-  if (careerDomainId) {
-    return Module.findAll({
-      include: [
-        {
-          model: DomainModuleMapping,
-          as: "domainModuleMappings",
-          where: { careerDomainId },
-        },
-      ],
-      order: [["sequence", "ASC"]],
-    });
-  }
-  return Module.findAll({ order: [["sequence", "ASC"]] });
+  const whereDomain = careerDomainId
+    ? { where: { id: careerDomainId } }
+    : {};
+
+  return Module.findAll({
+    attributes: [
+      "id",
+      "title",
+      "description",
+      "badge",
+      "totalXP",
+      "createdAt",
+      "updatedAt",
+    ],
+    include: [
+      {
+        model: CareerDomain,
+        as: "domains", // 👈 directly use alias
+        attributes: ["id", "title"],
+        through: { attributes: [] }, // hide join table
+        ...whereDomain,
+      },
+    ],
+    order: [["sequence", "ASC"]],
+  });
 };
+
+
 
 export const startOrGetModuleProgressService = async (userId, moduleId) => {
   if (!moduleId) throw { status: 400, message: "moduleId required" };
@@ -281,6 +292,7 @@ export const getUserEnrolledModulesService = async (userId, domainId) => {
       badge: um.badge,
       isCompleted: um.isCompleted,
       completedAt: um.completedAt,
+      isActive: um.isActive,
       careerDomainTitle:
         um.Module?.domainModuleMappings?.[0]?.domain?.title || null,
     }));

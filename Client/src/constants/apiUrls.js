@@ -46,4 +46,7 @@ export const API_ROUTES = {
   ROADMAPS: {
     GET_ROADMAPS: (domainId) => `${roadmapController}${domainId}`,
   },
+  MODULES:{
+    GET_ALL_MODULES_FROM_DOMAIN: (domainId) => `${skillmoduleController}module/${domainId}`,
+  }
 };

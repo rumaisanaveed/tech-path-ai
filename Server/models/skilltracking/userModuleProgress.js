@@ -12,6 +12,7 @@ const UserModuleProgress = sequelize.define(
       type: DataTypes.ENUM("Bronze", "Silver", "Gold", "Platinum"),
       defaultValue: "Bronze",
     },
+    isActive: { type: DataTypes.BOOLEAN, defaultValue: false },
     isCompleted: { type: DataTypes.BOOLEAN, defaultValue: false },
     completedAt: { type: DataTypes.DATE },
   },

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getUserEnrolledModules } from "./moduleTracking.api";
+import { getAllModulesFromDomain, getUserEnrolledModules } from "./moduleTracking.api";
 
 
 export const GetUserEnrolledModule = (domainId) => {
@@ -14,3 +14,15 @@ export const GetUserEnrolledModule = (domainId) => {
     },
   })
 }
+
+export const GetAllModulesFromDomain = (domainId) => {
+  return useQuery({
+    queryKey: ["allModulesFromDomain", domainId],
+    queryFn: () => getAllModulesFromDomain(domainId),
+    enabled: !!domainId, // only run if domainId exists
+    staleTime: 1000 * 60 * 5, // 5 min cache
+    refetchOnWindowFocus: false,
+    onError: (error) => {
+      console.error("❌ Error fetching all modules from domain:", error);
+    }
+})}

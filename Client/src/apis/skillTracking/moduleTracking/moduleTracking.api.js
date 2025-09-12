@@ -9,3 +9,10 @@ export const getUserEnrolledModules = async (domainId) => {
   console.log("This is response from getUserEnrolledModules", res);
   return res.data;
 }
+
+export const getAllModulesFromDomain = async (domainId) => {
+  const url = API_ROUTES.MODULES.GET_ALL_MODULES_FROM_DOMAIN(domainId);
+  const res = await axiosReq(API_MODES.GET, url);
+  console.log("This is response from getAllModulesFromDomain", res);
+  return res.data;
+}
