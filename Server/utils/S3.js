@@ -1,9 +1,7 @@
 import multer from "multer";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
-import { v4 as uuidv4 } from "uuid";
 import path from "path";
-import fs from "fs";
 
 dotenv.config();
 
@@ -33,9 +31,9 @@ export const upload = multer({
 });
 
 // 3. Function to manually upload to S3
-export const uploadFileToS3 = async (file) => {
+export const uploadFileToS3 = async (file,folder,title) => {
   const fileExtension = path.extname(file.originalname);
-  const uniqueFileName = `career-domains/${uuidv4()}${fileExtension}`;
+  const uniqueFileName = `${folder}/${title}-${Date.now()}${fileExtension}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,

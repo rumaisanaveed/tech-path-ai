@@ -50,3 +50,16 @@ export const API_ROUTES = {
     GET_ALL_MODULES_FROM_DOMAIN: (domainId) => `${skillmoduleController}module/${domainId}`,
   }
 };
+
+const adminController = "/admin/skill-tracking";
+
+export const ADMIN_API_ROUTES = {
+  SKILLTRACKING: {
+    GET_ALL_CAREER_DOMAINS: `${adminController}/all-domains`,
+    TOGGLE_CAREER_DOMAIN_STATUS: (domainId) =>
+      `${adminController}/toggle-domain/${domainId}`,
+    DELETE_CAREER_DOMAIN: (domainId) =>
+      `${adminController}/delete-domain/${domainId}`,
+    CREATE_CAREER_DOMAIN: `${adminController}/create-domain`
+  },
+}

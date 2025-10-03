@@ -73,5 +73,7 @@ export const getCurrentCareerDomainService = async (userId) => {
 };
 
 export const getAllCareerDomainsService = async () => {
-  return await CareerDomain.findAll();
+   return await CareerDomain.findAll({
+    attributes: ["id", "title"],
+  });
 };

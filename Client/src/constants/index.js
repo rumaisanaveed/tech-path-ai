@@ -580,6 +580,11 @@ export const adminSidebarItems = [
     href: "/admin/dashboard/events",
   },
   {
+    label: "Skill Tracking Management",
+    icon: BarChart3,
+    href: "/admin/dashboard/skill-tracking",
+  },
+  {
     label: "Career Assessment Management",
     icon: BadgeCheck,
     href: "/admin/dashboard/career-assessment",

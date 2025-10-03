@@ -15,4 +15,5 @@ router.get("/current", verifyToken, getCurrentCareerDomain);
 
 router.get("/all", verifyToken, getAllCareerDomains);
 
+
 export default router;

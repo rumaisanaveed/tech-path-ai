@@ -46,6 +46,7 @@ export const ADMIN_DASHBOARD_ROUTES = {
   BLOGS: "blogs",
   VIEW_BLOG: "blogs/:id",
   EVENTS_MANAGEMENT: "events",
+  SKILL_TRACKING_MANAGEMENT: "skill-tracking",
   CAREER_ASSESSMENT_MANAGEMENT: "career-assessment",
   CAREERS_MANAGEMENT: "career-explorer",
 };

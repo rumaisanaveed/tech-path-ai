@@ -61,6 +61,7 @@ import { EventDetails } from "./pages/events/EventDetails";
 import Lessons from "./pages/dashboard/skillTracking/domainTracker/components/Lessons";
 import Roadmap from "./pages/dashboard/roadmaps/Roadmap";
 import ViewRoadMap from "./pages/dashboard/roadmaps/ViewRoadMap";
+import SkilltrackingManagement from "./pages/adminDashboard/SkillTracking/SkilltrackingManagement";
 
 // TODO : lazy load the pages
 
@@ -275,6 +276,14 @@ function Router() {
               element={
                 <AdminProtectedRoute>
                   <CareerExplorer />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path={ADMIN_DASHBOARD_ROUTES.SKILL_TRACKING_MANAGEMENT}
+              element={
+                <AdminProtectedRoute>
+                  <SkilltrackingManagement />
                 </AdminProtectedRoute>
               }
             />
