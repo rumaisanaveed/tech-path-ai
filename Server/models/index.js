@@ -11,12 +11,25 @@ import categoryScoreGame from "./gamification/categoryScore.js";
 import trainingSample from "./trainingSample.js";
 import CareerDomain from "./skilltracking/careerDomain.js";
 import Module from "./skilltracking/module.js";
-import Lesson from "./skilltracking/lesson.js";
-import QuizQuestion from "./skilltracking/quizQuestion.js";
-import UserModuleProgress from "./skilltracking/userModuleProgress.js";
-import UserLessonProgress from "./skilltracking/userLessonProgress.js";
-import UserQuizAnswer from "./skilltracking/userQuizAnswer.js";
+
+// Keep this import since it’s part of CareerDomain ↔ Module mapping
+import DomainModuleMapping from "./skilltracking/domainModuleMapping.js";
+import ModuleType from "./skilltracking/modulesType.js";
 import UserCareerDomain from "./skilltracking/userCareerDomain.js";
+import UserModuleMapping from "./userModuleMapping.js";
+
+// Mascot models
+import SkillEvalResponse from "./mascot/SkillEvalResponse.js";
+import SkillEvalQuestion from "./mascot/skillEvalQuestion.js";
+import skillEvalType from "./mascot/skillEvalType.js";
+import skillEvalCategory from "./mascot/skillEvalCategory.js";
+
+// Lesson-related models
+import Lesson from "./lessons/lessonModel.js";
+import LessonExample from "./lessons/lessonExample.js";
+import LessonLearningPoint from "./lessons/lessonLearningPoint.js";
+import LessonResource from "./lessons/lessonResources.js";
+import UserLessonProgress from "./skilltracking/userLessonProgress.js";
 
 // 🔁 Define relationships here
 
@@ -123,9 +136,6 @@ AssessmentSessionAns.belongsTo(AssessmentOptions, {
   as: "option",
 });
 
-// import DomainModuleMapping at the top with other models
-import DomainModuleMapping from "./skilltracking/domainModuleMapping.js";
-
 // direct relations for DomainModuleMapping
 DomainModuleMapping.belongsTo(CareerDomain, {
   foreignKey: "careerDomainId",
@@ -141,64 +151,6 @@ Module.hasMany(DomainModuleMapping, {
   as: "domainModuleMappings",
 });
 
-// One Module has many Lessons
-Module.hasMany(Lesson, { foreignKey: "moduleId" });
-Lesson.belongsTo(Module, { foreignKey: "moduleId" });
-
-// One Lesson has many QuizQuestions
-Lesson.hasMany(QuizQuestion, { foreignKey: "lessonId", onDelete: "CASCADE" });
-
-// Each QuizQuestion belongs to a Lesson
-QuizQuestion.belongsTo(Lesson, { foreignKey: "lessonId" });
-
-// User → UserModuleProgress (One-to-Many)
-User.hasMany(UserModuleProgress, { foreignKey: "userId", onDelete: "CASCADE" });
-UserModuleProgress.belongsTo(User, { foreignKey: "userId" });
-
-// Module → UserModuleProgress (One-to-Many)
-Module.hasMany(UserModuleProgress, {
-  foreignKey: "moduleId",
-  onDelete: "CASCADE",
-});
-UserModuleProgress.belongsTo(Module, { foreignKey: "moduleId" });
-
-// User → UserLessonProgress (One-to-Many)
-User.hasMany(UserLessonProgress, { foreignKey: "userId", onDelete: "CASCADE" });
-UserLessonProgress.belongsTo(User, { foreignKey: "userId" });
-
-// Lesson → UserLessonProgress (One-to-Many)
-Lesson.hasMany(UserLessonProgress, {
-  foreignKey: "lessonId",
-  onDelete: "CASCADE",
-});
-UserLessonProgress.belongsTo(Lesson, { foreignKey: "lessonId" });
-
-// User → UserQuizAnswer (One-to-Many)
-User.hasMany(UserQuizAnswer, { foreignKey: "userId", onDelete: "CASCADE" });
-UserQuizAnswer.belongsTo(User, { foreignKey: "userId" });
-
-// Lesson → UserQuizAnswer (One-to-Many)
-Lesson.hasMany(UserQuizAnswer, { foreignKey: "lessonId", onDelete: "CASCADE" });
-UserQuizAnswer.belongsTo(Lesson, { foreignKey: "lessonId" });
-
-// QuizQuestion → UserQuizAnswer (One-to-Many)
-QuizQuestion.hasMany(UserQuizAnswer, {
-  foreignKey: "quizQuestionId",
-  onDelete: "CASCADE",
-});
-UserQuizAnswer.belongsTo(QuizQuestion, { foreignKey: "quizQuestionId" });
-
-// User → UserCareerDomain (One-to-One)
-User.hasOne(UserCareerDomain, { foreignKey: "userId", onDelete: "CASCADE" });
-UserCareerDomain.belongsTo(User, { foreignKey: "userId" });
-
-// CareerDomain → UserCareerDomain (One-to-Many)
-CareerDomain.hasMany(UserCareerDomain, {
-  foreignKey: "careerDomainId",
-  onDelete: "CASCADE",
-});
-UserCareerDomain.belongsTo(CareerDomain, { foreignKey: "careerDomainId" });
-
 // CareerDomain ↔ Module (Many-to-Many through DomainModuleMapping)
 CareerDomain.belongsToMany(Module, {
   through: DomainModuleMapping,
@@ -206,13 +158,162 @@ CareerDomain.belongsToMany(Module, {
   otherKey: "moduleId",
   as: "modules",
 });
-
 Module.belongsToMany(CareerDomain, {
   through: DomainModuleMapping,
   foreignKey: "moduleId",
   otherKey: "careerDomainId",
   as: "domains",
 });
+
+Module.belongsTo(ModuleType, { foreignKey: "typeId", as: "type" });
+ModuleType.hasMany(Module, { foreignKey: "typeId", as: "modules" });
+
+// User ↔ CareerDomain (Many-to-Many through UserCareerDomain)
+User.belongsToMany(CareerDomain, {
+  through: UserCareerDomain,
+  foreignKey: "userId",
+  otherKey: "careerDomainId",
+  as: "enrolledDomains", // alias for user.getEnrolledDomains()
+});
+
+CareerDomain.belongsToMany(User, {
+  through: UserCareerDomain,
+  foreignKey: "careerDomainId",
+  otherKey: "userId",
+  as: "enrolledUsers", // alias for careerDomain.getEnrolledUsers()
+});
+
+// Optionally, if you want direct associations on the junction model:
+UserCareerDomain.belongsTo(User, { foreignKey: "userId", as: "user" });
+UserCareerDomain.belongsTo(CareerDomain, {
+  foreignKey: "careerDomainId",
+  as: "careerDomain",
+});
+
+User.belongsToMany(Module, {
+  through: UserModuleMapping,
+  foreignKey: "userId",
+  as: "enrolledModules",
+});
+
+Module.belongsToMany(User, {
+  through: UserModuleMapping,
+  foreignKey: "moduleId",
+  as: "enrolledUsers",
+});
+
+//MASCOTS
+// --------------------
+// CATEGORY ↔ QUESTION
+// --------------------
+skillEvalCategory.hasMany(SkillEvalQuestion, {
+  foreignKey: "categoryId",
+  as: "questions",
+});
+SkillEvalQuestion.belongsTo(skillEvalCategory, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+// --------------------
+// TYPE ↔ QUESTION
+// --------------------
+skillEvalType.hasMany(SkillEvalQuestion, {
+  foreignKey: "typeId",
+  as: "questions",
+});
+SkillEvalQuestion.belongsTo(skillEvalType, {
+  foreignKey: "typeId",
+  as: "type",
+});
+
+// --------------------
+// DOMAIN ↔ QUESTION
+// --------------------
+CareerDomain.hasMany(SkillEvalQuestion, {
+  foreignKey: "careerDomainId",
+  as: "questions",
+});
+SkillEvalQuestion.belongsTo(CareerDomain, {
+  foreignKey: "careerDomainId",
+  as: "domain",
+});
+
+// --------------------
+// QUESTION ↔ RESPONSE
+// --------------------
+SkillEvalQuestion.hasMany(SkillEvalResponse, {
+  foreignKey: "questionId",
+  as: "responses",
+});
+SkillEvalResponse.belongsTo(SkillEvalQuestion, {
+  foreignKey: "questionId",
+  as: "question",
+});
+
+// --------------------
+// USER ↔ RESPONSE
+// --------------------
+User.hasMany(SkillEvalResponse, {
+  foreignKey: "userId",
+  as: "skillResponses",
+});
+SkillEvalResponse.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+// --------------------
+// DOMAIN ↔ RESPONSE (optional)
+// --------------------
+CareerDomain.hasMany(SkillEvalResponse, {
+  foreignKey: "careerDomainId",
+  as: "responses",
+});
+SkillEvalResponse.belongsTo(CareerDomain, {
+  foreignKey: "careerDomainId",
+  as: "domain",
+});
+
+
+// --------------------
+// REPONSIBEL FOR LESSONS
+// --------------------
+// Lesson → Examples
+Module.hasMany(Lesson, { foreignKey: "moduleId", as: "lessons" });
+
+Lesson.hasMany(LessonExample, {
+  foreignKey: "lessonId",
+  as: "examples",       // alias for eager loading
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+LessonExample.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
+// Lesson → Learning Points
+Lesson.hasMany(LessonLearningPoint, {
+  foreignKey: "lessonId",
+  as: "learningPoints",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+LessonLearningPoint.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
+// Lesson → Resources
+Lesson.hasMany(LessonResource, {
+  foreignKey: "lessonId",
+  as: "resources",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+LessonResource.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
+// User ↔ Lesson (Many-to-Many through UserLessonProgress)
+User.hasMany(UserLessonProgress, { foreignKey: "userId", as: "lessonProgress" });
+UserLessonProgress.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+Lesson.hasMany(UserLessonProgress, { foreignKey: "lessonId", as: "userProgress" });
+UserLessonProgress.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
 
 
 export {
@@ -229,11 +330,17 @@ export {
   trainingSample,
   CareerDomain,
   Module,
-  Lesson,
-  QuizQuestion,
-  UserModuleProgress,
-  UserLessonProgress,
+  ModuleType,
+  DomainModuleMapping,
   UserCareerDomain,
-  UserQuizAnswer,
-  DomainModuleMapping
+  UserModuleMapping,
+  SkillEvalResponse,
+  SkillEvalQuestion,
+  skillEvalType,
+  skillEvalCategory,
+  Lesson,
+  LessonExample,
+  LessonLearningPoint,
+  LessonResource,
+  UserLessonProgress
 };

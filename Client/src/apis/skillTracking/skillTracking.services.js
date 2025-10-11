@@ -2,12 +2,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   adminCreateDomain,
+  adminCreateModule,
   adminDeleteDomain,
+  adminDeleteModule,
   adminGetAllCareerDomains,
+  adminGetAllModulesFromDomain,
   adminToggleDomainStatus,
   enrollInCareerDomain,
   getAllCareerDomains,
+  getSingleCareerDomains,
   getUserEnrolledDomains,
+  unEnrollInCareerDomain,
 } from "./skillTracking.api";
 
 // GET all career domains
@@ -45,6 +50,31 @@ export const useEnrollInCareerDomain = () => {
     },
   });
 };
+
+//Unenroll from a career domain
+export const useUnenrollFromCareerDomain = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (domainId) => unEnrollInCareerDomain(domainId),
+    onSuccess: (data) => {
+      toast.success(data.message || "Unenrolled successfully!");
+
+      // 🔑 FIX: Refresh enrolled domains automatically
+      queryClient.invalidateQueries({ queryKey: ["enrolledCareerDomains"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Unenrollment failed!");
+    },
+  });
+};
+
+
+export const useSingleCareerDomain = (domainId) => {
+  return useQuery({
+    queryKey: ["singlecareerDomain", domainId],
+    queryFn: () => getSingleCareerDomains(domainId),
+  });}
 
 //-----------------ADMIN Management-----------------
 export const useAdminAllCareerDomains = () => {
@@ -96,6 +126,47 @@ export const useCreateCareerDomain = () => {
     onError: (error) => {
       console.error("Error creating domain:", error);
       toast.error(error.response?.data?.message || "Failed to create domain");
+    },
+  });
+};
+
+//-----------------ADMIN Management MODULES----------------- 
+export const useAdminAllModulesFromDomain = (domainId, page, limit = 5) => {
+  return useQuery({
+    queryKey: ["adminModulesFromDomain", domainId, page, limit],
+    queryFn: () => adminGetAllModulesFromDomain(domainId, page, limit),
+    keepPreviousData: true, // helps with smooth transitions
+  });
+};
+
+export const useCreateModule = (domainId) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formData) => adminCreateModule(domainId, formData),
+    onSuccess: (data) => {
+      toast.success(data.message || "Module created successfully!");
+      queryClient.invalidateQueries(["adminModulesFromDomain", domainId]);
+    },
+    onError: (error) => {
+      console.error("Error creating module:", error);
+      toast.error(error?.response?.data?.message ||"Failed to create module");
+    },
+  });
+};
+
+export const useDeleteModule = (domainId) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (moduleId) => adminDeleteModule(moduleId, domainId),
+    onSuccess: (data) => {
+      toast.success(data.message || "Module deleted successfully!");
+      queryClient.invalidateQueries(["adminModulesFromDomain", domainId]);
+    },
+    onError: (error) => {
+      console.error("Error deleting module:", error);
+      toast.error(error?.response?.data?.message || "Failed to delete module");
     },
   });
 };

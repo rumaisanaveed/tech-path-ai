@@ -1,130 +1,135 @@
 import React, { useState, useEffect } from "react";
 import { Buddy } from "./buddy";
-import conversationData from "@/constants/buddyDialogues.json";
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams } from "react-router-dom";
-import { GetUserEnrolledModule } from "@/apis/skillTracking/moduleTracking/moduleTracking.services";
-import { frontendGraph, backendGraph } from "@/constants/knowledgeGraph";
-import { expandSkills, recommendNextModule } from "@/utils/skillsHelper";
+import axios from "axios";
 
 export const BuddyConversation = () => {
   const [buddyPose, setBuddyPose] = useState("waving");
-  const [conversationStep, setConversationStep] = useState("welcome");
-  const [domain, setDomain] = useState(null);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [conversationStep, setConversationStep] = useState("intro");
   const [showChat, setShowChat] = useState(true);
+  const [userResponses, setUserResponses] = useState([]);
 
-  const { id: domainId } = useParams();
-  const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
-  const modules = data?.modules || [];
+  // Helper to record response
+  const recordResponse = (choice) => {
+    const stepMessage = getStepData().message;
+    const responseData = {
+      step: conversationStep,
+      question: stepMessage,
+      answer: choice,
+      timestamp: new Date().toISOString(),
+    };
+    setUserResponses((prev) => [...prev, responseData]);
+    console.log("🧠 User Response Recorded:", responseData);
+  };
 
-  // Auto-detect domain
-  useEffect(() => {
-    if (!isLoading && !isError && modules.length > 0 && !domain) {
-      const domainTitle = modules[0].careerDomainTitle.toLowerCase();
-      const normalized =
-        domainTitle.includes("frontend")
-          ? "frontend"
-          : domainTitle.includes("backend")
-          ? "backend"
-          : null;
+  const handleChoice = async (choice) => {
+    recordResponse(choice);
 
-      if (normalized && conversationData[normalized]) {
-        setDomain(normalized);
-        setConversationStep("welcome");
-      } else {
-        setConversationStep("domain_select");
-      }
-    }
-  }, [modules, isLoading, isError, domain]);
-
-  const handleChoice = (choice) => {
-    if (conversationStep === "welcome") {
+    // Step 1: Intro → ask if beginner
+    if (conversationStep === "intro") {
       setBuddyPose("waving");
-      setConversationStep("start");
+      setConversationStep("askExperience");
       return;
     }
 
-    if (conversationStep === "domain_select") {
-      const chosenDomain = choice.toLowerCase();
-      if (conversationData[chosenDomain]) {
-        setDomain(chosenDomain);
-        setBuddyPose("waving");
-        setConversationStep("welcome");
+    // Step 2: Beginner or Experienced
+    if (conversationStep === "askExperience") {
+      if (choice.toLowerCase().includes("beginner")) {
+        setBuddyPose("explainingBook");
+        setConversationStep("newbieIntro");
+      } else {
+        setBuddyPose("standing");
+        setConversationStep("experiencedIntro");
       }
       return;
     }
 
-    if (conversationStep === "start") {
-      setBuddyPose(choice.includes("Newbie") ? "explaining" : "standing");
-      setConversationStep(choice.includes("Newbie") ? "newbie" : "experienced");
+    // Step 3: When user clicks "Let's Go" (final)
+    if (conversationStep === "newbieIntro" && choice === "Let's Go") {
+      setBuddyPose("laptop");
+      setConversationStep("assigningModules");
+
+      // Wait and hide chat
+      setTimeout(() => {
+        console.log("📦 Final Collected Responses:", userResponses);
+        setShowChat(false);
+      }, 3000);
       return;
     }
 
-    if (conversationStep === "newbie") {
-      setBuddyPose("explainingBook");
-      setConversationStep("module_intro");
-      return;
+    try {
+      const domainId = 3; // 🔥 hardcoded for now
+      const token = localStorage.getItem("token"); // or however you store auth
+      // const res = await axios.post(
+      //   `http://localhost:3000/api/enrollment/module/${domainId}`,
+      //   { userResponse: userResponses },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
+      //console.log("✅ Backend response:", res.data);
+    } catch (err) {
+      console.error("❌ Failed to send responses:", err);
     }
 
-    if (conversationStep === "experienced") {
-      setConversationStep("askSkills");
+    // Step 3 (for experienced)
+    if (conversationStep === "experiencedIntro" && choice === "Let's Go") {
+      setBuddyPose("laptop");
+      setConversationStep("assigningModules");
+
+      // Wait and hide chat
+      setTimeout(() => {
+        console.log("📦 Final Collected Responses:", userResponses);
+        setShowChat(false);
+      }, 3000);
       return;
-    }
-
-    if (conversationStep === "askSkills") {
-      const newSkills = choice.toLowerCase().includes("none")
-        ? ["None"]
-        : [...selectedSkills, choice];
-
-      setSelectedSkills(newSkills);
-      setBuddyPose("thumbsUp");
-      setConversationStep("skill_response");
     }
   };
 
   const getStepData = () => {
-    if (isLoading) return { message: "⏳ Loading your modules..." };
-    if (isError) return { message: "⚠️ Couldn't fetch modules." };
-
-    if (!domain) return { message: "Please choose a domain to start." };
-    const domainData = conversationData[domain];
-    const graph = domain === "frontend" ? frontendGraph : backendGraph;
-    const moduleOrder = modules.map((m) => m.title);
-
     switch (conversationStep) {
-      case "welcome":
-        return domainData.welcome;
-      case "start":
-        return domainData.intro.start;
-      case "newbie":
-        return domainData.newbie;
-      case "module_intro":
+      case "intro":
         return {
-          message: "We have multiple modules for you:",
-          options: domainData.newbie.modules || [],
+          message:
+            "👋 Hey there! I’m Piddu, your friendly learning buddy.\nI’ll help you build your path as a developer!",
+          options: ["Let's Start"],
         };
-      case "experienced":
-      case "askSkills":
-        return domainData.experienced.askSkills;
-      case "skill_response": {
-        // Expand all dependencies
-        const expandedSkills = expandSkills(selectedSkills, graph);
 
-        // Recommend next module
-        const nextModuleTitle = recommendNextModule(expandedSkills, moduleOrder);
-        if (!nextModuleTitle) {
-          return { message: "🎉 You already know everything here!" };
-        }
-
-        const nextModule = modules.find((m) => m.title === nextModuleTitle);
+      case "askExperience":
         return {
-          message: `Based on what you know, I recommend starting with **${nextModule.title}**:\n${nextModule.description || ""}`,
-          options: ["Next"],
+          message:
+            "Before we begin — can you tell me about your experience level?",
+          options: ["I'm a Beginner", "I'm Experienced"],
         };
-      }
+
+      case "newbieIntro":
+        return {
+          message:
+            "Awesome! Being a beginner is exciting — let's start your journey strong 💪\n\nI'm going to find and assign the best modules for you to become a Frontend Developer.",
+          options: ["Let's Go"],
+        };
+
+      case "experiencedIntro":
+        return {
+          message:
+            "Nice! Since you already have experience, I’ll tailor modules that can level up your Frontend skills further 🚀",
+          options: ["Let's Go"],
+        };
+
+      case "assigningModules":
+        return {
+          message:
+            "✨ Perfect! I'm assigning the best modules for you to become a Frontend Developer...",
+          options: [],
+        };
+
       default:
-        return { message: "🤔 Hmm, I’m not sure what to say here." };
+        return {
+          message: "🤔 Hmm, I’m not sure what to say here.",
+          options: [],
+        };
     }
   };
 
@@ -143,7 +148,7 @@ export const BuddyConversation = () => {
           >
             {/* Chat bubble */}
             <motion.div
-              key={conversationStep + domain}
+              key={conversationStep}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -153,6 +158,7 @@ export const BuddyConversation = () => {
               <p className="text-gray-800 leading-relaxed text-sm font-medium whitespace-pre-line">
                 {message}
               </p>
+
               {options.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4">
                   {options.map((opt) => (
@@ -169,6 +175,7 @@ export const BuddyConversation = () => {
                   ))}
                 </div>
               )}
+
               <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white/90 rotate-45 border-r border-b border-blue-200"></div>
             </motion.div>
 
@@ -182,13 +189,13 @@ export const BuddyConversation = () => {
               className="relative flex items-center justify-center w-40 h-40 md:w-48 md:h-48"
             >
               <div className="absolute w-full h-full bg-blue-100 rounded-full blur-2xl opacity-40"></div>
-              <Buddy pose={buddyPose} alt="Buddy Mascot" size="large" />
+              <Buddy pose={buddyPose} alt="Piddu Mascot" size="large" />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Toggle button */}
+      {/* Toggle button stays even when Piddu hides */}
       <motion.button
         onClick={() => setShowChat(!showChat)}
         whileTap={{ scale: 0.85, rotate: -15 }}
@@ -198,7 +205,7 @@ export const BuddyConversation = () => {
           backgroundColor: showChat ? "#E07A5F" : "#5A9BD4",
           color: "white",
         }}
-        title={showChat ? "Put Buddy to sleep" : "Wake up Buddy"}
+        title={showChat ? "Put Piddu to sleep" : "Wake up Piddu"}
       >
         {showChat ? "😴" : "💬"}
       </motion.button>

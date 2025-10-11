@@ -20,8 +20,12 @@ import { Switch } from "@/components/ui/switch";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Message } from "../Message";
+import { useNavigate } from "react-router-dom";
 
 const SkilltrckingBox = () => {
+
+  const  navigate  = useNavigate();
+
   // Queries & Mutations
   const { data } = useAdminAllCareerDomains();
   const { mutate: toggleDomainStatus } = useStatusToggleDomain();
@@ -115,41 +119,50 @@ const SkilltrckingBox = () => {
       </div>
 
       {/* Boxes grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {domains.map((domain) => (
-          <div
-            key={domain.id}
-            className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
-          >
-            {/* Cover Image */}
-            <div className="relative h-40 w-full">
-              <img
-                alt={domain.title}
-                src={domain.coverImage || "/fallback.jpg"}
-                className="absolute inset-0 w-full h-full object-cover"
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {domains.map((domain) => (
+        <div
+          key={domain.id}
+          className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+        >
+          {/* Cover Image */}
+          <div className="relative h-40 w-full">
+            <img
+              alt={domain.title}
+              src={domain.coverImage || "/fallback.jpg"}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="flex flex-col gap-1 p-4">
+            <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {domain.description}
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between px-4 pb-4">
+            {/* Toggle Active/Inactive */}
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={domain.isActive}
+                onCheckedChange={() => toggleDomainStatus(domain.id)}
               />
+              <span className="text-sm">Active</span>
             </div>
 
-            {/* Content */}
-            <div className="flex flex-col gap-1 p-4">
-              <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {domain.description}
-              </p>
-            </div>
+            {/* Buttons: Edit + Delete */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(`/admin/dashboard/skill-tracking/edit/${domain.id}`)}
+              >
+                Edit
+              </Button>
 
-            {/* Footer: Toggle + Delete */}
-            <div className="flex items-center justify-between px-4 pb-4">
-              {/* Toggle Active/Inactive */}
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={domain.isActive}
-                  onCheckedChange={() => toggleDomainStatus(domain.id)}
-                />
-                <span className="text-sm">Active</span>
-              </div>
-
-              {/* Delete Button */}
               <Button
                 variant="destructive"
                 size="sm"
@@ -159,8 +172,9 @@ const SkilltrckingBox = () => {
               </Button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 };

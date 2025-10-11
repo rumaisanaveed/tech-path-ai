@@ -6,6 +6,7 @@ import { uploadFileToS3 } from "../../../../utils/S3.js";
 import {
   DeleteDomain,
   GetAllDomains,
+  GetSingleDomains,
   PostnewDomain,
   ToggleStatus,
 } from "./domainServices.js";
@@ -31,7 +32,7 @@ export const createNewDomain = async (req, res) => {
       coverImage: coverImageUrl,
       isActive,
     });
-    successResponse(res, {},"Domain Created Successfully", 201);
+    successResponse(res, {}, "Domain Created Successfully", 201);
   } catch (error) {
     console.log("Error in createNewDomain:", error);
     errorResponse(res, error);
@@ -72,5 +73,20 @@ export const deleteDomain = async (req, res) => {
   } catch (error) {
     console.log("Error in deleteDomain:", error);
     errorResponse(res, error);
+  }
+};
+
+export const getSingleDomain = async (req, res) => {
+  const { domainId } = req.params;
+  try {
+    if (!domainId) return errorResponse(res, "Domain ID is required", 400);
+    const domain = await GetSingleDomains({ domainId });
+
+    if (!domain) return errorResponse(res, "Domain not found", 404);
+    return successResponse(res, domain, "Domain fetched successfully", 200);
+    
+  } catch (error) {
+    console.error("❌ Error fetching domain:", error);
+    return errorResponse(res, error, "Internal Server Error");
   }
 };

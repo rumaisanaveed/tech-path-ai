@@ -1,392 +1,199 @@
-//import Module from "../../models/skilltracking/module.js";
-//import DomainModuleMapping from "../../models/skilltracking/domainModuleMapping.js";
-//import { CareerDomain } from "../../models/index.js";
+import {
+  CareerDomain,
+  UserCareerDomain,
+  DomainModuleMapping,
+  Module,
+  UserModuleMapping,
+} from "../../models/index.js";
+import { predictModules } from "../../openai/predictCareer.js";
 import { Op } from "sequelize";
 
-import {CareerDomain, DomainModuleMapping, Lesson, Module, QuizQuestion, UserCareerDomain, UserLessonProgress, UserModuleProgress, UserQuizAnswer} from "../../models/index.js";
+export const EnrollInModule = async (userId, userResponse, domainId) => {
+  console.log("🧾 Received enrollment request:", { userId, domainId });
 
+  const filteredResponses = (userResponse || []).map((r) => ({
+    question: r.question,
+    answer: r.answer,
+  }));
 
-export const fetchModules = async (careerDomainId) => {
-  const whereDomain = careerDomainId
-    ? { where: { id: careerDomainId } }
-    : {};
-
-  return Module.findAll({
-    attributes: [
-      "id",
-      "title",
-      "description",
-      "badge",
-      "totalXP",
-      "createdAt",
-      "updatedAt",
-    ],
-    include: [
-      {
-        model: CareerDomain,
-        as: "domains", // 👈 directly use alias
-        attributes: ["id", "title"],
-        through: { attributes: [] }, // hide join table
-        ...whereDomain,
-      },
-    ],
-    order: [["sequence", "ASC"]],
-  });
-};
-
-
-
-export const startOrGetModuleProgressService = async (userId, moduleId) => {
-  if (!moduleId) throw { status: 400, message: "moduleId required" };
-
-  const module = await Module.findByPk(moduleId);
-  if (!module) throw { status: 404, message: "Module not found" };
-
-  const userDomain = await UserCareerDomain.findOne({ where: { userId } });
-  if (!userDomain)
-    throw { status: 403, message: "User not enrolled in any career domain" };
-
-  const mapping = await DomainModuleMapping.findOne({
-    where: { careerDomainId: userDomain.careerDomainId, moduleId },
-  });
-  if (!mapping)
-    throw {
-      status: 403,
-      message: "This module does not belong to user’s enrolled domain",
-    };
-
-  // Check progress
-  let progress = await UserModuleProgress.findOne({
-    where: { userId, moduleId },
-  });
-
-  if (!progress) {
-    progress = await UserModuleProgress.create({ userId, moduleId });
-
-    // Pre-create lesson + quiz progress
-    const lessons = await Lesson.findAll({ where: { moduleId } });
-
-    for (const lesson of lessons) {
-      await UserLessonProgress.findOrCreate({
-        where: { userId, lessonId: lesson.id },
-        defaults: { userId, lessonId: lesson.id },
-      });
-
-      const quizzes = await QuizQuestion.findAll({
-        where: { lessonId: lesson.id },
-      });
-      for (const quiz of quizzes) {
-        await UserQuizAnswer.findOrCreate({
-          where: { userId, lessonId: lesson.id, quizQuestionId: quiz.id },
-          defaults: {
-            userId,
-            lessonId: lesson.id,
-            quizQuestionId: quiz.id,
-            selectedOption: null,
-            isCorrect: null,
-          },
-        });
-      }
-    }
-  }
-
-  return progress;
-};
-
-export const getLessonsForModuleService = async (moduleId) => {
-  if (!moduleId) throw { status: 400, message: "moduleId required" };
-
-  const lessons = await Lesson.findAll({
-    where: { moduleId },
-    order: [["sequence", "ASC"]],
-  });
-
-  return lessons;
-};
-
-export const startOrGetLessonProgressService = async (userId, lessonId) => {
-  if (!lessonId) throw { status: 400, message: "lessonId required" };
-
-  let progress = await UserLessonProgress.findOne({
-    where: { userId, lessonId },
-  });
-
-  if (!progress) {
-    progress = await UserLessonProgress.create({ userId, lessonId });
-  }
-
-  return progress;
-};
-
-export const submitQuizAnswerService = async (
-  userId,
-  lessonId,
-  quizQuestionId,
-  selectedOption
-) => {
-  if (!lessonId || !quizQuestionId || selectedOption === undefined)
-    throw {
-      status: 400,
-      message: "lessonId, quizQuestionId, and selectedOption required",
-    };
-
-  // Check quiz and lesson existence
-  const question = await QuizQuestion.findByPk(quizQuestionId);
-  if (!question || question.lessonId !== lessonId)
-    throw { status: 404, message: "Quiz question not found for this lesson" };
-
-  const lesson = await Lesson.findByPk(lessonId);
-  if (!lesson) throw { status: 404, message: "Lesson not found" };
-
-  // Module and lesson progress
-  const moduleProgress = await UserModuleProgress.findOne({
-    where: { userId, moduleId: lesson.moduleId },
-  });
-  if (!moduleProgress)
-    throw {
-      status: 403,
-      message: "User not enrolled in the module for this lesson",
-    };
-
-  let lessonProgress = await UserLessonProgress.findOne({
-    where: { userId, lessonId },
-  });
-  if (!lessonProgress)
-    throw { status: 403, message: "User not enrolled in this lesson" };
-
-  // Check existing answer
-  let existing = await UserQuizAnswer.findOne({
-    where: { userId, lessonId, quizQuestionId },
-  });
-  if (existing && existing.selectedOption !== null)
-    throw { status: 400, message: "Already answered" };
-
-  // Save or update answer
-  const isCorrect = question.correctAnswer === selectedOption;
-  if (existing) {
-    existing.selectedOption = selectedOption;
-    existing.isCorrect = isCorrect;
-    existing.answeredAt = new Date();
-    await existing.save();
-  } else {
-    await UserQuizAnswer.create({
-      userId,
-      lessonId,
-      quizQuestionId,
-      selectedOption,
-      isCorrect,
-    });
-  }
-
-  // Award XP
-  let xpAwarded = isCorrect && question.xp ? question.xp : 0;
-  if (xpAwarded > 0) {
-    lessonProgress.obtainedXP += xpAwarded;
-    await lessonProgress.save();
-
-    moduleProgress.obtainedXP += xpAwarded;
-
-    // Update module badge
-    const module = await Module.findByPk(lesson.moduleId);
-    if (module && module.totalXP) {
-      const percent = (moduleProgress.obtainedXP / module.totalXP) * 100;
-      let badge = percent >= 66 ? "Gold" : percent >= 33 ? "Silver" : "Bronze";
-      if (moduleProgress.badge !== badge) moduleProgress.badge = badge;
-    }
-    await moduleProgress.save();
-  }
-
-  // Check lesson completion
-  const totalQuizzes = await QuizQuestion.count({ where: { lessonId } });
-  const answeredQuizzes = await UserQuizAnswer.count({
-    where: { userId, lessonId, selectedOption: { [Op.ne]: null } },
-  });
-
-  if (lessonProgress && totalQuizzes > 0 && answeredQuizzes === totalQuizzes) {
-    lessonProgress.isCompleted = true;
-    lessonProgress.completedAt = new Date();
-    await lessonProgress.save();
-  }
-
-  return { isCorrect, xpAwarded };
-};
-
-export const getUserModuleProgressService = async (userId, moduleId) => {
-  if (!moduleId) throw { status: 400, message: "moduleId required" };
-
-  const progress = await UserModuleProgress.findOne({
-    where: { userId, moduleId },
-  });
-  if (!progress) throw { status: 404, message: "No progress found" };
-
-  const module = await Module.findByPk(moduleId);
-  let badge = "Bronze";
-  if (module && module.totalXP) {
-    const percent = (progress.obtainedXP / module.totalXP) * 100;
-    if (percent >= 66) badge = "Gold";
-    else if (percent >= 33) badge = "Silver";
-  }
-
-  return { ...progress.get(), badge };
-};
-
-export const getQuizzesForLessonService = async (lessonId) => {
-  if (!lessonId) throw { status: 400, message: "lessonId required" };
-
-  const quizzes = await QuizQuestion.findAll({
-    where: { lessonId },
-    order: [["sequence", "ASC"]],
-  });
-
-  return quizzes;
-};
-
-// 1. Get all modules a user is enrolled in (for a specific domain)
-export const getUserEnrolledModulesService = async (userId, domainId) => {
-  if (!domainId) throw { status: 400, message: "domainId required" };
-
-  // ✅ Verify user is enrolled in this domain
   const userDomain = await UserCareerDomain.findOne({
     where: { userId, careerDomainId: domainId },
   });
-  if (!userDomain) {
-    throw { status: 403, message: "User not enrolled in this domain" };
-  }
+  if (!userDomain) throw new Error("❌ User domain not found");
 
-  // ✅ Fetch modules with progress
-  const userModules = await UserModuleProgress.findAll({
-    where: { userId },
-    include: [
-      {
-        model: Module,
-        attributes: ["id", "title", "description", "totalXP", "sequence"],
-        include: [
-          {
-            model: DomainModuleMapping,
-            as: "domainModuleMappings",
-            attributes: ["careerDomainId"], // minimal fields
-            where: { careerDomainId: domainId },
-            include: [
-              {
-                model: CareerDomain,
-                as: "domain",
-                attributes: ["id", "title"],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    order: [[{ model: Module }, "sequence", "ASC"]],
+  const careerDomain = await CareerDomain.findOne({
+    where: { id: domainId },
+    attributes: ["title"],
   });
 
-  // ✅ Return only the necessary fields
-  return userModules
-    .filter((um) => um.Module) // ensure Module exists
-    .map((um) => ({
-      id: um.Module.id,
-      title: um.Module.title,
-      description: um.Module.description,
-      totalXP: um.Module.totalXP,
-      obtainedXP: um.obtainedXP,
-      badge: um.badge,
-      isCompleted: um.isCompleted,
-      completedAt: um.completedAt,
-      isActive: um.isActive,
-      careerDomainTitle:
-        um.Module?.domainModuleMappings?.[0]?.domain?.title || null,
-    }));
-};
+  const domainModules = await DomainModuleMapping.findAll({
+    where: { careerDomainId: domainId },
+    attributes: ["moduleId"],
+  });
+  const allDomainModuleIds = domainModules.map((m) => m.moduleId);
 
-// 2. Get all lessons a user is enrolled in for a given module
-export const getUserEnrolledLessonsForModuleService = async (userId, moduleId) => {
-  if (!moduleId) throw { status: 400, message: "moduleId required" };
-
-  const userLessons = await UserLessonProgress.findAll({
-    where: { userId },
-    include: [
-      {
-        model: Lesson,
-        where: { moduleId },
-        attributes: [
-          "id",
-          "title",
-          "description",
-          "content",
-          "sequence",
-          "estimatedTime",
-          "xp",
-        ],
-        include: [
-          {
-            model: QuizQuestion,
-            attributes: ["id"], // only need ids for counting
-            include: [
-              {
-                model: UserQuizAnswer,
-                required: false,
-                attributes: ["selectedOption"], // only needed for answered check
-                where: { userId },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    order: [[{ model: Lesson }, "sequence", "ASC"]],
+  // 🔥 Removed already enrolled module logic temporarily
+  const modules = await Module.findAll({
+    where: { id: allDomainModuleIds },
+    attributes: ["id", "title"],
   });
 
-  return userLessons.map((ul) => {
-    const lesson = ul.Lesson.toJSON();
+  const cleanedData = {
+    userDomain: {
+      userId,
+      careerDomain: careerDomain?.title || "Unknown Domain",
+    },
+    modules: modules.map((m) => ({ id: m.id, title: m.title })),
+    userResponse: filteredResponses,
+  };
 
-    const totalQuiz = lesson.QuizQuestions?.length || 0;
+  console.log("🧹 Cleaned Data for AI:", cleanedData);
 
-    const answeredQuiz =
-      lesson.QuizQuestions?.filter(
-        (qq) =>
-          qq.user_quiz_answers &&
-          qq.user_quiz_answers.length > 0 &&
-          qq.user_quiz_answers[0].selectedOption !== null
-      ).length || 0;
-
-    return {
-      id: lesson.id,
-      title: lesson.title,
-      description: lesson.description,
-      content: lesson.content,
-      sequence: lesson.sequence,
-      estimatedTime: lesson.estimatedTime,
-      xp: lesson.xp,
-      obtainedXP: ul.obtainedXP,
-      totalQuiz,
-      answeredQuiz,
-    };
-  });
-};
-
-
-
-// 3. Get quizzes for a lesson (only unanswered)
-export const getUserQuizzesForLessonWithStatusService = async (
-  userId,
-  lessonId
-) => {
-  if (!lessonId) throw { status: 400, message: "lessonId required" };
-
-  const quizzes = await QuizQuestion.findAll({
-    where: { lessonId },
-    order: [["sequence", "ASC"]],
-  });
-
-  const userAnswers = await UserQuizAnswer.findAll({
-    where: { userId, lessonId },
-  });
-
-  const answeredSet = new Set(
-    userAnswers
-      .filter((a) => a.selectedOption !== null && a.selectedOption !== "")
-      .map((a) => a.quizQuestionId)
+  const recommendedModuleIds = await predictModules(
+    cleanedData.modules,
+    cleanedData.userResponse,
+    cleanedData.userDomain.careerDomain
   );
 
-  return quizzes.filter((q) => !answeredSet.has(q.id));
+  if (!recommendedModuleIds || recommendedModuleIds.length === 0) {
+    return {
+      success: false,
+      message: "No recommended modules found from AI.",
+      data: cleanedData,
+    };
+  }
+
+  // 🔥 All recommended modules will be enrolled, 3 active, rest pending
+  const enrollData = recommendedModuleIds.map((moduleId, index) => ({
+    userId,
+    moduleId,
+    enrolledBy: "mascot",
+    status: index < 3 ? "active" : "pending",
+    progress: 0.0,
+  }));
+
+  await UserModuleMapping.bulkCreate(enrollData, { ignoreDuplicates: true });
+
+  return {
+    success: true,
+    message: "User enrolled successfully with 3 active modules.",
+    data: {
+      userDomain: cleanedData.userDomain,
+      userResponse: cleanedData.userResponse,
+      enrolledModules: recommendedModuleIds, // return all recommended
+    },
+  };
 };
+
+
+export const GetAllUserModules = async (userId, domainId, page = 1, limit = 6) => {
+  // ✅ Step 1: Fetch career domain name
+  const careerDomain = await CareerDomain.findOne({
+    where: { id: domainId },
+    attributes: ["id", "title"],
+  });
+
+  if (!careerDomain) {
+    return {
+      userId,
+      domainId,
+      careerDomain: null,
+      modules: [],
+      message: "Career domain not found.",
+    };
+  }
+
+  // ✅ Step 2: Get all module IDs under this domain
+  const domainModules = await DomainModuleMapping.findAll({
+    where: { careerDomainId: domainId },
+    attributes: ["moduleId"],
+  });
+
+  const domainModuleIds = domainModules.map((m) => m.moduleId);
+
+  if (domainModuleIds.length === 0) {
+    return {
+      userId,
+      domainId,
+      careerDomain: careerDomain.title,
+      modules: [],
+      message: "No modules found for this domain.",
+    };
+  }
+
+  // ✅ Step 3: Get all user module mappings for this domain
+  const userModules = await UserModuleMapping.findAll({
+    where: {
+      userId,
+      moduleId: { [Op.in]: domainModuleIds },
+    },
+    attributes: ["moduleId", "status", "progress", "enrolledAt"],
+  });
+
+  const userModuleIds = userModules.map((um) => um.moduleId);
+
+  if (userModuleIds.length === 0) {
+    return {
+      userId,
+      domainId,
+      careerDomain: careerDomain.title,
+      modules: [],
+      message: "User not enrolled in any modules for this domain.",
+    };
+  }
+
+  // ✅ Step 4: Apply pagination
+  const offset = (page - 1) * limit;
+
+  const modules = await Module.findAll({
+    where: { id: { [Op.in]: userModuleIds } },
+    attributes: ["id", "title", "description", "totalXp", "badge", "slug"],
+    order: [["id", "ASC"]],
+    offset,
+    limit,
+  });
+
+  // ✅ Step 5: Combine progress + status from UserModuleMapping
+  const combinedModules = modules.map((mod) => {
+    const userMap = userModules.find((u) => u.moduleId === mod.id);
+    return {
+      ...mod.toJSON(),
+      status: userMap?.status || "unknown",
+      progress: userMap?.progress || 0,
+      enrolledAt: userMap?.enrolledAt || null,
+    };
+  });
+
+  const activeModules = combinedModules.filter((mod) => mod.status === "active");
+
+  // ✅ Step 6: Return structured + paginated response
+  return {
+    userId,
+    domainId,
+    careerDomain: careerDomain.title,
+    page,
+    perPage: limit,
+    totalModules: userModuleIds.length,
+    totalPages: Math.ceil(userModuleIds.length / limit),
+    modules: combinedModules,
+    activeModules
+  };
+};
+
+export const ToggleModule = async (userId, moduleId, status) => {
+  
+
+  const userModule = await UserModuleMapping.findOne({
+    where: { userId, moduleId },
+  });
+
+  if (!userModule) {
+    return []
+  }
+  userModule.status = status;
+
+  await userModule.save();
+
+  return userModule;
+
+}

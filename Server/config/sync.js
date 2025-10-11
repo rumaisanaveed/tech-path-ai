@@ -7,7 +7,7 @@ const startApp = async () => {
     console.log("Database connected/updated.");
 
     // Sync all models with database
-    await sequelize.sync(); // Or use { force: true } carefully in dev
+    await sequelize.sync(); // Or use { force: true } carefully in dev {alter: true}
 
     // Start your server here...
   } catch (error) {

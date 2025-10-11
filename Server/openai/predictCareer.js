@@ -1,6 +1,9 @@
 import openai from "./openaiClient.js";
+import genAI from "./openaiClient.js";
 
 export const getCareerRecommendation = async (userData) => {
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
   const prompt = `
 You are a career guidance AI of software and computer science field.
 
@@ -37,22 +40,16 @@ Data:
 ${JSON.stringify(userData, null, 2)}
 `;
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "system", content: "You are a career counselor AI assistant." },
-      { role: "user", content: prompt },
-    ],
-  });
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  let content = response.text().trim();
 
-  let content = response.choices[0].message.content.trim();
-
-  // 🔧 Clean up GPT response (remove ```json or ``` if present)
+  // 🧹 Clean up Gemini response (remove ```json or ``` if present)
   if (content.startsWith("```")) {
     content = content.replace(/^```json\s*|^```\s*|```$/g, "").trim();
   }
 
-  // 🔁 Retry logic to safely parse JSON
+  // 🔁 Retry-safe JSON parsing
   let parsed = null;
   let attempts = 0;
 
@@ -61,14 +58,83 @@ ${JSON.stringify(userData, null, 2)}
       parsed = JSON.parse(content);
     } catch (err) {
       attempts++;
-      console.warn(`❌ Attempt ${attempts} - Failed to parse GPT response JSON.`);
+      console.warn(`❌ Attempt ${attempts} - Failed to parse Gemini JSON.`);
       if (attempts === 3) {
-        console.error("❌ Final GPT output:\n", content);
-        throw new Error("Invalid JSON format from GPT");
+        console.error("❌ Final Gemini output:\n", content);
+        throw new Error("Invalid JSON format from Gemini");
       }
     }
   }
 
   return parsed;
 };
+
+
+export const predictModules = async (modules, userResponses, careerDomainName) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const prompt = `
+You are "Piddu" — an intelligent learning assistant that helps assign modules to users.
+
+🎓 Career Path: ${careerDomainName}
+
+Your task:
+- The user is enrolled in the above career path.
+- You are given a list of available modules (each has an id + title).
+- You are also given user responses about their experience, confidence, interests, and availability.
+- Based on those, pick **exactly 15 modules** that best match the user's current level and interests.
+- Focus on:
+  - Beginner if user says "new" or "just starting".
+  - Intermediate if user says "some experience" or "comfortable".
+  - Advanced if user says "experienced" or "expert".
+- Prioritize progressive learning order (basics first, then advanced).
+- You must return only valid module **IDs** from the provided list.
+
+🧾 MODULES:
+${JSON.stringify(modules, null, 2)}
+
+💬 USER RESPONSES:
+${JSON.stringify(userResponses, null, 2)}
+
+🎯 REQUIRED OUTPUT FORMAT:
+Return ONLY this JSON:
+{
+  "selectedModules": [list of 15 module IDs in learning order]
+}
+`;
+
+    // 🧠 Generate response
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+
+    console.log("🧠 Raw Gemini Output:\n", text);
+
+    // 🧩 Parse safely
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      console.warn("⚠️ Gemini output not valid JSON, attempting recovery...");
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error("Could not parse JSON from Gemini output.");
+      }
+    }
+
+    const selectedIds = parsed?.selectedModules || [];
+    console.log("✅ Selected Module IDs:", selectedIds);
+
+    return selectedIds; // 🔥 Only IDs, no titles
+  } catch (error) {
+    console.error("❌ Error in predictModules:", error);
+    return [];
+  }
+};
+
+
+
+
 

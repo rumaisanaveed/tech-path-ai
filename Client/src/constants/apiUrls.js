@@ -5,6 +5,8 @@ const skillmoduleController = "/skill-modules/";
 const lessonController = "/skill-modules/";
 const roadmapController = "/roadmap/";
 
+const skillEnrollment = "/enrollment/";
+
 export const API_ROUTES = {
   AUTH: {
     LOGIN: `${authController}login`,
@@ -31,10 +33,11 @@ export const API_ROUTES = {
     GET_ALL_CAREER_DOMAINS: `${careerdomainController}/all`,
     GET_USER_CAREER_DOMAINS: `${careerdomainController}/current`,
     ENROLL_CAREER_DOMAIN: `${careerdomainController}/enroll`,
+    UNENROLL_CAREER_DOMAIN: (domainId) =>
+      `${careerdomainController}/unenroll/${domainId}`,
   },
   SKILLMODULE: {
-    GET_USER_ENROLLED: (domainId) =>
-      `${skillmoduleController}module/enrolled/${domainId}`,
+    GET_USER_ENROLLED: (domainId) => `${skillEnrollment}modules/${domainId}`,
   },
   LESSONS: {
     GET_MODULE_LESSONS: (moduleId) =>
@@ -42,24 +45,46 @@ export const API_ROUTES = {
     GET_LESSON_QUIZZES: (lessonId) =>
       `${lessonController}lesson/${lessonId}/user-quizzes`,
     SUBMIT_QUIZ_ANSWER: `${lessonController}quiz/answer`,
+
+    GET_ALL_USER_LESSONS: (moduleId) =>
+      `$/lessons/all-lessons/${moduleId}`,
   },
   ROADMAPS: {
     GET_ROADMAPS: (domainId) => `${roadmapController}${domainId}`,
   },
-  MODULES:{
-    GET_ALL_MODULES_FROM_DOMAIN: (domainId) => `${skillmoduleController}module/${domainId}`,
-  }
+  MODULES: {
+    GET_ALL_MODULES_FROM_DOMAIN: (domainId) =>
+      `${skillmoduleController}module/${domainId}`,
+  },
 };
 
-const adminController = "/admin/skill-tracking";
+const adminController = "/admin";
 
 export const ADMIN_API_ROUTES = {
   SKILLTRACKING: {
-    GET_ALL_CAREER_DOMAINS: `${adminController}/all-domains`,
+    GET_ALL_CAREER_DOMAINS: `${adminController}/skill-tracking/all-domains`,
     TOGGLE_CAREER_DOMAIN_STATUS: (domainId) =>
-      `${adminController}/toggle-domain/${domainId}`,
+      `${adminController}/skill-tracking/toggle-domain/${domainId}`,
     DELETE_CAREER_DOMAIN: (domainId) =>
-      `${adminController}/delete-domain/${domainId}`,
-    CREATE_CAREER_DOMAIN: `${adminController}/create-domain`
+      `${adminController}/skill-tracking/delete-domain/${domainId}`,
+    CREATE_CAREER_DOMAIN: `${adminController}/skill-tracking/create-domain`,
+    GET_SINGLE_CAREER_DOMAIN: (domainId) =>
+      `${adminController}/skill-tracking/single-domain/${domainId}`,
   },
-}
+  MODULE_TRACKING: {
+    GET_ALL_MODULES: (domainId) =>
+      `${adminController}/skill-modules/all-modules/${domainId}`,
+    CREATE_MODULE: (domainId) =>
+      `${adminController}/skill-modules/create-module/${domainId}`,
+    DELETE_MODULE: (moduleId, domainId) =>
+      `${adminController}/skill-modules/delete-module/${moduleId}/${domainId}`,
+  },
+  LESSON_TRACKING: {
+    GET_ALL_MODULE_LESSONS_AND_MODULE: (moduleId) =>
+      `${adminController}/skill-lessons/get-module-lesson/${moduleId}`,
+    ADD_LESSON: (moduleId) =>
+      `${adminController}/skill-lessons/create-lesson/${moduleId}`,
+    GET_SINGLE_LESSON: (lessonId) =>
+      `${adminController}/skill-lessons/get-single-lesson/${lessonId}`,
+  },
+};

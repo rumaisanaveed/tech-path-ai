@@ -1,79 +1,70 @@
-import {
-  CareerDomain,
-  UserModuleProgress,
-  UserLessonProgress,
-  UserQuizAnswer,
-} from "../../models/index.js";
-import UserCareerDomain from "../../models/skilltracking/userCareerDomain.js";
+import { CareerDomain, UserCareerDomain } from "../../models/index.js";
 
-export const enrollCareerDomainService = async (userId, careerDomainId) => {
-  if (!careerDomainId)
-    throw { status: 400, message: "careerDomainId required" };
+export const GetAllCareerDomains = async (userId) => {
+  // Get all domains
+  const domains = await CareerDomain.findAll({
+    attributes: ["id", "title", "isActive"],
+  });
 
-  const domain = await CareerDomain.findByPk(careerDomainId);
-  if (!domain) throw { status: 404, message: "Career domain not found" };
+  // Get user's enrolled domains
+  const userDomains = await UserCareerDomain.findAll({
+    where: { userId },
+    attributes: ["careerDomainId"],
+  });
 
-  // Check if already enrolled
-  let userDomain = await UserCareerDomain.findOne({
+  const enrolledIds = userDomains.map((ud) => ud.careerDomainId);
+
+  // Add isEnrolled flag
+  const careerDomains = domains.map((domain) => ({
+    ...domain.toJSON(),
+    isEnrolled: enrolledIds.includes(domain.id),
+  }));
+
+  return {careerDomains};
+};
+
+
+export const EnrollCareerDomain = async (userId, careerDomainId) => {
+  const userDomain = await UserCareerDomain.findOne({
     where: { userId, careerDomainId },
   });
   if (userDomain) {
-    throw { status: 200, message: "User already enrolled in this domain" };
+    throw { status: 200, message: "Already enrolled in this domain" };
   }
-
-  // Enroll user
-  userDomain = await UserCareerDomain.create({ userId, careerDomainId });
-
-  // Auto-enroll in modules, lessons, quizzes
-  const modules = await domain.getModules();
-
-  for (const module of modules) {
-    await UserModuleProgress.findOrCreate({
-      where: { userId, moduleId: module.id },
-      defaults: { userId, moduleId: module.id },
-    });
-
-    const lessons = await module.getLessons();
-    for (const lesson of lessons) {
-      await UserLessonProgress.findOrCreate({
-        where: { userId, lessonId: lesson.id },
-        defaults: { userId, lessonId: lesson.id },
-      });
-
-      const quizzes = await lesson.getQuizQuestions();
-      for (const quiz of quizzes) {
-        await UserQuizAnswer.findOrCreate({
-          where: { userId, lessonId: lesson.id, quizQuestionId: quiz.id },
-          defaults: {
-            userId,
-            lessonId: lesson.id,
-            quizQuestionId: quiz.id,
-            selectedOption: null,
-            isCorrect: null,
-          },
-        });
-      }
-    }
-  }
-
-  return userDomain;
+  return await UserCareerDomain.create({
+    userId,
+    careerDomainId,
+  });
 };
 
-export const getCurrentCareerDomainService = async (userId) => {
+export const GetCurrentCareerDomain = async (userId) => {
   const userDomains = await UserCareerDomain.findAll({
     where: { userId },
-    include: [{ model: CareerDomain }],
+    include: [
+      {
+        model: CareerDomain,
+        as: "careerDomain",
+      },
+    ],
   });
 
   if (!userDomains || userDomains.length === 0) {
-    throw { status: 404, message: "User is not enrolled in any career domain" };
+    return [];
   }
 
+  // Access via alias name
   return userDomains.map((ud) => ud.careerDomain);
 };
 
-export const getAllCareerDomainsService = async () => {
-   return await CareerDomain.findAll({
-    attributes: ["id", "title"],
+
+export const UnenrollCareerDomain = async (userId, careerDomainId) => {
+  const userDomain = await UserCareerDomain.findOne({
+    where: { userId, careerDomainId },
   });
-};
+  if (!userDomain) {
+    throw { status: 200, message: "User not enrolled in this domain" };
+  }
+  return await UserCareerDomain.destroy({
+    where: { userId, careerDomainId },
+  });
+}

@@ -26,7 +26,16 @@ export const enrollInCareerDomain = async (domainId) => {
   return res.data;
 }
 
-//ADMIN Management
+//@DELETE || Unenroll a user from a career domain
+export const unEnrollInCareerDomain = async (domainId) => { 
+  const url = API_ROUTES.SKILLTRACKING.UNENROLL_CAREER_DOMAIN(domainId);
+  const res = await axiosReq(API_MODES.DELETE, url);
+  //console.log("This is response from unEnrollInCareerDomain", res);
+  return res.data;
+}
+
+
+//------------------------ADMIN Management-----------------------
 export const adminGetAllCareerDomains = async () => {
   const url = ADMIN_API_ROUTES.SKILLTRACKING.GET_ALL_CAREER_DOMAINS;
   const res = await axiosReq(API_MODES.GET, url);
@@ -55,3 +64,32 @@ export const adminCreateDomain = async (formData) => {
   });
   return res.data;
 };
+
+
+export const getSingleCareerDomains = async (domainId) => {
+  const url = ADMIN_API_ROUTES.SKILLTRACKING.GET_SINGLE_CAREER_DOMAIN(domainId);
+  const res = await axiosReq(API_MODES.GET, url);
+  console.log("This is response from getSingleCareerDomains", res);
+  return res.data;
+}
+
+//------------------------ADMIN Management MODULES-----------------------
+
+export const adminGetAllModulesFromDomain = async (domainId, page = 1, limit = 5) => {
+  const url = `${ADMIN_API_ROUTES.MODULE_TRACKING.GET_ALL_MODULES(domainId)}?page=${page}&limit=${limit}`;
+  const res = await axiosReq(API_MODES.GET, url);
+  console.log("This is response from adminGetAllModulesFromDomain", res);
+  return res.data; 
+}
+
+export const adminCreateModule = async (domainId, formData) => {
+  const url = ADMIN_API_ROUTES.MODULE_TRACKING.CREATE_MODULE(domainId);
+  const res = await axiosReq(API_MODES.POST, url, formData);
+  return res.data;
+}
+
+export const adminDeleteModule = async (moduleId, domainId) => {
+  const url = `${ADMIN_API_ROUTES.MODULE_TRACKING.DELETE_MODULE(moduleId, domainId)}`;
+  const res = await axiosReq(API_MODES.DELETE, url);
+  return res.data;
+}

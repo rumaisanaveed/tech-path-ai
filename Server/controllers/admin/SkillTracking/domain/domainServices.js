@@ -44,3 +44,13 @@ export const DeleteDomain = async (domainId) => {
   await domain.destroy();
   return;
 };
+
+export const GetSingleDomains = async ({ domainId }) => {
+  try {
+    const domain = await CareerDomain.findByPk(domainId);
+    return domain ? domain.toJSON() : null;
+  } catch (error) {
+    console.error("❌ Error in GetSingleDomains service:", error);
+    throw error;
+  }
+};

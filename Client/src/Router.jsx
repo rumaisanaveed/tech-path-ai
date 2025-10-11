@@ -62,6 +62,9 @@ import Lessons from "./pages/dashboard/skillTracking/domainTracker/components/Le
 import Roadmap from "./pages/dashboard/roadmaps/Roadmap";
 import ViewRoadMap from "./pages/dashboard/roadmaps/ViewRoadMap";
 import SkilltrackingManagement from "./pages/adminDashboard/SkillTracking/SkilltrackingManagement";
+import ModuleTracking from "./pages/adminDashboard/SkillTracking/ModuleTracking";
+import EditDomainPage from "./pages/adminDashboard/SkillTracking/EditDomainPage";
+import LessonPage from "./pages/adminDashboard/SkillTracking/LessonPage";
 
 // TODO : lazy load the pages
 
@@ -162,14 +165,14 @@ function Router() {
                   </UserProtectedRoute>
                 }
               />
-              <Route 
+              <Route
                 path={USER_DASHBOARD_ROUTES.LESSON_TRACKER}
                 element={
                   <UserProtectedRoute>
                     <Lessons />
                   </UserProtectedRoute>
                 }
-               />
+              />
               <Route
                 path={USER_DASHBOARD_ROUTES.SKILL_ASSESSMENT}
                 element={
@@ -286,6 +289,31 @@ function Router() {
                   <SkilltrackingManagement />
                 </AdminProtectedRoute>
               }
+            />
+            <Route 
+              path={ADMIN_DASHBOARD_ROUTES.SKILL_TRACKING_EDIT}
+              element={
+                <AdminProtectedRoute>
+                  <EditDomainPage />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path={ADMIN_DASHBOARD_ROUTES.MODULE_TRACKING_MANAGEMENT}
+              element={
+                <AdminProtectedRoute>
+                  <ModuleTracking />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+            path={ADMIN_DASHBOARD_ROUTES.LESSON_TRACKING_MANAGEMENT}
+            element={
+              <AdminProtectedRoute>
+                <LessonPage />
+              </AdminProtectedRoute>
+            }
+
             />
           </Route>
         </Routes>

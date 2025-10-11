@@ -7,6 +7,7 @@ import { ActionDropdown } from "@/components/dropdowns/ActionDropdown";
 import CertificationModal from "@/components/modals/CertificationModal";
 import ProjectModal from "@/components/modals/ProjectModal";
 import { OrangeProgressBar } from "@/components/OrangeProgressBar";
+import TrackerSkeletons from "@/components/skeletons/skillTracking/tracker/TrackerSkeletons";
 import { BuddyConversation } from "@/components/skillTracking/buddy/BuddyConversation";
 import Modules from "@/components/skillTracking/Modules";
 import { Badge } from "@/components/ui/badge";
@@ -155,9 +156,10 @@ const SkillTracker = () => {
 
   // API hook
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
-  const modules = data?.modules || [];
+  const activeModules = data?.userModules?.activeModules || [];
 
-  const activeModules = modules.filter((mod) => mod.isActive);
+  // Only show first 3 active modules
+  const displayModules = activeModules.slice(0, 3);
 
   const handleActions = (action, moduleId) => {
     switch (action) {
@@ -170,23 +172,9 @@ const SkillTracker = () => {
     }
   };
 
-  // --- Skeleton loader ---
   if (isLoading) {
     return (
-      <div className="w-full md:w-3/4 bg-custom-light-white rounded-md p-5 flex flex-col gap-4">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-2 bg-white p-3 rounded-xl shadow-sm min-h-[120px]"
-          >
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-5 w-1/2" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-3/4" />
-            <Skeleton className="h-2 w-full mt-2" />
-          </div>
-        ))}
-      </div>
+      <TrackerSkeletons />
     );
   }
 
@@ -198,78 +186,74 @@ const SkillTracker = () => {
     );
   }
 
+  if (displayModules.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[300px] bg-white rounded-xl shadow-sm">
+        <p className="text-gray-500 text-sm">
+          No active modules found. Enroll to get started!
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full md:w-3/4 bg-custom-light-white rounded-md p-5 flex flex-col gap-4 h-fit">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-black font-medium text-lg md:text-xl">
-          {modules[0]?.careerDomainTitle || "Skill Modules"}
+          {data?.userModules?.careerDomain || "Skill Modules"}
         </h1>
-        {modules[0]?.badge && (
-          <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">
-            {modules[0]?.badge}
-          </span>
-        )}
       </div>
 
-      {/* Active Modules or Empty State */}
+      {/* Display first 3 active modules */}
       <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-        {activeModules.length > 0 ? (
-          activeModules.map((mod, idx) => {
-            const progressPercent = Math.round(
-              (mod.obtainedXP / mod.totalXP) * 100
-            );
+        {displayModules.map((mod, idx) => {
+          const progressPercent = Math.round((mod.progress / 100) * 100); // Or calculate properly
 
-            return (
-              <div
-                key={mod.id}
-                className="flex flex-col gap-1 bg-white p-3 rounded-xl shadow-sm min-h-[120px]"
-              >
-                <span className="text-xs text-gray-500 mb-1">
-                  Module {idx + 1}
-                </span>
+          return (
+            <div
+              key={mod.id}
+              className="flex flex-col gap-1 bg-white p-3 rounded-xl shadow-sm min-h-[120px]"
+            >
+              <span className="text-xs text-gray-500 mb-1">
+                Module {idx + 1}
+              </span>
 
-                <h2 className="text-black font-medium text-base md:text-lg">
-                  {mod.title}
-                </h2>
+              <h2 className="text-black font-medium text-base md:text-lg">
+                {mod.title}
+              </h2>
 
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {mod.description}
-                </p>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {mod.description}
+              </p>
 
-                <div className="flex items-center justify-between mt-2">
-                  <div className="flex flex-col gap-1 w-full">
-                    <OrangeProgressBar value={progressPercent} />
-                    <span className="text-xs text-muted-foreground">
-                      {mod.obtainedXP}/{mod.totalXP} XP
-                    </span>
-                  </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Ellipsis
-                        color="black"
-                        size={18}
-                        className="cursor-pointer ml-2"
-                      />
-                    </DropdownMenuTrigger>
-                    <ActionDropdown
-                      items={domainSkillDropdownItems}
-                      onAction={(action) => handleActions(action, mod.id)}
-                    />
-                  </DropdownMenu>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex flex-col gap-1 w-full">
+                  <OrangeProgressBar value={progressPercent} />
+                  <span className="text-xs text-muted-foreground">
+                    {mod.totalXp} XP
+                  </span>
                 </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Ellipsis
+                      color="black"
+                      size={18}
+                      className="cursor-pointer ml-2"
+                    />
+                  </DropdownMenuTrigger>
+                  <ActionDropdown
+                    items={domainSkillDropdownItems}
+                    onAction={(action) => handleActions(action, mod.id)}
+                  />
+                </DropdownMenu>
               </div>
-            );
-          })
-        ) : (
-          <div className="flex items-center justify-center h-[300px] bg-white rounded-xl shadow-sm">
-            <p className="text-gray-500 text-sm">
-              No active modules found. Enroll to get started!
-            </p>
-          </div>
-        )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+

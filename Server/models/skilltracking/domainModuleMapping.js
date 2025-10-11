@@ -17,15 +17,6 @@ const DomainModuleMapping = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    orderIndex: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 1,
-    },
-    isMandatory: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
     customTitle: {
       type: DataTypes.STRING(250),
       allowNull: true,

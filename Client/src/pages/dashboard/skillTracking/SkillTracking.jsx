@@ -4,7 +4,7 @@ import usePageTitle from "@/hooks/usePageTitle";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { Heading } from "./components/Heading";
 import { OutlinedActionButton } from "@/components/buttons/OutlinedActionButton";
-import { BookOpenCheck, Ellipsis, Plus, Trash2 } from "lucide-react";
+import { BookOpenCheck, Check, Ellipsis, Plus, Trash2 } from "lucide-react";
 import { SecondaryButton } from "@/components/buttons/SecondaryButton";
 import {
   careerDomainDropdownItem,
@@ -72,8 +72,12 @@ export const SkillTracking = () => {
                       <DropdownMenuItem
                         key={domain.id}
                         onSelect={() => handleDomainSelect(domain.id)}
+                        className="flex items-center justify-between"
                       >
-                        {domain.title}
+                        <span>{domain.title}</span>
+                        {domain.isEnrolled && (
+                          <Check className="h-4 w-4 text-green-500" />
+                        )}
                       </DropdownMenuItem>
                     ))
                   )}
@@ -130,7 +134,9 @@ const Domains = () => {
             alt="No domains"
             className="w-20 h-20 mb-4 opacity-80"
           />
-          <h2 className="text-lg font-semibold">You're not enrolled in any field yet</h2>
+          <h2 className="text-lg font-semibold">
+            You're not enrolled in any field yet
+          </h2>
           <p className="text-sm text-muted-foreground">
             Start exploring and enroll in a domain to begin your journey 🚀
           </p>
@@ -165,7 +171,9 @@ const Domains = () => {
                 </DropdownMenu>
               </div>
               <div className="flex flex-col gap-1 p-4">
-                <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
+                <h1 className="text-lg font-semibold truncate">
+                  {domain.title}
+                </h1>
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {domain.description}
                 </p>
@@ -177,7 +185,9 @@ const Domains = () => {
                   className="w-full py-1"
                   textSmall
                   onClickHandler={() =>
-                    navigate(`/user/dashboard/skill-tracker/domain/${domain.id}`)
+                    navigate(
+                      `/user/dashboard/skill-tracker/domain/${domain.id}`
+                    )
                   }
                 />
               </div>
@@ -233,7 +243,6 @@ const IndividualSkills = () => {
     </div>
   );
 };
-
 
 const DomainsSkeleton = () => {
   return (

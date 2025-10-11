@@ -1,213 +1,71 @@
-import { QuizQuestion, UserModuleProgress } from "../../models/index.js";
 import {
-  successResponse,
   errorResponse,
+  successResponse,
 } from "../../utils/handlers/reponseHandler.js";
-import {
-  fetchModules,
-  getLessonsForModuleService,
-  getQuizzesForLessonService,
-  getUserModuleProgressService,
-  startOrGetLessonProgressService,
-  startOrGetModuleProgressService,
-  submitQuizAnswerService,
-  getUserEnrolledModulesService,
-  getUserEnrolledLessonsForModuleService,
-  getUserQuizzesForLessonWithStatusService,
-} from "./modulesServices.js";
+import { EnrollInModule, GetAllUserModules } from "./modulesServices.js";
 
-export const getAllModules = async (req, res) => {
+export const enrollInModule = async (req, res) => {
   try {
+    const userId = req.userId;
+    const { userResponse } = req.body;
     const { domainId } = req.params;
-    const modules = await fetchModules(domainId);
-    return successResponse(res, { modules }, "Modules fetched successfully");
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
 
-export const patchModulesActive = async (req, res) => {
-  try {
-    const { moduleId } = req.params;
-    const userId = req.userId; // from auth middleware
-    const { isActive } = req.body;
-
-    if (typeof isActive !== "boolean") {
-      return errorResponse(res, "isActive must be a boolean");
-    }
-
-    // Count how many active domains user already has
-    if (isActive === true) {
-      const activeModules = await UserModuleProgress.count({
-        where: { userId, isActive: true },
-      });
-
-      if (activeModules >= 3) {
-        return errorResponse(
-          res,
-          "You can only enroll into a maximum of 3 domains at the same time."
-        );
-      }
-    }
-
-    // Find progress for this user + module
-    const progress = await UserModuleProgress.findOne({
-      where: { userId, moduleId },
-    });
-
-    if (!progress) {
-      return errorResponse(res, "Progress record not found", 404);
-    }
-
-    // Update field
-    progress.isActive = isActive;
-    await progress.save();
-
-    return successResponse(res, {
-      message: `Module ${moduleId} isActive set to ${isActive}`,
-      data: progress,
-    });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-export const startOrGetModuleProgress = async (req, res) => {
-  try {
-    const { moduleId } = req.body;
-    const userId = req.userId;
-    if (!moduleId) errorResponse(res, "moduleId is required", null, 400);
-
-    const progress = await startOrGetModuleProgressService(userId, moduleId);
-
-    return successResponse(res, { progress });
-  } catch (err) {
-    console.error("Error in startOrGetModuleProgress:", err);
-    return errorResponse(res, err);
-  }
-};
-
-export const getLessonsForModule = async (req, res) => {
-  try {
-    const { moduleId } = req.params;
-    if (!moduleId) return errorResponse(res, "moduleId is required", null, 400);
-    const lessons = await getLessonsForModuleService(moduleId);
-
-    return successResponse(res, { lessons });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-export const startOrGetLessonProgress = async (req, res) => {
-  try {
-    const { lessonId } = req.body;
-    const userId = req.userId;
-
-    const progress = await startOrGetLessonProgressService(userId, lessonId);
-
-    return successResponse(res, { progress });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-export const submitQuizAnswer = async (req, res) => {
-  try {
-    const { lessonId, quizQuestionId, selectedOption } = req.body;
-    const userId = req.userId;
-
-    const result = await submitQuizAnswerService(
+    const enrollIntoModules = await EnrollInModule(
       userId,
-      lessonId,
-      quizQuestionId,
-      selectedOption
+      userResponse,
+      domainId
     );
 
-    return successResponse(res, result);
-  } catch (err) {
-    return errorResponse(res, err);
+    return successResponse(
+      res,
+      { enrollIntoModules },
+      "Enrolled in module successfully"
+    );
+  } catch (error) {
+    console.error("Error enrolling in module:", error);
+    errorResponse(res, error, "Failed to enroll in module");
   }
 };
 
-export const getUserModuleProgress = async (req, res) => {
-  try {
-    const { moduleId } = req.params;
-    const userId = req.userId;
-
-    const progress = await getUserModuleProgressService(userId, moduleId);
-    return successResponse(res, { progress });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-export const getQuizzesForLesson = async (req, res) => {
-  try {
-    const { lessonId } = req.params;
-    const quizzes = await getQuizzesForLessonService(lessonId);
-    return successResponse(res, { quizzes });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-// 1. Get all modules user enrolled in
-export const getUserEnrolledModules = async (req, res) => {
+export const getAllUserModules = async (req, res) => {
   try {
     const userId = req.userId;
     const { domainId } = req.params;
-    console.log("Fetching enrolled modules for user:", userId);
+    const page = parseInt(req.query.page) || 1; // default page 1
+    const limit = 6; // 6 modules per page
 
-    const modules = await getUserEnrolledModulesService(userId, domainId);
-    return successResponse(res, { modules });
-  } catch (err) {
-    return errorResponse(res, err);
+    const userModules = await GetAllUserModules(userId, domainId, page, limit);
+
+    return successResponse(
+      res,
+      { userModules },
+      "Fetched all user modules successfully"
+    );
+  } catch (error) {
+    console.log("Error getting all user modules:", error);
+    errorResponse(res, error, "Failed to get all user modules");
   }
 };
 
-// 2. Get lessons for a module user enrolled in
-export const getUserEnrolledLessonsForModule = async (req, res) => {
+export const toggleModule = async (req, res) => {
   try {
     const userId = req.userId;
     const { moduleId } = req.params;
+    const { status } = req.body; 
+    
+    const validStatuses = ["active", "completed", "pending"];
+    if (!validStatuses.includes(status)) {
+      errorResponse(res, null, "Invalid status value");
+    }
 
-    console.log("Fetching lessons for user:", userId, "module:", moduleId);
-
-    const lessons = await getUserEnrolledLessonsForModuleService(
-      userId,
-      moduleId
+    const toggled = await ToggleModule(userId, moduleId, status);
+    return successResponse(
+      res,
+      { toggled },
+      "Module status toggled successfully"
     );
-    return successResponse(res, { lessons });
-  } catch (err) {
-    return errorResponse(res, err);
+  } catch (error) {
+    console.log("Error toggling module status:", error);
+    errorResponse(res, error, "Failed to toggle module status");
   }
 };
-
-// 3. Get unanswered quizzes for a lesson
-export const getUserQuizzesForLessonWithStatus = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { lessonId } = req.params;
-
-    const quizzes = await getUserQuizzesForLessonWithStatusService(
-      userId,
-      lessonId
-    );
-    return successResponse(res, { quizzes });
-  } catch (err) {
-    return errorResponse(res, err);
-  }
-};
-
-
-//GET LESSONS QUESTIONS
-export const getLessonQuestions = async (req, res) => {
-  const {lessonId} = req.params
-  const quizzes = await QuizQuestion.findAll({
-    where: { lessonId },
-    order: [["sequence", "ASC"]],
-  });
-
-  return successResponse(res, { quizzes });
-}

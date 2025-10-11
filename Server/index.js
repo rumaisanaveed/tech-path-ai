@@ -8,17 +8,15 @@ import connectDB from "./config/connectDB.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 
-
-
-
 import routes from "./routes/routes.js";
 import adminRoutes from "./routes/admin/adminRoute.js";
 import assessmentsRoutes from "./routes/assessmentsRoute.js";
 
 import startApp from "./config/sync.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import { insertQuestions } from "./utils/seedQuestions.js";
-import { seedModules } from "./utils/SeedData/skilllTracking/frontendSeed.js";
+// import { insertQuestions } from "./utils/seedQuestions.js";
+//import { insertModules } from "./utils/SeedData/skilllTracking/frontendSeed.js";
+//import {seedDomainModules} from "./utils/SeedData/skilllTracking/frontendSeed.js";
 
 dotenv.config();
 
@@ -47,7 +45,8 @@ app.listen(PORT, () => {
   connectDB();
   startApp();
   // insertQuestions();
-  //seedModules()
+  //insertModules()
+  //seedDomainModules();
   console.log(`Server is running on port ${PORT}`);
   console.log(
     `📚 Swagger docs available at: http://localhost:${PORT}/api-docs`

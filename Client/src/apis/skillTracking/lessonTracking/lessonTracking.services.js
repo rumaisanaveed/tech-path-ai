@@ -1,5 +1,13 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getModuleLessons, getLessonQuizzes, submitQuizAnswer } from "./lessonTracking.api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getModuleLessons,
+  getLessonQuizzes,
+  submitQuizAnswer,
+  getAllModuleLessons,
+  postLesson,
+  getSingleLesson,
+  getAllUserLessons,
+} from "./lessonTracking.api";
 
 // Hook: get all lessons of a module
 export const useModuleLessons = (moduleId) =>
@@ -25,3 +33,48 @@ export const useSubmitQuiz = () =>
   useMutation({
     mutationFn: submitQuizAnswer,
   });
+
+//--------------User-------------
+export const useAllUserLessons = (moduleId) => {
+  return useQuery({
+    queryKey: ["allUserLessons", moduleId],
+    queryFn: () => getAllUserLessons(moduleId),
+    enabled: !!moduleId,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+//--------------ADMIN-------------
+
+export const useAllModuleLessonAdmin = (moduleId) => {
+  return useQuery({
+    queryKey: ["allModuleLessons", moduleId],
+    queryFn: () => getAllModuleLessons(moduleId),
+    enabled: !!moduleId,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useAddNewLessonAdmin = (moduleId) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (newLesson) => postLesson({ moduleId, ...newLesson }),
+    onSuccess: () => {
+      // Refetch lessons after a successful addition
+      queryClient.invalidateQueries(["allModuleLessons", moduleId]);
+    },
+  });
+};
+
+export const useGetSingleLessonAdmin = (lessonId) => {
+  return useQuery({
+    queryKey: ["singleLesson", lessonId],
+    queryFn: () => getSingleLesson(lessonId),
+    enabled: !!lessonId,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  });
+};
