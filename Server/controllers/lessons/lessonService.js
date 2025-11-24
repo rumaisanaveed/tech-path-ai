@@ -6,6 +6,7 @@ import {
   LessonResource,
   Module,
   UserLessonProgress,
+  UserModuleMapping,
   XpWeight,
 } from "../../models/index.js";
 
@@ -61,21 +62,21 @@ export const PostLessonEnrollment = async ({ userId, moduleId }) => {
 };
 
 export const GetAllUserLessons = async ({ moduleId, userId }) => {
-  // Fetch module with lessons and user progress in one query
-  const module = await Module.findByPk(moduleId, {
-    attributes: ["id", "title", "description", "totalXP", "badge", "slug"],
+  // Fetch module with lessons and user progress
+  const modulePromise = Module.findByPk(moduleId, {
+    attributes: ["id", "title", "description", "totalXp", "badge", "slug"],
     include: [
       {
         model: Lesson,
         as: "lessons",
-        attributes: ["id", "title", "description", "isMandatory", "sequence"],
+        attributes: ["id", "title", "description", "sequence", "isMandatory"],
         include: [
           {
             model: UserLessonProgress,
             as: "userProgress",
             where: { userId },
-            required: false, // include lessons even if no progress yet
-            attributes: ["status", "locked", "xpEarned"],
+            required: false,
+            attributes: ["status", "locked", "xp_earned"],
           },
         ],
         order: [["sequence", "ASC"]],
@@ -84,11 +85,20 @@ export const GetAllUserLessons = async ({ moduleId, userId }) => {
     order: [[{ model: Lesson, as: "lessons" }, "sequence", "ASC"]],
   });
 
+  const moduleMappingPromise = UserModuleMapping.findOne({
+    where: { userId, moduleId },
+    attributes: ["progress", "status"],
+  });
+
+  const [module, moduleMapping] = await Promise.all([
+    modulePromise,
+    moduleMappingPromise,
+  ]);
+
   if (!module) return null;
 
   const moduleData = module.get({ plain: true });
 
-  // Map lessons and merge progress
   const lessons = moduleData.lessons.map((lesson) => {
     const progress = lesson.userProgress?.[0] || {};
     return {
@@ -99,7 +109,7 @@ export const GetAllUserLessons = async ({ moduleId, userId }) => {
       sequence: lesson.sequence,
       status: progress.status || "not_started",
       locked: progress.locked !== undefined ? progress.locked : true,
-      xpEarned: progress.xpEarned ? parseFloat(progress.xpEarned) : 0,
+      xpEarned: progress.xp_earned ? parseFloat(progress.xp_earned) : 0,
     };
   });
 
@@ -107,9 +117,13 @@ export const GetAllUserLessons = async ({ moduleId, userId }) => {
     id: moduleData.id,
     title: moduleData.title,
     description: moduleData.description,
-    totalXP: moduleData.totalXP,
+    totalXP: moduleData.totalXp,
     badge: moduleData.badge,
     slug: moduleData.slug,
+    moduleProgress: moduleMapping
+      ? parseFloat(moduleMapping.progress)
+      : 0,
+    moduleStatus: moduleMapping?.status || "active",
     lessons,
   };
 };
@@ -191,17 +205,49 @@ export const GetDetailLesson = async (lessonId, userId) => {
 };
 
 export const PatchLessonProgress = async (userId, lessonId, status) => {
-  // Validate status
   const validStatuses = ["not_started", "in_progress", "completed"];
   if (!validStatuses.includes(status)) return null;
 
+  // Fetch lesson progress
   const progress = await UserLessonProgress.findOne({
     where: { userId, lessonId },
-    attributes: ["id", "xp_earned"],
+    attributes: ["id", "xp_earned", "moduleId", "status"],
   });
+
   if (!progress) return null;
-  
+
+  const previousStatus = progress.status;
+
+  // Update lesson status
   progress.status = status;
   await progress.save();
+
+  const moduleId = progress.moduleId;
+
+  if (moduleId) {
+    const moduleMapping = await UserModuleMapping.findOne({ where: { userId, moduleId } });
+
+    if (moduleMapping) {
+      const lessonXp = parseFloat(progress.get("xp_earned") || 0);
+      let currentProgress = parseFloat(moduleMapping.progress || 0);
+
+      // Increment if changed to completed
+      if (status === "completed" && previousStatus !== "completed") {
+        currentProgress += lessonXp;
+      }
+      // Decrement if changed from completed to other
+      else if (previousStatus === "completed" && status !== "completed" && currentProgress > 0) {
+        currentProgress -= lessonXp;
+        if (currentProgress < 0) currentProgress = 0; // prevent negative
+      }
+
+      moduleMapping.progress = currentProgress;
+
+      // DO NOT change module status
+      await moduleMapping.save();
+    }
+  }
+
   return progress.get({ plain: true });
 };
+

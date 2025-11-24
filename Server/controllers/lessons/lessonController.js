@@ -67,9 +67,10 @@ export const patchLessonProgress = async (req, res) => {
   const { lessonId } = req.params;
 
   try {
-    if(!status || !lessonId || !userId){
+    if (!status || !lessonId || !userId) {
       return errorResponse(res, "Status is required", "Bad Request", 400);
     }
+
     const progress = await PatchLessonProgress(userId, lessonId, status);
 
     if (!progress) {

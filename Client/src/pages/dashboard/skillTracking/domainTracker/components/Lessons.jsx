@@ -16,6 +16,7 @@ import ViewLessonModal from "./ViewLessonModal";
 import BuddyLessons from "@/components/skillTracking/buddy/BuddyLessons";
 
 import peekImg from "@/assets/mascot/peaking.webp";
+import { CustomLessonProgressBar } from "@/components/CustomLessonProgressBar";
 
 const Lessons = () => {
   const { moduleId } = useParams();
@@ -86,16 +87,25 @@ const Lessons = () => {
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-700">
               <div className="flex items-center gap-1">
                 <Star size={14} className="text-yellow-500" />
-                <span>{module.totalXp ?? 0} XP</span>
+                <span>{module.totalXP ?? 0} XP</span>
               </div>
               <div className="flex items-center gap-1">
                 <BookOpen size={14} className="text-blue-500" />
                 <span>
-                  {module.lessons?.length || 0}{" "}
-                  {module.lessons?.length === 1 ? "Lesson" : "Lessons"}
+                  {module.lessons?.filter(
+                    (lesson) => lesson.status === "completed"
+                  ).length || 0}{" "}
+                  / {module.lessons?.length || 0}{" "}
+                  {module.lessons?.length === 1 ? "Lesson" : "Lessons"}{" "}
+                  Completed
                 </span>
               </div>
             </div>
+
+            <CustomLessonProgressBar
+              xpearned={module.moduleProgress || 0}
+              totalXP={module.totalXP || 0}
+            />
           </CardContent>
         </Card>
 
@@ -124,7 +134,7 @@ const Lessons = () => {
                   </div>
 
                   <div className="flex justify-between text-xs text-gray-700 mb-3">
-                    <span>{lesson.isMandatory ? "Mandatory" : "Optional"}</span>
+                    <span className="font-medium">Status: {lesson.status}</span>
                     <span className="font-medium">Seq: {lesson.sequence}</span>
                   </div>
 
