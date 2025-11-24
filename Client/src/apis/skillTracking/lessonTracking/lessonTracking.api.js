@@ -35,6 +35,12 @@ export const getSingleUserLesson = async (lessonId) => {
   return res.data;
 }
 
+export const updateStatusLesson = async ({lessonId, status})=>{
+  const url = API_ROUTES.LESSONS.UPDATE_LESSON_STATUS(lessonId);
+   const res = await axiosReq(API_MODES.PATCH, url, { status });
+  return res.data;
+}
+
 //--------------ADMIN-------------
 
 export const getAllModuleLessons = async (moduleId) => {

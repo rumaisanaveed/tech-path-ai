@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,22 +7,40 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";
-import { useGetSingleLessonDetails } from "@/apis/skillTracking/lessonTracking/lessonTracking.services";
+import {
+  useGetSingleLessonDetails,
+  useUpdateStatusLesson,
+} from "@/apis/skillTracking/lessonTracking/lessonTracking.services";
 
 const ViewLessonModal = ({ open, onClose, lesson }) => {
   const lessonId = lesson?.id;
+
+  // ⭐ FIX: Add status state
+  const [status, setStatus] = useState("pending");
+
   const { data, isLoading, isError, refetch } = useGetSingleLessonDetails(
     lessonId,
     { enabled: !!lessonId }
   );
 
-  //console.log("ViewLesson - data:", data);
+  const { mutate: updateStatus } = useUpdateStatusLesson();
+
+  useEffect(() => {
+    if (data?.userProgress?.status) {
+      setStatus(data.userProgress.status);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (lessonId) refetch();
   }, [lessonId, refetch]);
 
   if (!open) return null;
+
+  const handleChangeStatus = (newStatus) => {
+    setStatus(newStatus);
+    updateStatus({ lessonId: lesson.id, status: newStatus });
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -49,12 +67,10 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
               <h3 className="font-semibold text-gray-900 mb-3 text-lg">
                 Lesson Information
               </h3>
-              <div className="space-y-3 pl-1">
-                <p>
-                  <strong className="text-gray-900">Description:</strong>{" "}
-                  {data?.description || "No description available."}
-                </p>
-              </div>
+              <p>
+                <strong>Description:</strong>{" "}
+                {data?.description || "No description available."}
+              </p>
             </section>
 
             <Separator />
@@ -66,15 +82,14 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
                   Learning Points
                 </h3>
                 <ol className="list-decimal list-inside space-y-2 pl-2">
-                  {data.learningPoints.map((point, i) => (
-                    <li key={point.id} className="ml-1">
-                      <span className="font-medium text-gray-800">
-                        {point.point}
-                      </span>
-                      {point.subPoints && point.subPoints.length > 0 && (
-                        <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-gray-700">
-                          {point.subPoints.map((sp, idx) => (
-                            <li key={idx}>
+                  {data.learningPoints.map((point) => (
+                    <li key={point.id}>
+                      <span className="font-medium">{point.point}</span>
+
+                      {point.subPoints?.length > 0 && (
+                        <ul className="list-disc list-inside ml-6 mt-1 space-y-1">
+                          {point.subPoints.map((sp, i) => (
+                            <li key={i}>
                               {sp.label && <strong>{sp.label}:</strong>}{" "}
                               {sp.description}
                             </li>
@@ -101,29 +116,23 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
                       key={ex.id}
                       className="p-4 sm:p-5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
                     >
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">
-                        Example {idx + 1}
-                      </h4>
+                      <h4 className="font-semibold mb-2">Example {idx + 1}</h4>
 
-                      {/* Description */}
                       {ex.description && (
                         <p className="text-gray-800 mb-2">{ex.description}</p>
                       )}
 
-                      {/* Optional descriptionPoints */}
-                      {ex.descriptionPoints &&
-                        ex.descriptionPoints.length > 0 && (
-                          <ul className="text-gray-700 list-disc list-inside mb-2 ml-4 space-y-1">
-                            {ex.descriptionPoints.map((dp, i) => (
-                              <li key={i}>
-                                {dp.label && <strong>{dp.label}: </strong>}
-                                {dp.description}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                      {ex.descriptionPoints?.length > 0 && (
+                        <ul className="list-disc list-inside ml-4 space-y-1 mb-3">
+                          {ex.descriptionPoints.map((dp, i) => (
+                            <li key={i}>
+                              {dp.label && <strong>{dp.label}: </strong>}
+                              {dp.description}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
 
-                      {/* Code snippet */}
                       {ex.codeSnippet && (
                         <pre className="bg-gray-900 text-white text-xs sm:text-sm p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-words">
                           {ex.codeSnippet}
@@ -148,8 +157,7 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
                       <a
                         href={res.url}
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 underline break-all"
+                        className="text-blue-600 hover:underline break-all"
                       >
                         {res.type} → {res.url}
                       </a>
@@ -158,6 +166,27 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
                 </ul>
               </section>
             )}
+
+            {/* ⭐ FIXED STATUS SECTION */}
+            <section className="pt-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Lesson Status
+              </h3>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <label className="text-sm text-gray-700">Select Status:</label>
+
+                <select
+                  value={status}
+                  onChange={(e) => handleChangeStatus(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 text-sm w-full sm:w-40 bg-white"
+                >
+                  <option value="not_started">Not Started</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </section>
           </div>
         )}
       </DialogContent>

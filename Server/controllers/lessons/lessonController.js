@@ -2,13 +2,18 @@ import {
   errorResponse,
   successResponse,
 } from "../../utils/handlers/reponseHandler.js";
-import { PostLessonEnrollment,GetAllUserLessons,GetDetailLesson } from "./lessonService.js";
+import {
+  PostLessonEnrollment,
+  GetAllUserLessons,
+  GetDetailLesson,
+  PatchLessonProgress,
+} from "./lessonService.js";
 
 export const postLessonEnrollment = async (req, res) => {
   try {
-    const  userId  = req.userId;
+    const userId = req.userId;
     const { moduleId } = req.params;
-    const enrolled = await PostLessonEnrollment({ userId,moduleId });
+    const enrolled = await PostLessonEnrollment({ userId, moduleId });
     return successResponse(res, enrolled, "Lesson enrollment successful", 201);
   } catch (error) {
     console.log("Error in postLessonEnrollment", error);
@@ -17,37 +22,66 @@ export const postLessonEnrollment = async (req, res) => {
 };
 
 export const getAllUserLessons = async (req, res) => {
- try {
-     const { moduleId } = req.params;
+  try {
+    const { moduleId } = req.params;
+    const userId = req.userId;
 
- 
-     if (!moduleId) {
-       return errorResponse(res, "Module ID is required", "Bad Request", 400);
-     }
- 
-     const moduleAndLessons = await GetAllUserLessons({moduleId});
-     return successResponse(res, moduleAndLessons, "Module and lessons fetched successfully", 200);
-     
-   } catch (error) {
-     console.log(error);
-     errorResponse(res, error.message, "Internal Server Error");
-   }
-}
+    if (!moduleId) {
+      return errorResponse(res, "Module ID is required", "Bad Request", 400);
+    }
+
+    const moduleAndLessons = await GetAllUserLessons({ moduleId, userId });
+    return successResponse(
+      res,
+      moduleAndLessons,
+      "Module and lessons fetched successfully",
+      200
+    );
+  } catch (error) {
+    console.log(error);
+    errorResponse(res, error.message, "Internal Server Error");
+  }
+};
 
 export const getDetailsOfLesson = async (req, res) => {
   try {
-      const { lessonId } = req.params;
-  
-      if (!lessonId) {
-        return errorResponse(res, "Lesson ID is required", "Bad Request", 400);
-      }
-  
-      const data = await GetDetailLesson(lessonId)
-  
-      return successResponse(res, data, "Lesson fetched successfully", 200);
-      
-    } catch (error) {
-      console.log(error);
-      errorResponse(res, error.message, "Internal Server Error");
+    const { lessonId } = req.params;
+    const userId = req.userId;
+
+    if (!lessonId) {
+      return errorResponse(res, "Lesson ID is required", "Bad Request", 400);
     }
-}
+
+    const data = await GetDetailLesson(lessonId, userId);
+
+    return successResponse(res, data, "Lesson fetched successfully", 200);
+  } catch (error) {
+    console.log(error);
+    errorResponse(res, error.message, "Internal Server Error");
+  }
+};
+
+export const patchLessonProgress = async (req, res) => {
+  const userId = req.userId;
+  const { status } = req.body;
+  const { lessonId } = req.params;
+
+  try {
+    const progress = await PatchLessonProgress(userId, lessonId, status);
+
+    if (!progress) {
+      return errorResponse(res, "Lesson progress not found", "Not Found", 404);
+    }
+
+    // Conditional message
+    const message =
+      status === "completed"
+        ? `Lesson status updated successfully! You've earned ${progress.xp_earned} XP.`
+        : "Lesson status updated successfully.";
+
+    return successResponse(res, progress, message, 200);
+  } catch (error) {
+    console.log(error);
+    return errorResponse(res, error.message, "Internal Server Error");
+  }
+};

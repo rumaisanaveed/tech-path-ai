@@ -48,6 +48,8 @@ export const API_ROUTES = {
 
     GET_ALL_USER_LESSONS: (moduleId) => `/lessons/all-lessons/${moduleId}`,
     GET_SINGLE_USER_LESSON: (lessonId) => `/lessons/details/${lessonId}`,
+
+    UPDATE_LESSON_STATUS: (lessonId)=>`/lessons/update-progress/${lessonId}`,
   },
   ROADMAPS: {
     GET_ROADMAPS: (domainId) => `${roadmapController}${domainId}`,

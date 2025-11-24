@@ -5,10 +5,13 @@ import PersonProfile from "@/assets/icons/person-profile.svg";
 import { Button } from "@/components/ui/button";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Logo from "@/assets/icons/logo.svg";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { sidebarItems } from "@/constants";
 
 export default function DashboardLayout({ children }) {
   return (
+    <TooltipProvider>
+
     <div className="flex h-screen overflow-hidden">
       <Sidebar items={sidebarItems} />
       <div className="flex-1 flex flex-col overflow-y-auto">
@@ -16,6 +19,7 @@ export default function DashboardLayout({ children }) {
         <main className="flex-1">{children}</main>
       </div>
     </div>
+    </TooltipProvider>
   );
 }
 

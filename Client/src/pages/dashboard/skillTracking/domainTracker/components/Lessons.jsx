@@ -4,18 +4,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Star, BookOpen, ArrowLeft, Eye } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Star, BookOpen, ArrowLeft, Eye, Lock } from "lucide-react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { useAllUserLessons } from "@/apis/skillTracking/lessonTracking/lessonTracking.services";
 import ViewLessonModal from "./ViewLessonModal";
 import BuddyLessons from "@/components/skillTracking/buddy/BuddyLessons";
 
+import peekImg from "@/assets/mascot/peaking.webp";
+
 const Lessons = () => {
   const { moduleId } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useAllUserLessons(moduleId);
-  console.log("Module Lessons Data:", data);
-
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
 
@@ -38,15 +43,16 @@ const Lessons = () => {
   const module = data;
 
   const handleViewLesson = (lesson) => {
+    if (lesson.locked) return; // locked, do nothing
     setSelectedLesson(lesson);
     setIsViewModalOpen(true);
   };
 
   return (
     <DashboardLayout>
-    <BuddyLessons/>
+      <BuddyLessons />
       <div className="p-6 space-y-6">
-        {/* --- Back Button --- */}
+        {/* Back Button */}
         <div className="flex items-center justify-between">
           <Button
             variant="ghost"
@@ -58,7 +64,7 @@ const Lessons = () => {
           </Button>
         </div>
 
-        {/* --- Module Header --- */}
+        {/* Module Header */}
         <Card className="rounded-2xl border border-gray-100 shadow-md bg-white">
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
@@ -93,17 +99,19 @@ const Lessons = () => {
           </CardContent>
         </Card>
 
-        {/* --- Lessons List --- */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-800">Lessons</h2>
-        </div>
+        {/* Lessons List */}
+        <h2 className="text-lg font-semibold text-gray-800">Lessons</h2>
 
         {module.lessons && module.lessons.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {module.lessons.map((lesson) => (
               <Card
                 key={lesson.id}
-                className="rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition"
+                className={`rounded-xl border border-gray-100 shadow-sm transition relative ${
+                  lesson.locked
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:shadow-md"
+                }`}
               >
                 <CardContent className="p-5 flex flex-col justify-between h-full">
                   <div>
@@ -120,14 +128,46 @@ const Lessons = () => {
                     <span className="font-medium">Seq: {lesson.sequence}</span>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full flex items-center justify-center gap-1"
-                    onClick={() => handleViewLesson(lesson)}
-                  >
-                    <Eye size={14} /> View Lesson
-                  </Button>
+                  {lesson.locked ? (
+                    <div className="relative group select-none flex flex-col items-center">
+                      {/* Mascot with tooltip */}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <img
+                            src={peekImg}
+                            alt="Peek"
+                            className="
+            absolute -top-14 left-1/2 -translate-x-1/2 w-14
+            opacity-0 group-hover:opacity-100
+            transition-opacity duration-300
+            z-[50] pointer-events-auto
+          "
+                          />
+                        </TooltipTrigger>
+
+                        <TooltipContent
+                          side="top"
+                          className="z-[60] text-center"
+                        >
+                          Complete previous lesson
+                        </TooltipContent>
+                      </Tooltip>
+
+                      {/* Lock label */}
+                      <div className="flex items-center justify-center gap-1 text-gray-600 font-medium text-sm">
+                        <Lock size={14} /> Locked
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full flex items-center justify-center gap-1"
+                      onClick={() => handleViewLesson(lesson)}
+                    >
+                      <Eye size={14} /> View Lesson
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -137,7 +177,7 @@ const Lessons = () => {
         )}
       </div>
 
-      {/* --- View Modal --- */}
+      {/* View Modal */}
       <ViewLessonModal
         open={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}

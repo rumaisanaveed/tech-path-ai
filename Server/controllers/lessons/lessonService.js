@@ -40,10 +40,17 @@ export const PostLessonEnrollment = async ({ userId, moduleId }) => {
   const totalLessonXP = module.totalXP * xpWeight.lesson_weight;
 
   // 6️⃣ Generate lesson progress array
-  const lessonProgress = generateLessonProgress(userId, module.id, lessons, totalLessonXP);
+  const lessonProgress = generateLessonProgress(
+    userId,
+    module.id,
+    lessons,
+    totalLessonXP
+  );
 
   // 7️⃣ Insert all lesson progress into DB
-  const insertedProgress = await UserLessonProgress.bulkCreate(lessonProgress, { returning: true });
+  const insertedProgress = await UserLessonProgress.bulkCreate(lessonProgress, {
+    returning: true,
+  });
 
   // 8️⃣ Optional: Console log for debugging
   insertedProgress.forEach((item, i) => {
@@ -51,38 +58,66 @@ export const PostLessonEnrollment = async ({ userId, moduleId }) => {
   });
 
   return insertedProgress;
-
 };
 
-export const GetAllUserLessons = async ({ moduleId }) => {
-  const moduleWithLessons = await Module.findByPk(moduleId, {
-    attributes: ["id", "title", "description", "totalXp", "badge", "slug"],
+export const GetAllUserLessons = async ({ moduleId, userId }) => {
+  // Fetch module with lessons and user progress in one query
+  const module = await Module.findByPk(moduleId, {
+    attributes: ["id", "title", "description", "totalXP", "badge", "slug"],
     include: [
       {
         model: Lesson,
         as: "lessons",
-        attributes: [
-          "id",
-          "title",
-          "description",
-          "isMandatory",
-          "sequence",
-          "createdAt",
-          "updatedAt",
+        attributes: ["id", "title", "description", "isMandatory", "sequence"],
+        include: [
+          {
+            model: UserLessonProgress,
+            as: "userProgress",
+            where: { userId },
+            required: false, // include lessons even if no progress yet
+            attributes: ["status", "locked", "xpEarned"],
+          },
         ],
+        order: [["sequence", "ASC"]],
       },
     ],
     order: [[{ model: Lesson, as: "lessons" }, "sequence", "ASC"]],
   });
 
-  if (!moduleWithLessons) return null;
+  if (!module) return null;
 
-  return moduleWithLessons.get({ plain: true });
+  const moduleData = module.get({ plain: true });
+
+  // Map lessons and merge progress
+  const lessons = moduleData.lessons.map((lesson) => {
+    const progress = lesson.userProgress?.[0] || {};
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      description: lesson.description,
+      isMandatory: lesson.isMandatory,
+      sequence: lesson.sequence,
+      status: progress.status || "not_started",
+      locked: progress.locked !== undefined ? progress.locked : true,
+      xpEarned: progress.xpEarned ? parseFloat(progress.xpEarned) : 0,
+    };
+  });
+
+  return {
+    id: moduleData.id,
+    title: moduleData.title,
+    description: moduleData.description,
+    totalXP: moduleData.totalXP,
+    badge: moduleData.badge,
+    slug: moduleData.slug,
+    lessons,
+  };
 };
 
-export const GetDetailLesson = async (lessonId) => {
-  if (!lessonId) return null;
+export const GetDetailLesson = async (lessonId, userId) => {
+  if (!lessonId || !userId) return null;
 
+  // 1. Fetch lesson
   const lesson = await Lesson.findByPk(lessonId, {
     attributes: [
       "id",
@@ -97,50 +132,76 @@ export const GetDetailLesson = async (lessonId) => {
       {
         model: LessonExample,
         as: "examples",
-        attributes: ["codeSnippet", "description", "descriptionPoints"],
+        attributes: ["id", "codeSnippet", "description", "descriptionPoints"],
         order: [["createdAt", "ASC"]],
       },
       {
         model: LessonLearningPoint,
         as: "learningPoints",
-        attributes: ["point", "subPoints"], // include subPoints JSON
-        order: [["ASC"]],
+        attributes: ["id", "point", "subPoints"],
+        order: [["id", "ASC"]],
       },
       {
         model: LessonResource,
         as: "resources",
-        attributes: ["type", "url"],
-        order: [["ASC"]],
+        attributes: ["id", "type", "url"],
+        order: [["id", "ASC"]],
       },
     ],
   });
 
   if (!lesson) return null;
 
-  // Convert to plain object
   const result = lesson.get({ plain: true });
 
-  // Parse learningPoints.subPoints if stored as string
-  if (result.learningPoints && result.learningPoints.length > 0) {
-    result.learningPoints = result.learningPoints.map((lp) => ({
-      ...lp,
-      subPoints:
-        typeof lp.subPoints === "string"
-          ? JSON.parse(lp.subPoints)
-          : lp.subPoints || [],
-    }));
-  }
+  // 2. Parse JSON fields where needed
+  result.learningPoints = result.learningPoints?.map((lp) => ({
+    ...lp,
+    subPoints:
+      typeof lp.subPoints === "string"
+        ? JSON.parse(lp.subPoints)
+        : lp.subPoints || [],
+  }));
 
-  // Parse examples.descriptionPoints if stored as string
-  if (result.examples && result.examples.length > 0) {
-    result.examples = result.examples.map((ex) => ({
-      ...ex,
-      descriptionPoints:
-        typeof ex.descriptionPoints === "string"
-          ? JSON.parse(ex.descriptionPoints)
-          : ex.descriptionPoints || [],
-    }));
-  }
+  result.examples = result.examples?.map((ex) => ({
+    ...ex,
+    descriptionPoints:
+      typeof ex.descriptionPoints === "string"
+        ? JSON.parse(ex.descriptionPoints)
+        : ex.descriptionPoints || [],
+  }));
+
+  // 3. Fetch user progress for this lesson
+  const progress = await UserLessonProgress.findOne({
+    where: { userId, lessonId },
+    attributes: ["id", "status", "locked", "xpEarned"],
+  });
+
+  // 4. If no progress exists → provide default
+  result.userProgress = progress
+    ? progress.get({ plain: true })
+    : {
+        id: null,
+        status: "not_started",
+        locked: false, // or true if you lock based on sequence
+        xpEarned: 0,
+      };
 
   return result;
+};
+
+export const PatchLessonProgress = async (userId, lessonId, status) => {
+  // Validate status
+  const validStatuses = ["not_started", "in_progress", "completed"];
+  if (!validStatuses.includes(status)) return null;
+  // Find existing progress
+  const progress = await UserLessonProgress.findOne({
+    where: { userId, lessonId },
+    attributes: ["id","xp_earned"],
+  });
+  if (!progress) return null;
+  // Update progress
+  progress.status = status;
+  await progress.save();
+  return progress.get({ plain: true });
 };

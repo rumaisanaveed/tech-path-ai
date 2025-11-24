@@ -9,6 +9,7 @@ import {
   getAllUserLessons,
   deleteSingleLesson,
   getSingleUserLesson,
+  updateStatusLesson,
 } from "./lessonTracking.api";
 import { toast } from "sonner";
 
@@ -58,6 +59,18 @@ export const useGetSingleLessonDetails = (lessonId) => {
     cacheTime: 0,
   });
 };
+
+export const useUpdateStatusLesson = ()=>{
+  const queryClient = useQueryClient();
+  return useMutation({
+        mutationFn: ({ lessonId, status }) => updateStatusLesson({ lessonId, status }),
+    onSuccess: (data, lessonId) => {
+      // Refetch lesson details after a successful status update
+      queryClient.invalidateQueries(["singleLessonDetails", lessonId]);
+      toast.success(data.message || "Lesson status updated successfully!");
+    }
+  })
+}
 
 //--------------ADMIN-------------
 
