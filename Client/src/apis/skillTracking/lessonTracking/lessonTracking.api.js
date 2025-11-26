@@ -33,13 +33,13 @@ export const getSingleUserLesson = async (lessonId) => {
   const url = API_ROUTES.LESSONS.GET_SINGLE_USER_LESSON(lessonId);
   const res = await axiosReq(API_MODES.GET, url);
   return res.data;
-}
+};
 
-export const updateStatusLesson = async ({lessonId, status})=>{
+export const updateStatusLesson = async ({ lessonId, status, sequence }) => {
   const url = API_ROUTES.LESSONS.UPDATE_LESSON_STATUS(lessonId);
-   const res = await axiosReq(API_MODES.PATCH, url, { status });
+  const res = await axiosReq(API_MODES.PATCH, url, { status, sequence });
   return res.data;
-}
+};
 
 //--------------ADMIN-------------
 
@@ -79,9 +79,8 @@ export const getSingleLesson = async (lessonId) => {
   return res.data;
 };
 
-
 export const deleteSingleLesson = async (lessonId) => {
   const url = ADMIN_API_ROUTES.LESSON_TRACKING.DELETE_LESSON(lessonId);
   const res = await axiosReq(API_MODES.DELETE, url);
   return res.data;
-}
+};

@@ -63,15 +63,17 @@ export const getDetailsOfLesson = async (req, res) => {
 
 export const patchLessonProgress = async (req, res) => {
   const userId = req.userId;
-  const { status } = req.body;
+  const { status, sequence } = req.body;
   const { lessonId } = req.params;
+
+  console.log("Sequence received in request body:", sequence);
 
   try {
     if (!status || !lessonId || !userId) {
       return errorResponse(res, "Status is required", "Bad Request", 400);
     }
 
-    const progress = await PatchLessonProgress(userId, lessonId, status);
+    const progress = await PatchLessonProgress(userId, lessonId, status,sequence);
 
     if (!progress) {
       return errorResponse(res, "Lesson progress not found", "Not Found", 404);

@@ -60,17 +60,19 @@ export const useGetSingleLessonDetails = (lessonId) => {
   });
 };
 
-export const useUpdateStatusLesson = ()=>{
+export const useUpdateStatusLesson = () => {
   const queryClient = useQueryClient();
   return useMutation({
-        mutationFn: ({ lessonId, status }) => updateStatusLesson({ lessonId, status }),
+    mutationFn: ({ lessonId, status, sequence }) =>
+      updateStatusLesson({ lessonId, status, sequence }),
     onSuccess: (data, lessonId) => {
       // Refetch lesson details after a successful status update
       queryClient.invalidateQueries(["singleLessonDetails", lessonId]);
       toast.success(data.message || "Lesson status updated successfully!");
-    }
-  })
-}
+      console.log("Lesson status updated:", data);
+    },
+  });
+};
 
 //--------------ADMIN-------------
 

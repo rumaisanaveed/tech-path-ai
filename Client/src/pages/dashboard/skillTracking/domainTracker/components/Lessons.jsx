@@ -110,7 +110,22 @@ const Lessons = () => {
         </Card>
 
         {/* Lessons List */}
-        <h2 className="text-lg font-semibold text-gray-800">Lessons</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Lessons</h2>
+          <div className="flex gap-2">
+            {module.quizzes?.map((quiz) => (
+              <Button
+                key={quiz.quizId}
+                size="sm"
+                variant={quiz.unlocked ? "default" : "secondary"}
+                disabled={!quiz.unlocked}
+                onClick={() => console.log(`Quiz ${quiz.quizId} clicked`)}
+              >
+                Quiz {quiz.quizId}
+              </Button>
+            ))}
+          </div>
+        </div>
 
         {module.lessons && module.lessons.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
