@@ -25,7 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export const Tracker = () => {
-   const { id: domainId } = useParams();
+  const { id: domainId } = useParams();
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
   const [isAddCertificationModalOpen, setIsAddCertificationModalOpen] =
     useState(false);

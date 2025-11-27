@@ -1,12 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { getRoadmaps } from "./roadmap.api";
+import { getRoadmaps,getDashboardData } from "./roadmap.api";
 
 
-export const useRoadmaps = (domainId) => {
+export const useRoadmaps = () => {
   return useQuery({
-    queryKey: ["roadmaps", domainId],
-    queryFn: () => getRoadmaps(domainId),
-    enabled: !!domainId,
+    queryKey: ["roadmaps"],
+    queryFn: () => getRoadmaps(),
   });
 };
+
+export const useDashboardData = () => {
+
+  return useQuery({
+    queryKey: ["dashboardData"],
+    queryFn: () => getDashboardData(),
+  });
+}

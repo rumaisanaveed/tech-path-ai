@@ -8,12 +8,12 @@ export const getQuestionQuiz = async (quizData) => {
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const prompt =
-  `You are an expert quiz generator AI specializing in creating quizzes for assessing skills in software and computer science fields. 
+    `You are an expert quiz generator AI specializing in creating quizzes for assessing skills in software and computer science fields. 
 Generate at least 10 questions (with 4 options each, without revealing the answers) from the following lesson titles:\n\n` +
-  quizData.lessons
-    .map((lesson, index) => `${index + 1}. ${lesson.title}`)
-    .join("\n") +
-  `
+    quizData.lessons
+      .map((lesson, index) => `${index + 1}. ${lesson.title}`)
+      .join("\n") +
+    `
 
 Additionally, add 3 extra questions that are the hardest possible questions related to these lessons. These should challenge the user’s knowledge at a higher level. Make sure they are randomly different from the first 4 questions and all are scenario based.
 
@@ -40,7 +40,6 @@ C) <option C>
 D) <option D>
 
 Do not reveal the correct answers. Ensure all 10 questions are unique and relevant to the lessons.`;
-
 
   try {
     const result = await model.generateContent(prompt);

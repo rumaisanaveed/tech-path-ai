@@ -6,6 +6,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import { useAllCareerDomains } from "@/apis/skillTracking/skillTracking.services";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRoadmaps } from "@/apis/roadMaps/roadmap.services";
 
 const Roadmap = () => {
   usePageTitle("Roadmaps");
@@ -17,7 +18,9 @@ const Roadmap = () => {
     setBreadcrumbText("Roadmaps");
   }, []);
 
-  const { data: domainsData, isLoading: domainsLoading } = useAllCareerDomains();
+  const { data, isLoading: domainsLoading } = useRoadmaps();
+
+  console.log("Career Domains Data:", data);
 
   return (
     <DashboardLayout>
@@ -34,7 +37,7 @@ const Roadmap = () => {
         {/* Career Domains */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {domainsLoading && <p>Loading career domains...</p>}
-          {domainsData?.careerDomains?.map((domain) => (
+          {data?.roadmaps?.map((domain) => (
             <div
               key={domain.id}
               onClick={() => navigate(`/user/dashboard/roadmaps/${domain.id}`)}
