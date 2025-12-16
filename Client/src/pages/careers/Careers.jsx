@@ -25,7 +25,7 @@ export const Careers = () => {
         </h1>
         {/* search and filter */}
         <div className="flex items-center gap-2 md:gap-3">
-          <SearchBar placeholderText="Search Careers.." />
+          <SearchBar variant="default" placeholder="Search Careers.." />
           <FilterButton />
         </div>
         {/* careers */}

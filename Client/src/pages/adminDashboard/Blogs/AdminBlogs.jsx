@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SelectInput } from "@/components/inputs/SelectInput/SelectInput";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Search,
-  Filter,
-  Eye,
-  Calendar,
-  User,
-  FileText,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import usePageTitle from "@/hooks/usePageTitle";
+import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
+import {
+  Calendar,
+  CheckCircle,
+  Clock,
+  Eye,
+  FileText,
+  Search,
+  TrendingUp,
+  User,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const mockBlogs = [
   {
@@ -103,6 +95,24 @@ const filterOptions = [
   { value: "pending", label: "Pending", icon: Clock },
   { value: "approved", label: "Approved", icon: CheckCircle },
   { value: "rejected", label: "Rejected", icon: XCircle },
+];
+
+const selectOptions = [
+  {
+    value: "pending",
+    label: "Pending",
+    icon: Clock,
+  },
+  {
+    value: "approved",
+    label: "Approved",
+    icon: CheckCircle,
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+    icon: XCircle,
+  },
 ];
 
 const AdminBlogs = () => {
@@ -341,36 +351,20 @@ const AdminBlogs = () => {
                           </span>
                         </div>
 
-                        <Select
+                        <SelectInput
                           value={blog.status}
                           onValueChange={(value) =>
                             handleStatusChange(blog.id, value)
                           }
-                        >
-                          <SelectTrigger className="w-[130px] h-8 text-sm border-gray-200">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pending">
-                              <div className="flex items-center gap-2">
-                                <Clock className="w-3 h-3" />
-                                Pending
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="approved">
-                              <div className="flex items-center gap-2">
-                                <CheckCircle className="w-3 h-3" />
-                                Approved
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="rejected">
-                              <div className="flex items-center gap-2">
-                                <XCircle className="w-3 h-3" />
-                                Rejected
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                          items={selectOptions}
+                          customItem={(item) => (
+                            <div className="flex items-center gap-2">
+                              <item.icon className="w-3 h-3" />
+                              {item.label}
+                            </div>
+                          )}
+                          selectTriggerClassName="w-[130px] h-8 text-sm border-gray-200"
+                        />
                       </div>
 
                       <Button

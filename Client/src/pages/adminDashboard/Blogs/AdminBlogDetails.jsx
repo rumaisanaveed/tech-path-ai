@@ -1,34 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
+import { SelectInput } from "@/components/inputs/SelectInput/SelectInput";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  ArrowLeft,
-  Calendar,
-  User,
-  Eye,
-  Tag,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Share2,
-  BookOpen,
-  MessageSquare,
-  TrendingUp,
-  AlertTriangle,
-} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
 import { format } from "date-fns";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  BookOpen,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Eye,
+  MessageSquare,
+  Share2,
+  Tag,
+  User,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const statusConfig = {
   pending: {
@@ -81,6 +74,27 @@ const mockBlogData = [
       { name: "JavaScript" },
       { name: "React" },
     ],
+  },
+];
+
+export const statusOptions = [
+  {
+    value: "pending",
+    label: "Pending Review",
+    icon: Clock,
+    iconColor: "text-amber-600",
+  },
+  {
+    value: "approved",
+    label: "Approved",
+    icon: CheckCircle,
+    iconColor: "text-emerald-600",
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+    icon: XCircle,
+    iconColor: "text-red-600",
   },
 ];
 
@@ -296,7 +310,7 @@ const AdminBlogDetails = () => {
                       <label className="text-sm font-medium text-gray-700">
                         Change Status
                       </label>
-                      <Select
+                      {/* <Select
                         value={blog.status}
                         onValueChange={handleStatusChange}
                         disabled={statusLoading}
@@ -324,7 +338,24 @@ const AdminBlogDetails = () => {
                             </div>
                           </SelectItem>
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+                      <SelectInput
+                        value={blog.status}
+                        onValueChange={(value) => handleStatusChange(value)}
+                        placeholder="Select Status"
+                        disabled={statusLoading}
+                        items={statusOptions}
+                        customItem={(item) => (
+                          <div className="flex items-center gap-2">
+                            <item.icon
+                              className={`w-3 h-3 ${item.iconColor}`}
+                            />
+                            <span>{item.label}</span>
+                          </div>
+                        )}
+                        selectTriggerClassName="w-full border-gray-200"
+                      />
                     </div>
 
                     {statusLoading && (

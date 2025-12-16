@@ -1,52 +1,51 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 //Protected Routes
 import {
+  AdminProtectedRoute,
   PublicRoute,
   UserProtectedRoute,
-  AdminProtectedRoute,
 } from "./components/protectedRoute/protectedRoutes";
 
 //Authentication
 import {
   ForgotPassword,
   Login,
-  Signup,
   Otp,
-  ResetPassword,
   ResendOtp,
+  ResetPassword,
+  Signup,
 } from "./pages/auth";
 
 //Pages
 import Home from "./pages/Home";
-import { Events } from "./pages/events/Events";
 import { Careers } from "./pages/careers/Careers";
 import {
   Achievements,
-  Dashboard,
   AssessmentFlowManager,
+  Dashboard,
+  DomainTracker,
   Mentors,
   Settings,
-  SkillTracking,
   SkillAssessment,
-  DomainTracker,
+  SkillTracking,
 } from "./pages/dashboard";
+import { Events } from "./pages/events/Events";
 
 // blogs
-import { Blogs } from "./pages/blogs/Blogs";
-import { BlogDetail } from "./pages/blogs/BlogDetail";
 import AddNewBlog from "./pages/blogs/AddNewBlog";
+import { BlogDetail } from "./pages/blogs/BlogDetail";
+import { Blogs } from "./pages/blogs/Blogs";
 
 // admin
 import { AdminDashboard } from "./pages/adminDashboard/AdminDashboard";
-import AdminBlogs from "./pages/adminDashboard/Blogs/AdminBlogs";
-import AdminEvents from "./pages/adminDashboard/Events/AdminEvents";
-import CareerExplorer from "./pages/adminDashboard/CareerExplorer/CareerExplorer";
 import AdminBlogDetails from "./pages/adminDashboard/Blogs/AdminBlogDetails";
+import AdminBlogs from "./pages/adminDashboard/Blogs/AdminBlogs";
+import CareerExplorer from "./pages/adminDashboard/CareerExplorer/CareerExplorer";
+import AdminEvents from "./pages/adminDashboard/Events/AdminEvents";
 
 // user blogs
-import UserBlogs from "./pages/dashboard/blogs/UserBlogs";
 import {
   ADMIN_DASHBOARD_ROUTES,
   AUTH_ROUTES,
@@ -56,15 +55,18 @@ import {
   HOME_ROUTE,
   USER_DASHBOARD_ROUTES,
 } from "./constants/navigation";
-import { CareerDetail } from "./pages/careers/CareerDetail";
-import { EventDetails } from "./pages/events/EventDetails";
-import Lessons from "./pages/dashboard/skillTracking/domainTracker/components/Lessons";
-import Roadmap from "./pages/dashboard/roadmaps/Roadmap";
-import ViewRoadMap from "./pages/dashboard/roadmaps/ViewRoadMap";
-import SkilltrackingManagement from "./pages/adminDashboard/SkillTracking/SkilltrackingManagement";
-import ModuleTracking from "./pages/adminDashboard/SkillTracking/ModuleTracking";
 import EditDomainPage from "./pages/adminDashboard/SkillTracking/EditDomainPage";
 import LessonPage from "./pages/adminDashboard/SkillTracking/LessonPage";
+import ModuleTracking from "./pages/adminDashboard/SkillTracking/ModuleTracking";
+import SkilltrackingManagement from "./pages/adminDashboard/SkillTracking/SkilltrackingManagement";
+import { CareerDetail } from "./pages/careers/CareerDetail";
+import UserBlogs from "./pages/dashboard/blogs/UserBlogs";
+import Roadmap from "./pages/dashboard/roadmaps/Roadmap";
+import ViewRoadMap from "./pages/dashboard/roadmaps/ViewRoadMap";
+import Lessons from "./pages/dashboard/skillTracking/domainTracker/components/Lessons";
+import { EventDetails } from "./pages/events/EventDetails";
+import EditEvent from "./pages/adminDashboard/Events/EditEvent";
+import AddEvent from "./pages/adminDashboard/Events/AddEvent";
 
 // TODO : lazy load the pages
 
@@ -275,6 +277,22 @@ function Router() {
               }
             />
             <Route
+              path={ADMIN_DASHBOARD_ROUTES.ADD_EVENT}
+              element={
+                <AdminProtectedRoute>
+                  <AddEvent />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path={ADMIN_DASHBOARD_ROUTES.EDIT_EVENT}
+              element={
+                <AdminProtectedRoute>
+                  <EditEvent />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
               path={ADMIN_DASHBOARD_ROUTES.CAREERS_MANAGEMENT}
               element={
                 <AdminProtectedRoute>
@@ -290,7 +308,7 @@ function Router() {
                 </AdminProtectedRoute>
               }
             />
-            <Route 
+            <Route
               path={ADMIN_DASHBOARD_ROUTES.SKILL_TRACKING_EDIT}
               element={
                 <AdminProtectedRoute>
@@ -307,13 +325,12 @@ function Router() {
               }
             />
             <Route
-            path={ADMIN_DASHBOARD_ROUTES.LESSON_TRACKING_MANAGEMENT}
-            element={
-              <AdminProtectedRoute>
-                <LessonPage />
-              </AdminProtectedRoute>
-            }
-
+              path={ADMIN_DASHBOARD_ROUTES.LESSON_TRACKING_MANAGEMENT}
+              element={
+                <AdminProtectedRoute>
+                  <LessonPage />
+                </AdminProtectedRoute>
+              }
             />
           </Route>
         </Routes>

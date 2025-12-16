@@ -40,7 +40,8 @@ export default function Sidebar({ items, variant = "sidebar" }) {
             // handling active states differently on mobile menu and sidebar
             const isActive =
               variant === "sidebar"
-                ? item.href === "/user/dashboard"
+                ? item.href === "/user/dashboard" ||
+                  item.href === "/admin/dashboard"
                   ? location.pathname === item.href
                   : location.pathname.startsWith(item.href)
                 : location.pathname === item.href;

@@ -46,6 +46,8 @@ export const ADMIN_DASHBOARD_ROUTES = {
   BLOGS: "blogs",
   VIEW_BLOG: "blogs/:id",
   EVENTS_MANAGEMENT: "events",
+  ADD_EVENT: "events/add",
+  EDIT_EVENT: "events/edit/:id",
   SKILL_TRACKING_MANAGEMENT: "skill-tracking",
   SKILL_TRACKING_EDIT: "skill-tracking/edit/:domainId",
   LESSON_TRACKING_MANAGEMENT: "lesson-tracking/:moduleId",
