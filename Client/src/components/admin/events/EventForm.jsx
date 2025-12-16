@@ -1,8 +1,8 @@
-import { Badge } from "@/components/ui/badge";
+import { TagInput } from "@/components/inputs/TagsInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 const EventForm = ({
   initialValues,
@@ -10,7 +10,20 @@ const EventForm = ({
   submitLabel = "Save Event",
   loading = false,
 }) => {
-  const [formData, setFormData] = useState(initialValues);
+  const [formData, setFormData] = useState(
+    initialValues
+      ? initialValues
+      : {
+          name: "",
+          description: "",
+          date: "",
+          time: "",
+          venue: "",
+          registrationLink: "",
+          status: "pending",
+          tags: [],
+        }
+  );
   const [tags, setTags] = useState(initialValues.tags || []);
 
   const handleChange = (e) => {
@@ -18,20 +31,30 @@ const EventForm = ({
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({ ...formData, tags });
+  };
+
+  const [value, setValue] = useState("simple text");
+
+  function onChange(e) {
+    setValue(e.target.value);
+  }
+
   return (
     <form
-      onSubmit={onSubmit}
-      className="grid grid-cols-1 lg:grid-cols-3 gap-10"
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 lg:grid-cols-2 gap-10"
     >
-      {/* LEFT */}
-      <div className="lg:col-span-2 space-y-8">
+      <div className="lg:col-span-2 space-y-8 min-h-screen">
         {/* Event Info */}
-        <section className="space-y-4 border-b pb-6">
+        <section className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-700">
             Event Information
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-3 col-span-1 lg:col-span-2">
             <Label>Event Name</Label>
             <Input
               name="name"
@@ -41,7 +64,7 @@ const EventForm = ({
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 col-span-1 lg:col-span-2">
             <Label>Description</Label>
             <Textarea
               name="description"
@@ -54,7 +77,7 @@ const EventForm = ({
         </section>
 
         {/* Date & Location */}
-        <section className="space-y-4 border-b pb-6">
+        <section className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-700">
             Date & Location
           </h2>
@@ -71,81 +94,74 @@ const EventForm = ({
             </div>
 
             <div>
-              <Label>Time</Label>
+              <Label>Venue</Label>
+              <Input
+                name="venue"
+                value={formData.venue}
+                onChange={handleChange}
+                placeholder="Venue or Online"
+              />
+            </div>
+
+            <div>
+              <Label>Start Time</Label>
               <Input
                 type="time"
-                name="time"
-                value={formData.time}
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleChange}
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <Label>End Time</Label>
+              <Input
+                type="time"
+                name="endTime"
+                value={formData.endTime}
                 onChange={handleChange}
               />
             </div>
-          </div>
-
-          <div>
-            <Label>Venue</Label>
-            <Input
-              name="venue"
-              value={formData.venue}
-              onChange={handleChange}
-              placeholder="Venue or Online"
-            />
           </div>
         </section>
 
         {/* Registration */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-700">Registration</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            Registration & Tags
+          </h2>
 
-          <Input
-            name="registrationLink"
-            value={formData.registrationLink}
-            onChange={handleChange}
-            placeholder="https://..."
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <Label>Tags</Label>
+              <TagInput
+                name="tags"
+                placeholder="Enter tags..."
+                value={tags}
+                onChange={setTags}
+              />
+            </div>
+            <div className="space-y-4">
+              <Label>Registration Link</Label>
+              <Input
+                name="registrationLink"
+                value={formData.registrationLink}
+                onChange={handleChange}
+                placeholder="https://..."
+                type="url"
+              />
+            </div>
+          </div>
         </section>
       </div>
 
-      {/* RIGHT */}
-      <aside className="space-y-6">
-        {/* Status */}
-        <div className="border rounded-xl p-5 space-y-4">
-          <Label>Status</Label>
-          <select
-            className="w-full border rounded-md p-2"
-            value={formData.status}
-            onChange={(e) =>
-              setFormData((p) => ({ ...p, status: e.target.value }))
-            }
-          >
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-          </select>
-        </div>
-
-        {/* Tags */}
-        <div className="border rounded-xl p-5 space-y-4">
-          <Label>Tags</Label>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="space-y-3">
-          <Button
-            type="submit"
-            className="w-full bg-custom-text-orange"
-            disabled={loading}
-          >
-            {submitLabel}
-          </Button>
-        </div>
-      </aside>
+      {/* Actions */}
+      <div className="lg:col-span-1 flex justify-end">
+        <Button className="w-full bg-custom-text-orange" disabled={loading}>
+          {submitLabel}
+        </Button>
+      </div>
     </form>
   );
 };

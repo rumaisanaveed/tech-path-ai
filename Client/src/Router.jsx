@@ -271,25 +271,25 @@ function Router() {
             <Route
               path={ADMIN_DASHBOARD_ROUTES.EVENTS_MANAGEMENT}
               element={
-                <AdminProtectedRoute>
-                  <AdminEvents />
-                </AdminProtectedRoute>
+                // <AdminProtectedRoute>
+                <AdminEvents />
+                // </AdminProtectedRoute>
               }
             />
             <Route
               path={ADMIN_DASHBOARD_ROUTES.ADD_EVENT}
               element={
-                <AdminProtectedRoute>
-                  <AddEvent />
-                </AdminProtectedRoute>
+                // <AdminProtectedRoute>
+                <AddEvent />
+                // </AdminProtectedRoute>
               }
             />
             <Route
               path={ADMIN_DASHBOARD_ROUTES.EDIT_EVENT}
               element={
-                <AdminProtectedRoute>
-                  <EditEvent />
-                </AdminProtectedRoute>
+                // <AdminProtectedRoute>
+                <EditEvent />
+                // </AdminProtectedRoute>
               }
             />
             <Route

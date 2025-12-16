@@ -1,15 +1,22 @@
+import EventForm from "@/components/admin/events/EventForm";
 import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
 
 const AddEvent = () => {
   const initialValues = {
-    name: "",
-    description: "",
-    date: "",
-    time: "",
-    venue: "",
-    registrationLink: "",
+    name: "My Event",
+    description: "This is the event description",
+    date: "24/05/2023",
+    startTime: "12:00",
+    endTime: "21:00",
+    venue: "Nastp, Karachi",
+    registrationLink: "https://placeholder.com",
     status: "pending",
-    tags: [],
+    tags: ["First Event", "Tech", "Workshop"],
+  };
+
+  const handleCreate = (data) => {
+    console.log("Form data", data);
+    // TODO: api call here
   };
 
   return (
@@ -19,11 +26,11 @@ const AddEvent = () => {
           Add New Event
         </h1>
 
-        {/* <EventForm
+        <EventForm
           initialValues={initialValues}
           submitLabel="Create Event"
           onSubmit={handleCreate}
-        /> */}
+        />
       </div>
     </AdminDashboardLayout>
   );
