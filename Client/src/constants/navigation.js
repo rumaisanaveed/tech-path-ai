@@ -52,5 +52,7 @@ export const ADMIN_DASHBOARD_ROUTES = {
   LESSON_TRACKING_MANAGEMENT: "lesson-tracking/:moduleId",
   MODULE_TRACKING_MANAGEMENT: "module-tracking",
   CAREER_ASSESSMENT_MANAGEMENT: "career-assessment",
-  CAREERS_MANAGEMENT: "career-explorer",
+  CAREERS_MANAGEMENT: "careers",
+  ADD_CAREER: "careers/add",
+  EDIT_CAREER: "careers/edit/:id",
 };

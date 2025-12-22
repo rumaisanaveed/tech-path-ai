@@ -16,6 +16,12 @@ const EditEvent = lazy(() => import("@/pages/adminDashboard/events/EditEvent"));
 const CareerExplorer = lazy(() =>
   import("@/pages/adminDashboard/Careers/AdminCareers")
 );
+const AddCareer = lazy(() =>
+  import("@/pages/adminDashboard/Careers/AddCareer")
+);
+const EditCareer = lazy(() =>
+  import("@/pages/adminDashboard/Careers/EditCareer")
+);
 const CareerAssessmentManager = lazy(() =>
   import(
     "@/pages/adminDashboard/Careers/CareerAssessment/CareerAssessmentManager"
@@ -43,6 +49,8 @@ export {
   AddEvent,
   EditEvent,
   CareerExplorer,
+  AddCareer,
+  EditCareer,
   CareerAssessmentManager,
   SkilltrackingManagement,
   EditDomainPage,

@@ -588,6 +588,6 @@ export const adminSidebarItems = [
   {
     label: "Career Explorer Management",
     icon: Compass,
-    href: "/admin/dashboard/career-explorer",
+    href: "/admin/dashboard/careers",
   },
 ];

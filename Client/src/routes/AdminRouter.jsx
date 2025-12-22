@@ -15,6 +15,8 @@ import {
   EditDomainPage,
   ModuleTracking,
   LessonPage,
+  AddCareer,
+  EditCareer,
 } from "./import/AdminRoutes";
 
 export const adminRouter = [
@@ -57,6 +59,14 @@ export const adminRouter = [
       {
         path: ADMIN_DASHBOARD_ROUTES.CAREERS_MANAGEMENT,
         element: <CareerExplorer />,
+      },
+      {
+        path: ADMIN_DASHBOARD_ROUTES.ADD_CAREER,
+        element: <AddCareer />,
+      },
+      {
+        path: ADMIN_DASHBOARD_ROUTES.EDIT_CAREER,
+        element: <EditCareer />,
       },
       {
         path: ADMIN_DASHBOARD_ROUTES.SKILL_TRACKING_MANAGEMENT,

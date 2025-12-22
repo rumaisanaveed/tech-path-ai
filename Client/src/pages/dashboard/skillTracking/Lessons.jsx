@@ -15,13 +15,13 @@ import {
   useAddUserLesson,
   useAllUserLessons,
 } from "@/apis/skillTracking/lessonTracking/lessonTracking.services";
-import ViewLessonModal from "./ViewLessonModal";
+import ViewLessonModal from "./domainTracker/components/ViewLessonModal";
 import peekImg from "@/assets/mascot/peaking.webp";
 import tabletImg from "@/assets/mascot/tablet.webp";
 import { CustomLessonProgressBar } from "@/components/CustomLessonProgressBar";
 import BuddyLessons from "@/components/skillTracking/buddy/BuddyLessons";
 import { useGetAllQuiz } from "@/apis/skillTracking/quizTracking/quizetracking.api";
-import QuizModal from "./QuizModal";
+import QuizModal from "./domainTracker/components/QuizModal";
 
 const Lessons = () => {
   const { moduleId } = useParams();

@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "@/assets/icons/logo.svg";
 import { motion } from "framer-motion";
 
-export const SplashScreen = () => {
+export const FullPageLoader = () => {
   return (
     <motion.div
       className="h-screen flex gap-2 items-center justify-center"

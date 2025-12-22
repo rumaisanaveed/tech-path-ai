@@ -19,7 +19,7 @@ const AddBlog = () => {
         <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
           <EventsHeader
             icon={<Book className="h-7 w-7 text-white" />}
-            iconContainerClassName="bg-custom-light-blue"
+            iconContainerClassName="!bg-custom-light-blue"
             buttonClassName="bg-custom-light-blue"
             title={"Add New Blog"}
             buttonTitle="Back to Blogs"
