@@ -15,11 +15,11 @@ import {
 export const userRouter = [
   {
     path: USER_DASHBOARD_ROUTES.INDEX,
-    element: (
-      <UserProtectedRoute>
-        <Outlet />
-      </UserProtectedRoute>
-    ),
+    // element: (
+    //   <UserProtectedRoute>
+    //     <Outlet />
+    //   </UserProtectedRoute>
+    // ),
     children: [
       {
         index: true,

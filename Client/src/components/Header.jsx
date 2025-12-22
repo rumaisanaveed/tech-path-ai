@@ -59,8 +59,6 @@ const Header = () => {
               }
             />
             {/* Desktop Navigation */}
-            {/* should redirect the unauthenticated users to home page */}
-            {/* else the auth pages won't be visible to authenticated users */}
             <Link
               className="text-2xl hidden md:block font-medium anonymous-font text-logo"
               to={isAuthPage ? "/" : "/"}

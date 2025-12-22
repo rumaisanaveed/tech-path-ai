@@ -22,11 +22,11 @@ import {
 export const adminRouter = [
   {
     path: ADMIN_DASHBOARD_ROUTES.INDEX,
-    element: (
-      <AdminProtectedRoute>
-        <Outlet />
-      </AdminProtectedRoute>
-    ),
+    // element: (
+    //   <AdminProtectedRoute>
+    //     <Outlet />
+    //   </AdminProtectedRoute>
+    // ),
     children: [
       {
         index: true,

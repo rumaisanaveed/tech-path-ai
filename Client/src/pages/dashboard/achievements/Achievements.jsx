@@ -2,7 +2,7 @@ import usePageTitle from "@/hooks/usePageTitle";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import React from "react";
 
-export const Achievements = () => {
+const Achievements = () => {
   usePageTitle("Achievements");
   return (
     <DashboardLayout>
@@ -10,3 +10,5 @@ export const Achievements = () => {
     </DashboardLayout>
   );
 };
+
+export default Achievements;

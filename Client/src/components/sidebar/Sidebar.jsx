@@ -1,17 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Logo from "@/assets/icons/logo.svg";
 import Logout from "@/assets/icons/sidebar/logout.svg";
-import { Settings } from "lucide-react";
-import { SidebarItem } from "./SidebarItem";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
+import { SidebarItem } from "./SidebarItem";
+import { getInitials, truncateText } from "@/utils/helpers";
 
 export default function Sidebar({ items, variant = "sidebar" }) {
   const location = useLocation();
   const { open, setOpen } = useGlobalContext();
-  const { logout } = useAuth();
+  const { logout, user, isAdmin, isUser } = useAuth();
 
   return (
     <>
@@ -51,28 +51,29 @@ export default function Sidebar({ items, variant = "sidebar" }) {
 
         {/* Bottom buttons */}
         {variant === "sidebar" ? (
-          <div className="absolute bottom-6 left-6 right-6">
-            <SidebarItem
-              item={{
-                label: "Settings",
-                href: "/user/dashboard/settings",
-                icon: Settings,
-                isActive: location.pathname === "/dashboard/settings",
-              }}
-            />
-
-            <Button
-              variant="ghost"
-              className="w-full flex justify-start gap-3 text text-muted-foreground text-sm font-medium"
-              onClick={logout}
-            >
+          <div className="flex items-center justify-between absolute bottom-3 left-6 right-6">
+            <div className="flex items-center gap-2 text-custom-black">
+              <div className="bg-custom-gray rounded-lg p-2">
+                <p className="font-bold text-lg">
+                  {getInitials(user?.firstName, user?.lastName) || "N/A"}
+                </p>
+              </div>
+              <div>
+                <p className="font-bold truncate text-sm">
+                  {user?.firstName && user?.lastName
+                    ? truncateText(`${user.firstName} ${user.lastName}`, 15)
+                    : "N/A"}
+                </p>
+                <p className="font-medium text-sm">
+                  {isAdmin ? "Admin" : isUser ? "User" : ""}
+                </p>
+              </div>
+            </div>
+            <div className="cursor-pointer" onClick={logout}>
               <img src={Logout} className="w-5 h-5" alt="logout" />
-              Logout
-            </Button>
+            </div>
           </div>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </aside>
 
       {/* Dimmed overlay for mobile menu */}

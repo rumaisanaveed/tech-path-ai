@@ -18,6 +18,7 @@ import {
   User,
   Users,
   Route,
+  Settings,
 } from "lucide-react";
 import Brain from "@/assets/icons/brain.svg";
 import CircleCheck from "@/assets/icons/circle-check.svg";
@@ -181,6 +182,11 @@ export const sidebarItems = [
     href: "/blogs",
   },
   { label: "Achievements", icon: Trophy, href: "/user/dashboard/achievements" },
+  {
+    label: "Settings",
+    icon: Settings,
+    href: "/user/dashboard/settings",
+  },
 ];
 
 export const initialAssessmentFeaturesListData = [
