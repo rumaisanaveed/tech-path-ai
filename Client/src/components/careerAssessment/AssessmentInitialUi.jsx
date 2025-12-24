@@ -79,7 +79,7 @@ export const AssessmentInitialUi = () => {
 
   return (
     <div
-      className={`flex flex-col 3xl:justify-center 3xl:items-center xl:flex-row justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7 ${
+      className={`flex flex-col 3xl:justify-center 3xl:items-center xl:flex-row xl:items-center xl:h-full justify-between items-start gap-8 lg:gap-12 px-6 md:px-10 py-4 md:py-7 ${
         isVeryLargeScreen && "max-w-7xl mx-auto justify-center items-center"
       }`}
     >
