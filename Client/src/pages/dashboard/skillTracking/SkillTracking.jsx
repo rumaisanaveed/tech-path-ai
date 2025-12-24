@@ -101,7 +101,7 @@ const Domains = () => {
 
   const handleActions = (action, id) => {
     if (action === "delete") {
-      console.log("Delete domain with id:", id);
+      // console.log("Delete domain with id:", id);
     }
   };
 

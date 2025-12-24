@@ -1,19 +1,18 @@
-import React, { useEffect } from "react";
+import { getQuestionsByCategory } from "@/apis/assessment/assessment.api";
+import { SessionStarted } from "@/apis/assessment/assessment.service";
 import {
   assessmentSectionsNames,
   initialAssessmentFeaturesListData,
 } from "@/constants";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { AssessmentSectionHeading } from "./AssessmentSectionHeading";
-import { SecondaryButton } from "../buttons/SecondaryButton";
-import { Info } from "lucide-react";
-import { SessionStarted } from "@/apis/assessment/assessment.service";
-import { BreadCrumb } from "./BreadCrumb";
 import { useAssessmentContext } from "@/context/AssessmentContext";
-import { saveItemToStorage } from "@/utils/helpers/storage/localStorage";
-import { toast } from "sonner";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { useScreenSize } from "@/hooks/useScreenSize";
-import { getQuestionsByCategory } from "@/apis/assessment/assessment.api";
+import { saveItemToStorage } from "@/utils/helpers/storage/localStorage";
+import { Info } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { SecondaryButton } from "../buttons/SecondaryButton";
+import { BreadCrumb } from "./BreadCrumb";
 
 export const AssessmentInitialUi = () => {
   const { setBreadcrumbText } = useGlobalContext();
@@ -21,8 +20,6 @@ export const AssessmentInitialUi = () => {
     useAssessmentContext();
   const sessionStarted = SessionStarted();
   const { isVeryLargeScreen } = useScreenSize();
-
-  console.log("sessionStarted", sessionStarted);
 
   useEffect(() => {
     setBreadcrumbText("");

@@ -38,7 +38,6 @@ const ResendOtp = () => {
 
     resendVerification(email, {
       onSuccess: () => {
-        console.log("OTP sent successfully");
         navigate("/auth/verify-identity");
         setCooldown(30);
       },

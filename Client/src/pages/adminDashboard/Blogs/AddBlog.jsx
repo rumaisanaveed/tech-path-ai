@@ -10,7 +10,7 @@ const AddBlog = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (data) => {
-    console.log("Add blog form data", data);
+    // console.log("Add blog form data", data);
   };
 
   return (

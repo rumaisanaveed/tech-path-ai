@@ -23,7 +23,6 @@ export const BuddyConversation = () => {
       timestamp: new Date().toISOString(),
     };
     setUserResponses((prev) => [...prev, responseData]);
-    console.log("🧠 User Response Recorded:", responseData);
   };
 
   const handleChoice = async (choice) => {
@@ -53,13 +52,11 @@ export const BuddyConversation = () => {
       setConversationStep("assigningModules");
 
       try {
-        console.log("🚀 Starting module enrollment with responses:", userResponses);
         const res = await axiosInstance.post(
           `/enrollment/module/${id}`,
           { userResponse: userResponses },
           { headers: { "Content-Type": "application/json" } }
         );
-        console.log("✅ Enrollment response:", res.data);
       } catch (err) {
         console.error("❌ Enrollment failed:", err);
       }

@@ -68,7 +68,6 @@ const ModuleTrackingBox = () => {
   };
 
   const handleManage = (moduleId) => {
-    console.log("Navigating to lessons for module:", moduleId);
     navigate(`/admin/dashboard/lesson-tracking/${moduleId}`);
   };
 

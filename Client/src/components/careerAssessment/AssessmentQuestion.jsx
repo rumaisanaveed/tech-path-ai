@@ -32,7 +32,6 @@ export const AssessmentQuestion = () => {
     categoryName,
     setCategoryName,
   } = useAssessmentContext();
-  console.log("questions", questions, categoryNo, sessionId);
 
   const [loadedQuestions, setLoadedQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(
@@ -112,14 +111,13 @@ export const AssessmentQuestion = () => {
           setStep("result");
           saveItemToStorage("step", "result");
 
-          // ✅ Clean up assessment-related storage
           removeItemFromStorage("assessmentAnswers");
           removeItemFromStorage("questions");
           removeItemFromStorage("currentQuestionIndex");
           removeItemFromStorage("categoryNo");
         } catch (err) {
           console.error("❌ Failed to post results:", err);
-          return; // optionally prevent moving forward if prediction fails
+          return;
         } finally {
           setIsPredicting(false);
         }
@@ -131,12 +129,7 @@ export const AssessmentQuestion = () => {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
-  console.log("currentQuestion", currentQuestion);
-
   if (!currentQuestion) return <p>Loading questions...</p>;
-  // TODO : Make a reusable component for both skill assessment and assessment for handling the questions
-
-  console.log("categoryName, categoryNo", categoryNo, categoryName);
 
   // show skeleton
   if (isPredicting) {

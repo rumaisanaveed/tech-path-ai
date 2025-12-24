@@ -168,7 +168,6 @@ const SkillTracker = () => {
   // API hook
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
 
-  console.log("Enrolled modules data:", data);
   const activeModules = data?.userModules?.activeModules || [];
 
   // Only show first 3 active modules

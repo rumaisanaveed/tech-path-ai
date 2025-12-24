@@ -20,8 +20,6 @@ export const GetQuestionsByCategory = ({ sessionId, categoryId }) => {
     onSuccess: (data) => {
       saveItemToStorage(`questions`, data.questions);
       setQuestions(categoryId, data.questions);
-      console.log("✅ Stored questions for category:", categoryId);
-      console.log("Questions:", data.questions);
     },
   });
 };
@@ -34,7 +32,6 @@ export const SubmitAnswer = () => {
         optionId,
       }),
     onSuccess: (data) => {
-      console.log("✅ Answer submitted:", data);
       toast.success("Answer submitted successfully");
     },
   });
@@ -43,9 +40,7 @@ export const SubmitAnswer = () => {
 export const PostResults = () => {
   return useMutation({
     mutationFn: (sessionId) => AssessmentAPI.postResults(sessionId),
-    onSuccess: (data) => {
-      console.log("✅ Results posted", data);
-    },
+    onSuccess: (data) => {},
   });
 };
 
@@ -54,8 +49,6 @@ export const GetFinalResults = (sessionId) => {
     queryKey: ["results", sessionId],
     queryFn: () => AssessmentAPI.getCurrentResult(sessionId),
     enabled: !!sessionId,
-    onSuccess: (data) => {
-      console.log("✅ Final results:", data);
-    },
+    onSuccess: (data) => {},
   });
 };

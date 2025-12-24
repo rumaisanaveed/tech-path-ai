@@ -60,8 +60,6 @@ const ViewLessonModal = ({ open, onClose, lesson }) => {
       sequence: data?.sequence,
     });
 
-    console.log("Status update response:", response);
-
     if (response?.unlockMessage) {
       setUnlockMessage(response.unlockMessage);
     }

@@ -74,7 +74,6 @@ const Mentors = () => {
   const [selectedMentor, setSelectedMentor] = React.useState(null);
 
   const handleSelectMentor = (mentor) => {
-    console.log(`Selected mentor: ${mentor.name}`);
     // Add your mentor selection logic here
     // For example: save to state, call API, navigate to chat, etc.
     setSelectedMentor(null);

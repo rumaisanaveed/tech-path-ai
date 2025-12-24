@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Message } from "../Message";
 
-const SkilltrckingBox = () => {
+const SkillTrackingBox = () => {
   const navigate = useNavigate();
 
   // Queries & Mutations
@@ -184,4 +184,4 @@ const SkilltrckingBox = () => {
   );
 };
 
-export default SkilltrckingBox;
+export default SkillTrackingBox;

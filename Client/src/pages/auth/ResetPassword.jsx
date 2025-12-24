@@ -29,7 +29,6 @@ const ResetPassword = () => {
       { password: data.password, token },
       {
         onSuccess: () => {
-          console.log("Password reset successful");
           navigate("/auth/login");
         },
         onError: (error) => {

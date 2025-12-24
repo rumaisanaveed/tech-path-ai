@@ -2,7 +2,6 @@ import { GetRoadmaps } from "@/apiService/Roadmaps";
 import { BreadCrumb } from "@/components/careerAssessment/BreadCrumb";
 import { useGlobalContext } from "@/context/GlobalContext";
 import usePageTitle from "@/hooks/usePageTitle";
-import { useScreenSize } from "@/hooks/useScreenSize";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const Roadmap = () => {
   usePageTitle("Roadmaps");
   const { setBreadcrumbText } = useGlobalContext();
-  const { isSmallScreen, isLargeScreen } = useScreenSize();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,8 +16,6 @@ const Roadmap = () => {
   }, []);
 
   const { data, isLoading: domainsLoading } = GetRoadmaps();
-
-  console.log("Career Domains Data:", data);
 
   return (
     <DashboardLayout>

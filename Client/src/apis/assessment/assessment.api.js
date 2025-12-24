@@ -5,7 +5,6 @@ import axiosReq from "@/services/axiosHelper";
 export const StartSession = async () => {
   const url = API_ROUTES.ASSESSMENT.POST_SESSION();
   const res = await axiosReq(API_MODES.POST, url, {});
-  console.log("This is response from start session", res);
   return res.data;
 };
 

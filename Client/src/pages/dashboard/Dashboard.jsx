@@ -56,8 +56,6 @@ const Dashboard = () => {
           { withCredentials: true }
         );
 
-        console.log("Dashboard API Response:", res);
-
         // Axios already parses JSON, so use res.data
         const data = res.data;
 

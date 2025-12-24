@@ -20,7 +20,7 @@ const EditEvent = () => {
   usePageTitle("Edit Event");
 
   const handleUpdate = (data) => {
-    console.log("Edit event form data", data);
+    // console.log("Edit event form data", data);
   };
 
   return (

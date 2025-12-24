@@ -50,7 +50,6 @@ const Modules = () => {
         <Button
           variant="outline"
           className="mt-4 px-4 py-2 text-sm text-[#59A4C0] border-[#59A4C0] hover:bg-[#59A4C0]/10"
-          onClick={() => console.log("Navigate to module enrollment")}
         >
           Explore Modules
         </Button>
@@ -148,7 +147,6 @@ const Modules = () => {
                     textSmall
                     className="w-1/2 text-center"
                     variant="dark"
-                    onClickHandler={() => console.log("Project clicked")}
                   />
                 </div>
               </CardContent>

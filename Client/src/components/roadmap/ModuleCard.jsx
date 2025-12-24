@@ -9,9 +9,6 @@ const ModuleCard = ({
   isSmallScreen,
   index,
 }) => {
-
-  console.log("Rendering ModuleCard for module:", module);
-
   const isLeft = index % 2 === 0;
   const circleColor = isLeft ? "#ED843B" : "#F3B34E";
 
@@ -44,7 +41,8 @@ const ModuleCard = ({
 
         <p className="text-sm text-gray-600 mb-1">{module.description}</p>
         <p className="text-xs text-gray-500">
-          Completion: {module.completionRate}% ({module.obtainedXP}/{module.totalXP} XP)
+          Completion: {module.completionRate}% ({module.obtainedXP}/
+          {module.totalXP} XP)
         </p>
 
         {/* Lessons */}

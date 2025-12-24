@@ -40,7 +40,6 @@ const Lessons = () => {
   if (isLoadingQuizzes)
     return <DashboardLayout>Loading quizzes...</DashboardLayout>;
 
-  //console.log("QUIZ DATA IN LESSONS PAGE:", quizData);
   const quizzes = Object.values(quizData).filter((q) => typeof q === "object");
 
   const module = data;

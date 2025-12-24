@@ -30,7 +30,6 @@ const ForgotPassword = () => {
     const email = data.email.trim();
 
     if (!email) return;
-    console.log("Submitting forgot password request for email:", email);
 
     forgotPassword(email);
   };

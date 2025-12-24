@@ -62,8 +62,8 @@ const QuizModal = ({ open, onClose, quiz }) => {
     } else {
       // Quiz completed
       questions.forEach((q, i) => {
-        console.log(`Q${i + 1}: ${q.text}`);
-        console.log(`Selected Answer: ${userAnswers[i] || "No answer"}`);
+        // console.log(`Q${i + 1}: ${q.text}`);
+        // console.log(`Selected Answer: ${userAnswers[i] || "No answer"}`);
       });
       alert("Quiz completed! Check console for results.");
       onClose();
