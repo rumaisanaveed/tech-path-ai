@@ -5,12 +5,20 @@ const EMAIL_REGEX =
 
 const SPACES = /^\S*$/;
 
+export const FirstNameValidation = yup
+  .string()
+  .required("First name is required.");
+
+export const LastNameValidation = yup
+  .string()
+  .required("Last name is required.");
+
 export const EmailSchema = yup
   .string()
   .required("Email is required")
   .matches(EMAIL_REGEX, "Please enter valid email address.");
 
-export const PasswordSchema = (ref, name = "Password") => {
+export const PasswordSchema = (ref = "", name = "Password") => {
   let validation = yup
     .string()
     .required(`${name} is required.`)

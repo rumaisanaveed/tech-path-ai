@@ -7,6 +7,7 @@ import {
   MentorShip,
   Roadmap,
   Settings,
+  SkillAssessment,
   SkillTracker,
   UserDashboard,
   ViewRoadmap,
@@ -32,6 +33,10 @@ export const userRouter = [
       {
         path: USER_DASHBOARD_ROUTES.SKILL_TRACKER,
         element: <SkillTracker />,
+      },
+      {
+        path: USER_DASHBOARD_ROUTES.SKILL_ASSESSMENT,
+        element: <SkillAssessment />,
       },
       {
         path: USER_DASHBOARD_ROUTES.MENTORSHIP,

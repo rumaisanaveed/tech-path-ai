@@ -15,6 +15,9 @@ const ViewRoadmap = lazy(() =>
 const Achievements = lazy(() =>
   import("@/pages/dashboard/achievements/Achievements")
 );
+const SkillAssessment = lazy(() =>
+  import("@/pages/dashboard/skillTracking/SkillAssessment")
+);
 const Settings = lazy(() => import("@/pages/dashboard/Settings"));
 
 export {
@@ -26,4 +29,5 @@ export {
   ViewRoadmap,
   Settings,
   Achievements,
+  SkillAssessment,
 };

@@ -39,7 +39,7 @@ export function TagInput({
 
   return (
     <div className="space-y-4">
-      <InputWrapper name={name} label={label} error={error}>
+      <InputWrapper name={name} label={label} error={error} {...rest}>
         <Input
           placeholder={placeholder}
           value={inputValue}

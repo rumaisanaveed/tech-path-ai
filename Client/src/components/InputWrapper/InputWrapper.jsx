@@ -1,8 +1,6 @@
-import React from "react";
-import { Label } from "../ui/label";
-import ShowError from "../ui/error";
-import { capitalizeFirstChar } from "@/utils/helpers";
 import clsx from "clsx";
+import ShowError from "../ui/error";
+import { Label } from "../ui/label";
 
 export const InputWrapper = ({
   children,

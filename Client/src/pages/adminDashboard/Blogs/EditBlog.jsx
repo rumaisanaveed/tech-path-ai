@@ -10,7 +10,8 @@ const initialData = {
   title: "Sample Blog Title",
   description:
     '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This is a sample blog description."}]}]}',
-  coverImage: null,
+  coverImage:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLf2mXAcFRF-oD0L5-9kHMZ-9bFSWcrBXLfw&s",
   tags: ["Sample", "Blog", "Test"],
 };
 
@@ -19,7 +20,7 @@ const EditBlog = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (data) => {
-    console.log("Edit blog form data", data);
+    // console.log("Edit blog form data", data);
   };
 
   return (

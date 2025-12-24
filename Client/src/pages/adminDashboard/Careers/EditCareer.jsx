@@ -7,9 +7,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const initialData = {
-  title: "Sample Career Title",
+  name: "Sample Career Title",
   description:
     '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This is a sample career description."}]}]}',
+  coverImage:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLf2mXAcFRF-oD0L5-9kHMZ-9bFSWcrBXLfw&s",
 };
 
 const EditCareer = () => {

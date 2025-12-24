@@ -1,19 +1,15 @@
 import { useSignup } from "@/apis/auth/auth.service";
+import { InputField } from "@/components/InputField/InputField";
 import { Message } from "@/components/Message";
 import { AuthFooter } from "@/components/auth/AuthFooter";
 import { AppButton } from "@/components/buttons/AppButton";
-import { EyeButton } from "@/components/buttons/EyeButton";
 import { DatePicker } from "@/components/inputs/DatePicker";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { validations } from "@/validations/auth/validations";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { SignupFormSchema } from "@/validations";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import usePageTitle from "../../hooks/usePageTitle";
 import AuthLayout from "../../layouts/AuthLayout";
-import { SignupFormSchema } from "@/validations";
-import { InputField } from "@/components/InputField/InputField";
 
 const Signup = () => {
   usePageTitle("Signup");

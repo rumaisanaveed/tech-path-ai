@@ -4,9 +4,12 @@ import usePageTitle from "@/hooks/usePageTitle";
 import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
 import { Compass } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddCareer = () => {
   usePageTitle("Add New Career");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (data) => {
     // console.log("Add career form data", data);
@@ -21,8 +24,8 @@ const AddCareer = () => {
             iconContainerClassName="!bg-custom-orange-light"
             title="Add New Career"
             buttonTitle="Back to Careers"
-            onAddButtonClick={() => navigate("/admin/dashboard/careers/add")}
-            buttonClassName="bg-custom-orange-light"
+            onAddButtonClick={() => navigate("/admin/dashboard/careers")}
+            buttonClassName="!bg-custom-orange-light"
             subtitle=""
           />
 

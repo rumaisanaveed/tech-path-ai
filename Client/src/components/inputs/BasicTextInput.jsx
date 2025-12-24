@@ -33,6 +33,7 @@ export const BasicTextInput = ({
       label={label}
       error={error}
       showAsterisk={showAsterisk}
+      labelClassName={rest.labelClassName}
     >
       <div className="relative">
         <Component

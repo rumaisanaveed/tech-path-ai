@@ -9,9 +9,9 @@ export const truncateText = (text, maxLength = 32) => {
 // the api format to the readable format.
 // Example : if the category is stored as "critical-thinking",
 // then the function will return "Critical Thinking"
-export const getCategory = (category = "") => {
+export const getCategory = (category = "", splitter = "-") => {
   return category
-    .split("-")
+    .split(splitter)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
@@ -38,4 +38,18 @@ export const getInitials = (firstName = "", lastName = "") => {
 
 export const capitalizeFirstChar = (word = "") => {
   return word.charAt(0).toUpperCase() + word.slice(1);
+};
+
+export function normalizeString(str) {
+  return str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .trim();
+}
+
+export const replaceNullWithPlaceholder = (value, replaceBy) => {
+  if (value === null || value === undefined || value === "") {
+    return replaceBy ?? "N/A";
+  }
+  return value;
 };

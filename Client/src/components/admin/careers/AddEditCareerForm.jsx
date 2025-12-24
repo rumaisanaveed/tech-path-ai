@@ -1,145 +1,86 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Upload, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import Editor from "@/components/editor/examples/full/editor";
+import { InputField } from "@/components/InputField/InputField";
+import { UploadImage } from "@/components/inputs/UploadImage";
 import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { CareerFormSchema } from "@/validations";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 export const AddEditCareerForm = ({ initialData, onSubmit }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
 
-  const [formData, setFormData] = useState(
-    initialData ?? {
+  const { control, handleSubmit, reset, setValue, watch } = useForm({
+    defaultValues: {
       name: "",
-      image: null,
+      coverImage: null,
+      coverImagePreview: null,
+      description: null,
+    },
+    mode: "all",
+    resolver: yupResolver(CareerFormSchema),
+  });
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        name: initialData.name ?? "",
+        coverImage: null,
+        coverImagePreview: initialData.coverImage ?? null, // URL
+        description: initialData.description ?? null,
+      });
     }
-  );
+  }, [initialData, reset]);
 
-  const [description, setDescription] = useState(
-    initialData?.description ? initialData.description : null
-  );
+  const onFormSubmit = (data) => {
+    const payload = {
+      name: data.name,
+      description: JSON.stringify(data.description),
+    };
 
-  const [preview, setPreview] = useState(
-    initialData?.image ? initialData.image : null
-  );
+    if (data.coverImage instanceof File) {
+      payload.coverImage = data.coverImage;
+    }
 
-  /* ---------------- IMAGE HANDLERS ---------------- */
-
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFormData((p) => ({ ...p, image: file }));
-    setPreview(URL.createObjectURL(file));
-  };
-
-  const handleImageDelete = () => {
-    setFormData((p) => ({ ...p, image: null }));
-    setPreview(null);
-  };
-
-  /* ---------------- INPUT HANDLERS ---------------- */
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((p) => ({ ...p, [name]: value }));
-  };
-
-  /* ---------------- SUBMIT ---------------- */
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    onSubmit({
-      ...formData,
-      description: JSON.stringify(description),
-    });
+    onSubmit(payload);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Career Image */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-custom-black-dark">
-          Career Image <span className="text-red-500">*</span>
-        </label>
+    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+      <InputField
+        name="coverImage"
+        label="Cover Image"
+        component={UploadImage}
+        control={control}
+        preview={watch("coverImagePreview")}
+        setValue={setValue}
+        labelClassName="!font-medium"
+        showAsterisk
+        uploaderClassName="border-custom-orange-dark text-custom-orange-dark"
+      />
 
-        {!preview && (
-          <label
-            htmlFor="careerImage"
-            className="
-              flex items-center justify-center gap-2
-              h-52 w-full
-              rounded-lg
-              border border-dashed border-custom-orange-dark/40
-              text-custom-orange-dark
-              cursor-pointer
-              hover:bg-custom-orange-dark/5
-              transition
-            "
-          >
-            <Upload size={16} />
-            Upload Image
-          </label>
-        )}
+      <InputField
+        name="name"
+        label="Career Name"
+        control={control}
+        placeholder="Enter Career Name"
+        labelClassName="!font-medium"
+        showAsterisk
+      />
 
-        <input
-          id="careerImage"
-          type="file"
-          accept="image/*"
-          className="hidden"
-          required={!isEditMode}
-          onChange={handleImageChange}
-        />
+      <InputField
+        name="description"
+        label="Blog Description"
+        control={control}
+        component={Editor}
+        placeholder="Enter Blog Description"
+        labelClassName="!font-medium"
+        showAsterisk
+      />
 
-        {preview && (
-          <div className="relative w-fit">
-            <img
-              src={preview}
-              alt="Preview"
-              className="h-52 w-full rounded-lg object-cover"
-            />
-            <button
-              type="button"
-              onClick={handleImageDelete}
-              className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow cursor-pointer"
-            >
-              <X className="h-4 w-4 text-gray-700" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Career Name */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-custom-black-dark">
-          Career Name <span className="text-red-500">*</span>
-        </label>
-
-        <Input
-          name="name"
-          placeholder="e.g. Software Engineer"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      {/* Description */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-custom-black-dark">
-          Description <span className="text-red-500">*</span>
-        </label>
-
-        <Editor
-          initialContent={description}
-          onChange={(content) => setDescription(content)}
-        />
-      </div>
-
-      {/* Actions */}
       <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
         <Button
           type="button"
@@ -150,10 +91,11 @@ export const AddEditCareerForm = ({ initialData, onSubmit }) => {
         </Button>
 
         <Button
+          variant="secondary"
           type="submit"
-          className="bg-custom-orange-dark hover:bg-custom-orange-dark/90"
+          className="!bg-custom-orange-light/100 text-white !font-light opacity-100"
         >
-          {isEditMode ? "Update Career" : "Add Career"}
+          <p>{isEditMode ? "Update Career" : "Add Career"}</p>
         </Button>
       </div>
     </form>

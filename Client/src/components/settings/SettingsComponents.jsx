@@ -1,17 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getInitials } from "@/utils/helpers";
-import { validations } from "@/validations/auth/validations";
+import { ChangePasswordSchema, EditProfileSchema } from "@/validations";
 import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { EyeButton } from "../buttons/EyeButton";
 import { OutlinedActionButton } from "../buttons/OutlinedActionButton";
 import { SecondaryButton } from "../buttons/SecondaryButton";
+import { InputField } from "../InputField/InputField";
 import { DatePicker } from "../inputs/DatePicker";
-import { Message } from "../Message";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { tabs } from "./constants";
 
 export const SettingsHeader = () => {
@@ -100,6 +97,14 @@ const Profile = ({ user, isAdmin, isUser }) => {
 const ProfileDetails = ({ user, isAdmin, isUser }) => {
   return (
     <div className="bg-white border border-custom-gray rounded-md p-6 grid grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* {Object.entries(user).map(([key, value]) => (
+        <div className="space-y-2 text-custom-black">
+          <p className="font-semibold text-base">{normalizeString(key)}</p>
+          <p className="font-light text-sm">
+            {replaceNullWithPlaceholder(value)}
+          </p>
+        </div>
+      ))} */}
       <div className="space-y-2 text-custom-black">
         <p className="font-semibold text-base">First Name</p>
         <p className="font-light text-sm">{user?.firstName ?? "Rumaisa"}</p>
@@ -131,9 +136,17 @@ const ProfileDetails = ({ user, isAdmin, isUser }) => {
 };
 
 const EditProfile = ({ user, isAdmin, isUser, onCancel }) => {
-  const { reset, setValue, watch, handleSubmit, register } = useForm();
-
-  const dateOfBirth = watch("dateOfBirth");
+  const { control, reset, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      dateOfBirth: null,
+      email: "",
+      systemRole: "",
+    },
+    mode: "all",
+    resolver: EditProfileSchema,
+  });
 
   useEffect(() => {
     if (user) {
@@ -142,12 +155,13 @@ const EditProfile = ({ user, isAdmin, isUser, onCancel }) => {
         lastName: user?.lastName || "N/A",
         dateOfBirth: user?.dateOfBirth || "N/A",
         email: user?.email || "N/A",
+        systemRole: isAdmin ? "Admin" : isUser ? "User" : "User",
       });
     }
   }, [user, reset]);
 
   const handleEditProfile = (data) => {
-    console.log("Edit Profile Data:", data);
+    // console.log("Edit Profile Data:", data);
     // api call
     // refetch
     // show toast
@@ -159,73 +173,55 @@ const EditProfile = ({ user, isAdmin, isUser, onCancel }) => {
       onSubmit={handleSubmit(handleEditProfile)}
       className="grid grid-cols-1 md:grid-cols-2 gap-4 text-custom-black-dark bg-white border border-custom-gray rounded-md p-6"
     >
-      <div className="grid gap-2 w-full">
-        <Label htmlFor="firstName" className="text-sm">
-          First Name
-        </Label>
-        <Input
-          id="firstName"
-          name="firstName"
-          className="w-full"
-          type="text"
-          placeholder="John"
-          {...register("firstName")}
-        />
-      </div>
-      <div className="grid gap-2 w-full">
-        <Label htmlFor="lastName" className="text-sm">
-          Last Name
-        </Label>
-        <Input
-          name="lastName"
-          id="lastName"
-          className="w-full"
-          type="text"
-          placeholder="Doe"
-          {...register("lastName")}
-        />
-      </div>
+      <InputField
+        name="firstName"
+        htmlFor="firstName"
+        placeholder="John"
+        label="First Name"
+        type="text"
+        control={control}
+        labelClassName="!font-medium"
+      />
+      <InputField
+        name="lastName"
+        htmlFor="lastName"
+        placeholder="Doe"
+        label="Last Name"
+        type="text"
+        control={control}
+        labelClassName="!font-medium"
+      />
 
-      <div className="grid gap-2 relative w-full">
-        <Label htmlFor="dateOfBirth" className="text-sm">
-          Date of Birth
-        </Label>
-        <DatePicker
-          value={dateOfBirth}
-          onChange={(date) => setValue("dateOfBirth", date)}
-          placeholder="12/04/2003"
-          disabled
-        />
-      </div>
+      <InputField
+        name="dateOfBirth"
+        htmlFor="dateOfBirth"
+        placeholder="12/04/2003"
+        label="Date of Birth"
+        type="text"
+        control={control}
+        labelClassName="!font-medium"
+        component={DatePicker}
+      />
 
-      <div className="grid gap-2 w-full">
-        <Label htmlFor="email" className="text-sm">
-          Email Address
-        </Label>
-        <Input
-          id="email"
-          className="w-full"
-          type="email"
-          name="email"
-          placeholder="johndoe@gmail.com"
-          disabled
-        />
-      </div>
+      <InputField
+        name="email"
+        htmlFor="email"
+        placeholder="johndoe@gmail.com"
+        label="Email Address"
+        type="email"
+        control={control}
+        labelClassName="!font-medium"
+      />
 
-      <div className="grid gap-2 w-full">
-        <Label htmlFor="systemRole" className="text-sm">
-          System Role
-        </Label>
-        <Input
-          id="systemRole"
-          className="w-full"
-          type="text"
-          name="systemRole"
-          placeholder="System Role"
-          value={isAdmin ? "Admin" : isUser ? "User" : "User"}
-          disabled
-        />
-      </div>
+      <InputField
+        name="systemRole"
+        htmlFor="systemRole"
+        placeholder="System Role"
+        label="System Role"
+        type="text"
+        control={control}
+        labelClassName="!font-medium"
+      />
 
       <div className="md:col-span-2 flex justify-end gap-2 mt-4">
         <OutlinedActionButton
@@ -245,23 +241,18 @@ const EditProfile = ({ user, isAdmin, isUser, onCancel }) => {
 };
 
 const ChangePassword = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: "all",
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+    resolver: ChangePasswordSchema,
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-
-  const newPassword = watch("newPassword");
-
   const handleChangePassword = (data) => {
-    console.log("Change Password Data:", data);
+    // console.log("Change Password Data:", data);
   };
 
   return (
@@ -274,85 +265,37 @@ const ChangePassword = () => {
       </div>
       <form
         onSubmit={handleSubmit(handleChangePassword)}
-        className="bg-white border border-custom-gray rounded-md p-6"
+        className="bg-white border border-custom-gray flex flex-col gap-4 rounded-md p-6"
       >
-        <div className="grid gap-2 w-full">
-          <Label htmlFor="currentPassword" className="text-sm font-normal">
-            Current Password
-          </Label>
-          <div className="relative">
-            <Input
-              id="currentPassword"
-              className="w-full"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your current password"
-              {...register("currentPassword", validations.currentPassword)}
-            />
-            <EyeButton
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
-          </div>
-          <div className="min-h-[1.25rem] md:min-h-[35px]">
-            {errors.currentPassword && (
-              <Message message={errors.currentPassword.message} />
-            )}
-          </div>
-        </div>
+        <InputField
+          name="currentPassword"
+          htmlFor="currentPassword"
+          placeholder="Enter your current password"
+          label="Current Password"
+          type="password"
+          control={control}
+          labelClassName="!font-medium"
+        />
 
-        <div className="grid gap-2 w-full">
-          <Label htmlFor="newPassword" className="text-sm font-normal">
-            New Password
-          </Label>
-          <div className="relative">
-            <Input
-              id="newPassword"
-              className="w-full"
-              type={showNewPassword ? "text" : "password"}
-              placeholder="Enter confirm password"
-              {...register("newPassword", {
-                ...validations.newPassword,
-              })}
-            />
-            <EyeButton
-              showPassword={showNewPassword}
-              setShowPassword={setShowNewPassword}
-            />
-          </div>
-          <div className="min-h-[1.25rem] md:min-h-[35px]">
-            {errors.newPassword && (
-              <Message message={errors.newPassword.message} />
-            )}
-          </div>
-        </div>
+        <InputField
+          name="newPassword"
+          htmlFor="newPassword"
+          placeholder="Enter your new password"
+          label="New Password"
+          type="password"
+          control={control}
+          labelClassName="!font-medium"
+        />
 
-        <div className="grid gap-2 w-full">
-          <Label htmlFor="confirmNewPassword" className="text-sm font-normal">
-            Confirm New Password
-          </Label>
-          <div className="relative">
-            <Input
-              id="confirmNewPassword"
-              className="w-full"
-              type={showConfirmNewPassword ? "text" : "password"}
-              placeholder="Enter confirm password"
-              {...register("confirmNewPassword", {
-                ...validations.confirmNewPassword,
-                validate: (value) =>
-                  value === newPassword || "Passwords do not match",
-              })}
-            />
-            <EyeButton
-              showPassword={showConfirmNewPassword}
-              setShowPassword={setShowConfirmNewPassword}
-            />
-          </div>
-          <div className="min-h-[1.25rem] md:min-h-[35px]">
-            {errors.confirmNewPassword && (
-              <Message message={errors.confirmNewPassword.message} />
-            )}
-          </div>
-        </div>
+        <InputField
+          name="confirmNewPassword"
+          htmlFor="confirmNewPassword"
+          placeholder="Enter your confirm new password"
+          label="Confirm New Password"
+          type="password"
+          control={control}
+          labelClassName="!font-medium"
+        />
 
         <div className="flex justify-end">
           <SecondaryButton

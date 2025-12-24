@@ -28,6 +28,7 @@ export const DatePicker = ({
       name={name}
       label={label}
       error={error}
+      labelClassName={rest.labelClassName}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
