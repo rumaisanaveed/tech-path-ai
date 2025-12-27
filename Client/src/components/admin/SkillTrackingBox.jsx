@@ -21,12 +21,13 @@ import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Message } from "../Message";
+import { SkillTrackingCardSkeleton } from "../skeletons/admin/SkillTracking/SkillTrackingSkeletons";
 
 const SkillTrackingBox = () => {
   const navigate = useNavigate();
 
   // Queries & Mutations
-  const { data } = GetAdminAllCareerDomains();
+  const { data, isLoading } = GetAdminAllCareerDomains();
   const { mutate: toggleDomainStatus } = ToggleDomainStatus();
   const { mutate: deleteDomain } = DeleteCareerDomain();
   const { mutate: createDomain, isLoading: creating } = CreateCareerDomain();
@@ -120,66 +121,72 @@ const SkillTrackingBox = () => {
       </div>
 
       {/* Boxes grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {domains.map((domain) => (
-          <div
-            key={domain.id}
-            className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
-          >
-            {/* Cover Image */}
-            <div className="relative h-40 w-full">
-              <img
-                alt={domain.title}
-                src={domain.coverImage || "/fallback.jpg"}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col gap-1 p-4">
-              <h1 className="text-lg font-semibold truncate">{domain.title}</h1>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {domain.description}
-              </p>
-            </div>
-
-            {/* Footer */}
-            <div className="flex items-center justify-between px-4 pb-4">
-              {/* Toggle Active/Inactive */}
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={domain.isActive}
-                  onCheckedChange={() => toggleDomainStatus(domain.id)}
+      {isLoading ? (
+        <SkillTrackingCardSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {domains.map((domain) => (
+            <div
+              key={domain.id}
+              className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+            >
+              {/* Cover Image */}
+              <div className="relative h-40 w-full">
+                <img
+                  alt={domain.title}
+                  src={domain.coverImage || "/fallback.jpg"}
+                  className="absolute inset-0 w-full h-full object-fill"
                 />
-                <span className="text-sm">Active</span>
               </div>
 
-              {/* Buttons: Edit + Delete */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    navigate(
-                      `/admin/dashboard/skill-tracking/edit/${domain.id}`
-                    )
-                  }
-                >
-                  Edit
-                </Button>
+              {/* Content */}
+              <div className="flex flex-col gap-1 p-4">
+                <h1 className="text-lg font-semibold truncate">
+                  {domain.title}
+                </h1>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {domain.description}
+                </p>
+              </div>
 
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDeleteDomain(domain.id)}
-                >
-                  Delete
-                </Button>
+              {/* Footer */}
+              <div className="flex items-center justify-between pb-4 px-4 overflow-x-auto">
+                {/* Toggle Active/Inactive */}
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={domain.isActive}
+                    onCheckedChange={() => toggleDomainStatus(domain.id)}
+                  />
+                  <span className="text-sm">Active</span>
+                </div>
+
+                {/* Buttons: Edit + Delete */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      navigate(
+                        `/admin/dashboard/skill-tracking/edit/${domain.id}`
+                      )
+                    }
+                  >
+                    Edit
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeleteDomain(domain.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

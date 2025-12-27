@@ -18,6 +18,7 @@ export const EventsHeader = ({
   icon,
   iconContainerClassName,
   buttonClassName,
+  showIconOnButton = true,
   buttonTitle = "Add Event",
   title = "Events Management",
   subtitle = " Review, approve or reject community and campus events",
@@ -48,7 +49,7 @@ export const EventsHeader = ({
         className={clsx("bg-custom-text-orange text-white", buttonClassName)}
         onClick={onAddButtonClick}
       >
-        <Plus className="w-4 h-4 text-white font-bold" />
+        {showIconOnButton && <Plus className="w-4 h-4 text-white font-bold" />}
         <p>{buttonTitle}</p>
       </Button>
     </div>

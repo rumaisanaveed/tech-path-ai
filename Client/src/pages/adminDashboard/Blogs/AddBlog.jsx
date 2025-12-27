@@ -25,6 +25,7 @@ const AddBlog = () => {
             buttonTitle="Back to Blogs"
             onAddButtonClick={() => navigate("/admin/dashboard/blogs")}
             subtitle=""
+            showIconOnButton={false}
           />
 
           <AddEditBlogForm onSubmit={handleSubmit} />
