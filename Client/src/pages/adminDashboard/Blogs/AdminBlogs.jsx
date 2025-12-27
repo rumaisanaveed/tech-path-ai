@@ -6,12 +6,14 @@ import { mockBlogs } from "@/components/admin/blogs/constants";
 import { EventsHeader } from "@/components/admin/events/EventsComponents";
 import AdminBlogCard from "@/components/blogs/AdminBlogCard";
 import { SearchBar } from "@/components/search/SearchBar";
+import usePageTitle from "@/hooks/usePageTitle";
 import AdminDashboardLayout from "@/layouts/AdmindashboardLayout";
 import { Book } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminBlogs = () => {
+  usePageTitle("Admin Blogs");
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
