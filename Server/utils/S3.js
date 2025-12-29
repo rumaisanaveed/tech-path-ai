@@ -1,5 +1,10 @@
 import multer from "multer";
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import slugify from "slugify";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -31,9 +36,10 @@ export const upload = multer({
 });
 
 // 3. Function to manually upload to S3
-export const uploadFileToS3 = async (file,folder,title) => {
+export const uploadFileToS3 = async (file, folder, title) => {
   const fileExtension = path.extname(file.originalname);
-  const uniqueFileName = `${folder}/${title}-${Date.now()}${fileExtension}`;
+  const safeTitle = slugify(title, { lower: true, strict: true });
+  const uniqueFileName = `${folder}/${safeTitle}-${Date.now()}${fileExtension}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,

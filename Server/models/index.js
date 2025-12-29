@@ -4,8 +4,7 @@ import AssessmentOptions from "./assessment/assessmentOptionsModel.js";
 import AssessmentSession from "./assessment/assessmentSessionModel.js";
 import AssessmentSessionAns from "./assessment/assessmentSessionAns.js";
 import AssessmentSessionQuestion from "./assessment/assessmentSessionQuestion.js";
-import Blogs from "./blogModel.js";
-import Tag from "./tagModel.js";
+
 import User from "./userModel.js";
 import categoryScoreGame from "./gamification/categoryScore.js";
 import trainingSample from "./trainingSample.js";
@@ -33,23 +32,21 @@ import UserLessonProgress from "./skilltracking/userLessonProgress.js";
 import XpWeight from "./skilltracking/xpWeight.js";
 import QuizSession from "./quiz/quizSession.js";
 
+//Blogs models
+import blog_tag_mapping from "./blog/blogTagMapping.js";
+import blogs from "./blog/blogModel.js";
+import tag from "./blog/tagModel.js";
+
 // 🔁 Define relationships here
 
 // User → Blog (One-to-Many)
-User.hasMany(Blogs, { foreignKey: "userId", as: "blogs" });
-Blogs.belongsTo(User, { foreignKey: "userId", as: "authorInfo" });
+User.hasMany(blogs, { foreignKey: "user_id", as: "blogs" });
+blogs.belongsTo(User, { foreignKey: "user_id", as: "authorInfo" });
 
-// Blog ↔ Tag (Many-to-Many)
-Blogs.belongsToMany(Tag, {
-  through: "BlogTags",
-  foreignKey: "blogId",
-  otherKey: "tagId",
-});
-Tag.belongsToMany(Blogs, {
-  through: "BlogTags",
-  foreignKey: "tagId",
-  otherKey: "blogId",
-});
+// Blogs ↔ Tag (Many-to-Many)
+blogs.belongsToMany(tag, { through: blog_tag_mapping, foreignKey: "blog_id" });
+tag.belongsToMany(blogs, { through: blog_tag_mapping, foreignKey: "tag_id" });
+
 
 // Category → Question
 category.hasMany(AssessmentQuestion, {
@@ -327,8 +324,9 @@ Lesson.hasMany(UserLessonProgress, { foreignKey: "lessonId", as: "userProgress" 
 UserLessonProgress.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
 
 export {
-  Blogs,
-  Tag,
+  blogs,
+  tag,
+  blog_tag_mapping,
   User,
   AssessmentQuestion,
   AssessmentOptions,

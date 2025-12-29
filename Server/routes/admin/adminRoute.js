@@ -4,6 +4,8 @@ import domainRoutes from "./skillTracking/domainRoute.js";
 import moduleRoutes from "./skillTracking/moduleRoutes.js";
 import lessonRoutes from "./skillTracking/lessonRoutes.js";
 
+import blogRoutes from "./blogs/blogsRoute.js";
+
 const router = express.Router();
 
 //blogs approval route
@@ -22,5 +24,8 @@ router.use("/skill-modules", moduleRoutes);
 
 // Lesson Routes
 router.use("/skill-lessons", lessonRoutes);
+
+//Blogs Routes
+router.use("/blogs", blogRoutes)
 
 export default router;

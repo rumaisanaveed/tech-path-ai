@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/connectDB.js";
+import { sequelize } from "../../config/connectDB.js";
 
-const Tag = sequelize.define("Tag", {
+const tag = sequelize.define("tag", {
   name: {
     type: DataTypes.STRING,
     unique: true,
@@ -9,8 +9,10 @@ const Tag = sequelize.define("Tag", {
   },
   usageCount: {
     type: DataTypes.INTEGER,
-    defaultValue: 1,
+    defaultValue: 0,
   },
+}, {
+  timestamps: true,
 });
 
-export default Tag;
+export default tag;
