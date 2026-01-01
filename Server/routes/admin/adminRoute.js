@@ -6,6 +6,7 @@ import lessonRoutes from "./skillTracking/lessonRoutes.js";
 
 import blogRoutes from "./blogs/blogsRoute.js";
 import eventRoutes from "./events/eventRoutes.js";
+import careerExplorerRoutes from "./careerExplorer/careerExplorerRoute.js";
 
 const router = express.Router();
 
@@ -31,5 +32,8 @@ router.use("/blogs", blogRoutes)
 
 //Events Routes
 router.use("/events", eventRoutes)
+
+//Career Explorer Routes
+router.use("/career-explorer", careerExplorerRoutes)
 
 export default router;

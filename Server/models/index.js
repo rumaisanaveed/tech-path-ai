@@ -36,10 +36,15 @@ import QuizSession from "./quiz/quizSession.js";
 import blog_tag_mapping from "./blog/blogTagMapping.js";
 import blogs from "./blog/blogModel.js";
 import tag from "./blog/tagModel.js";
+
+//Event models
 import Events from "./events/eventModel.js";
 import EventEnrollment from "./events/eventEnrollment.js";
 import EventTag from "./events/eventTag.js";
 import EventTagMapping from "./events/eventTagMapping.js";
+
+//career explorer models
+import Career from "./careerExplorer/careerExplorer.js";
 
 // 🔁 Define relationships here
 
@@ -359,6 +364,8 @@ export {
   EventEnrollment,
   EventTag,
   EventTagMapping,
+  //career explorer
+  Career,
   //User
   User,
   AssessmentQuestion,
