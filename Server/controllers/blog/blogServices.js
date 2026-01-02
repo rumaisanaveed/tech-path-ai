@@ -13,14 +13,15 @@ const normalizeTags = (tags) => {
 // Get all blogs for user
 export const GetAllBlogsService = async ({
   page = 1,
-  limit = 7,
+  limit = 6,
   search = "",
-  tags,
+  tagName,
 }) => {
   const offset = (page - 1) * limit;
-  const normalizedTags = normalizeTags(tags);
 
   const whereCondition = {};
+
+  // Free-text search on title / shortDesc
   if (search) {
     whereCondition[Op.or] = [
       { title: { [Op.like]: `%${search}%` } },
@@ -28,43 +29,32 @@ export const GetAllBlogsService = async ({
     ];
   }
 
-  const tagFilter =
-    normalizedTags.length > 0 ? { name: { [Op.in]: normalizedTags } } : null;
+  // Build include for tags
+  const includeConditions = [
+    {
+      model: tag,
+      attributes: ["id", "name"],
+      through: { attributes: [] },
+    },
+  ];
+
+  // If a specific tag is selected, filter by it
+  if (tagName) {
+    includeConditions[0].where = { name: tagName };
+  }
 
   const { rows, count } = await blogs.findAndCountAll({
     where: whereCondition,
     limit,
     offset,
+    distinct: true, // 🔥 important for count with joins
     order: [["createdAt", "DESC"]],
-    attributes: [
-      "id",
-      "title",
-      "coverImage",
-      "shortDesc",
-      "timeToRead",
-      "createdAt",
-    ],
-    include: [
-      {
-        model: tag,
-        attributes: ["name"],
-        where: tagFilter,
-        through: { attributes: [] },
-        required: tagFilter ? true : false,
-      },
-    ],
-    distinct: true,
-  });
-
-  // Map tags to array of strings for frontend
-  const blogsWithTags = rows.map((b) => {
-    const blogObj = b.toJSON();
-    blogObj.tags = blogObj.tags.map((t) => t.name);
-    return blogObj;
+    attributes: ["id", "title", "coverImage", "createdAt", "slug"],
+    include: includeConditions,
   });
 
   return {
-    blogs: blogsWithTags,
+    blogs: rows,
     pagination: {
       page,
       limit,
@@ -114,7 +104,7 @@ export const GetBlogBySlugService = async (slug) => {
           required: true,
         },
       ],
-      limit: 5,
+      limit: 4,
       order: [["createdAt", "DESC"]],
     });
 

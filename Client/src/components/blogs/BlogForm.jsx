@@ -45,6 +45,8 @@ export const AddEditBlogForm = ({ initialData, onSubmit }) => {
       tags: data.tags,
     };
 
+    console.log("Form data:", data);
+
     if (data.coverImage instanceof File) {
       payload.coverImage = data.coverImage;
     }

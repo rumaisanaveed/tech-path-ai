@@ -108,11 +108,12 @@ export const createBlogService = async ({
   }
 };
 
-export const getAllBlogsService = async ({ page, limit, search }) => {
+export const getAllBlogsService = async ({ page, limit, search, tagName }) => {
   const offset = (page - 1) * limit;
 
   const whereCondition = {};
 
+  // Free-text search on title / shortDesc
   if (search) {
     whereCondition[Op.or] = [
       { title: { [Op.like]: `%${search}%` } },
@@ -120,26 +121,28 @@ export const getAllBlogsService = async ({ page, limit, search }) => {
     ];
   }
 
+  // Build include for tags
+  const includeConditions = [
+    {
+      model: tag,
+      attributes: ["id", "name"],
+      through: { attributes: [] },
+    },
+  ];
+
+  // If a specific tag is selected, filter by it
+  if (tagName) {
+    includeConditions[0].where = { name: tagName };
+  }
+
   const { rows, count } = await blogs.findAndCountAll({
     where: whereCondition,
     limit,
     offset,
+    distinct: true, // 🔥 important for count with joins
     order: [["createdAt", "DESC"]],
-    attributes: [
-      "id",
-      "title",
-      "coverImage",
-      "shortDesc",
-      "timeToRead",
-      "createdAt",
-    ],
-    include: [
-      {
-        model: tag,
-        attributes: ["id", "name"],
-        through: { attributes: [] }, // hide mapping table
-      },
-    ],
+    attributes: ["id", "title", "coverImage", "createdAt"],
+    include: includeConditions,
   });
 
   return {
@@ -152,6 +155,7 @@ export const getAllBlogsService = async ({ page, limit, search }) => {
     },
   };
 };
+
 
 export const getBlogBySlugService = async (slug) => {
   const blog = await blogs.findOne({
@@ -193,8 +197,12 @@ export const getBlogBySlugService = async (slug) => {
 
 export const getBlogTagsService = async () => {
   const tags = await tag.findAll({
-    attributes: ["id", "name", "usageCount"],
+    where: {
+      usageCount: { [Op.gt]: 0 },
+    },
     order: [["usageCount", "DESC"]],
+    limit: 10,
+    attributes: ["id", "name", "usageCount"],
   });
 
   return tags;

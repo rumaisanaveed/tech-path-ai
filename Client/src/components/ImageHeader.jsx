@@ -5,19 +5,23 @@ export const ImageHeader = ({
   imagePath,
   customBody,
   customBodyContainerClassName,
+  imageClassName = "",
 }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       <div className="lg:col-span-2">
         <img
           src={imagePath}
           alt="background"
-          className="rounded-xl w-full h-auto object-cover"
+          className={clsx(
+            "rounded-xl w-full h-full object-cover",
+            imageClassName || "min-h-[300px]"
+          )}
         />
       </div>
       <div
         className={clsx(
-          "lg:col-span-1 rounded-xl p-5 lg:p-10 flex flex-col justify-center gap-2 lg:gap-6",
+          "lg:col-span-1 rounded-xl p-5 lg:p-10 flex flex-col justify-center gap-2 lg:gap-4 h-full",
           customBodyContainerClassName
         )}
         style={{

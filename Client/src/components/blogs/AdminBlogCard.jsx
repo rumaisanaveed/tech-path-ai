@@ -77,19 +77,19 @@ const AdminBlogCard = ({ post, onEdit, onDelete }) => {
         {/* Tags (only if exist) */}
         {post.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {post.tags.slice(0, 3).map((tag, idx) => (
+            {post.tags.slice(0, 3).map((tag) => (
               <span
-                key={idx}
+                key={tag.id}
                 className="
-                  inline-flex items-center gap-1
-                  px-2.5 py-1 rounded-full
-                  text-xs
-                  bg-[#59A4C0]/10
-                  text-[#59A4C0]
-                "
+          inline-flex items-center gap-1
+          px-2.5 py-1 rounded-full
+          text-xs
+          bg-[#59A4C0]/10
+          text-[#59A4C0]
+        "
               >
                 <Tag size={10} />
-                {tag}
+                {tag.name}
               </span>
             ))}
           </div>

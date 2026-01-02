@@ -3,13 +3,13 @@ import { GetAllBlogsService, GetBlogBySlugService } from "./blogServices.js";
 
 export const getAllBlogsController = async (req, res) => {
   try {
-    const { page = 1, limit = 7, search = "", tags = "" } = req.query;
+    const { page = 1, limit = 6, search = "", tagName= null } = req.query;
 
     const data = await GetAllBlogsService({
       page: Number(page),
       limit: Number(limit),
       search,
-      tags,
+      tagName,
     });
 
     return successResponse(res, data, "Get all blogs");

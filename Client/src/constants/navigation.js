@@ -2,7 +2,7 @@ export const HOME_ROUTE = "/";
 
 export const BLOG_ROUTES = {
   INDEX: "/blogs",
-  DETAILS: ":id",
+  DETAILS: ":slug",
 };
 
 export const EVENTS_ROUTE = {

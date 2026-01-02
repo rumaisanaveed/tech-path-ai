@@ -10,21 +10,29 @@ import quizRoutes from "./quizRoutes.js";
 import roadMapRoutes from "./roadMapRoutes.js";
 import eventRoutes from "./eventRoutes.js";
 
-
 const router = express.Router();
 
-router.use("/auth", authRoutes)
-router.use("/blogs", blogsRoutes)
-router.use("/assessments", assessmentsRoutes)
+/**
+ * @swagger
+ * tags:
+ *   - name: Blogs
+ *     description: Public blog endpoints
+ *   - name: AdminBlogs
+ *     description: Administrative blog management
+ */
 
-router.use("/careerdomain", careerDomainRoutes)
-router.use("/enrollment", domainProgressRoutes)
-router.use("/lessons", lessonRoutes)
+router.use("/auth", authRoutes);
+router.use("/blogs", blogsRoutes);
+router.use("/assessments", assessmentsRoutes);
 
-router.use("/quiz", quizRoutes)
+router.use("/careerdomain", careerDomainRoutes);
+router.use("/enrollment", domainProgressRoutes);
+router.use("/lessons", lessonRoutes);
 
-router.use("/roadmaps", roadMapRoutes)
+router.use("/quiz", quizRoutes);
 
-router.use("/events", eventRoutes)
+router.use("/roadmaps", roadMapRoutes);
+
+router.use("/events", eventRoutes);
 
 export default router;

@@ -68,6 +68,10 @@ export const API_ROUTES = {
     GET_ALL_MODULES_FROM_DOMAIN: (domainId) =>
       `${skillmoduleController}module/${domainId}`,
   },
+  BLOGS: {
+    FETCH_BLOGS_FOR_USERS: `/blogs/all-blogs`,
+    FETCH_SINGLE_BLOG: (slug) => `/blogs/single-blog/${slug}`,
+  },
 };
 
 const adminController = "/admin";
@@ -101,4 +105,9 @@ export const ADMIN_API_ROUTES = {
     DELETE_LESSON: (lessonId) =>
       `${adminController}/skill-lessons/delete-lesson/${lessonId}`,
   },
+  BLOGS_TRACKING: {
+    GET_ALL_BLOGS: `${adminController}/blogs/all-blogs`,
+    GET_BLOG_TAGS: `${adminController}/blogs/blog-tags`,
+    ADD_BLOG: `${adminController}/blogs/create-blog`,
+  }
 };

@@ -41,12 +41,13 @@ export const createBlogController = async (req, res) => {
 
 export const getAllBlogsController = async (req, res) => {
   try {
-    const { page = 1, limit = 7, search = "" } = req.query;
+    const { page = 1, limit = 9, search = "", tagName= null } = req.query;
 
     const data = await getAllBlogsService({
       page: Number(page),
       limit: Number(limit),
       search,
+      tagName,
     });
 
     return successResponse(res, data, "Get all blogs - Admin");
@@ -80,7 +81,7 @@ export const getBlogTagsController = async (req, res) => {
   try {
     const tags = await getBlogTagsService();
 
-    return successResponse(res, tags, "Blog tags fetched successfully");
+    return successResponse(res, {tags}, "Blog tags fetched successfully");
   } catch (err) {
     console.error(err);
     return errorResponse(res, err.message || "Something went wrong");

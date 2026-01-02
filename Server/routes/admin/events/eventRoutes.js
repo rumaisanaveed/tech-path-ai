@@ -11,7 +11,54 @@ import {
 
 const router = express.Router();
 
-// Create event
+/**
+ * @swagger
+ * /admin/events/create-event:
+ *   post:
+ *     summary: Create a new event
+ *     tags: [Admin Events]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - eventDate
+ *               - registration_type
+ *             properties:
+ *               title:
+ *                 type: string
+ *               shortDesc:
+ *                 type: string
+ *               eventDate:
+ *                 type: string
+ *                 format: date
+ *               startTime:
+ *                 type: string
+ *               endTime:
+ *                 type: string
+ *               venue:
+ *                 type: string
+ *               registration_type:
+ *                 type: string
+ *                 enum: [internal, external]
+ *               registration_link:
+ *                 type: string
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               coverImage:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Event created successfully
+ */
 router.post(
   "/create-event",
   verifyToken,
@@ -20,16 +67,70 @@ router.post(
   postEventController
 );
 
-// Get all events
+/**
+ * @swagger
+ * /admin/events/all-events:
+ *   get:
+ *     summary: Get all events (Admin)
+ *     tags: [Admin Events]
+ *     security:
+ *       - BearerAuth: []
+ */
 router.get("/all-events", verifyToken, isAdmin, getEventController);
 
-// Update event details
-router.patch("/update-event/:eventId", verifyToken, isAdmin, upload.single("coverImage"), updateEventController);
+/**
+ * @swagger
+ * /admin/events/update-event/{eventId}:
+ *   patch:
+ *     summary: Update event details
+ *     tags: [Admin Events]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.patch(
+  "/update-event/:eventId",
+  verifyToken,
+  isAdmin,
+  upload.single("coverImage"),
+  updateEventController
+);
 
-// Get enrolled users for an event
-router.get("/enrolled-users/:eventId", verifyToken, isAdmin, getEnrolledUsersController);
+/**
+ * @swagger
+ * /admin/events/enrolled-users/{eventId}:
+ *   get:
+ *     summary: Get enrolled users
+ *     tags: [Admin Events]
+ *     security:
+ *       - BearerAuth: []
+ */
+router.get(
+  "/enrolled-users/:eventId",
+  verifyToken,
+  isAdmin,
+  getEnrolledUsersController
+);
 
-// Update event status (affects all enrolled users)
-router.patch("/update-event-status/:eventId", verifyToken, isAdmin, updateEventStatusController);
+/**
+ * @swagger
+ * /admin/events/update-event-status/{eventId}:
+ *   patch:
+ *     summary: Update event status
+ *     tags: [Admin Events]
+ *     security:
+ *       - BearerAuth: []
+ */
+router.patch(
+  "/update-event-status/:eventId",
+  verifyToken,
+  isAdmin,
+  updateEventStatusController
+);
 
 export default router;

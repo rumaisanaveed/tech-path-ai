@@ -10,11 +10,26 @@ export default function ProseKitRenderer({ contentString, className = "" }) {
     () => createEditor({ extension: defineExtension() }),
     []
   );
-  const parsed = JSON.parse(contentString);
 
-  const rawHtml = htmlFromJSON(parsed, editor);
+  // Check if contentString is HTML or JSON
+  const isHTML = contentString.trim().startsWith("<");
 
-  const cleanHtml = sanitizeHTML(rawHtml);
+  let cleanHtml;
+
+  if (isHTML) {
+    // Content is already HTML from API
+    cleanHtml = sanitizeHTML(contentString);
+  } else {
+    // Content is JSON format (legacy or other sources)
+    try {
+      const parsed = JSON.parse(contentString);
+      const rawHtml = htmlFromJSON(parsed, editor);
+      cleanHtml = sanitizeHTML(rawHtml);
+    } catch (error) {
+      console.error("Error parsing content:", error);
+      cleanHtml = "<p>Error loading content</p>";
+    }
+  }
 
   return (
     <div
