@@ -32,6 +32,7 @@ const QuizModal = ({ open, onClose, quiz }) => {
           options: options.map((opt) => opt.trim()),
         };
       });
+      console.log("Parsed Questions:", parsed);
       setQuestions(parsed);
       setPreparing(false);
     }

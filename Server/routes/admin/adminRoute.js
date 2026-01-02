@@ -8,6 +8,8 @@ import blogRoutes from "./blogs/blogsRoute.js";
 import eventRoutes from "./events/eventRoutes.js";
 import careerExplorerRoutes from "./careerExplorer/careerExplorerRoute.js";
 
+import assessmentsRoutes from "./assessments/adminAssessmentRoute.js";
+
 const router = express.Router();
 
 //SkillTracking || DOMAIN
@@ -27,5 +29,8 @@ router.use("/events", eventRoutes)
 
 //Career Explorer Routes
 router.use("/career-explorer", careerExplorerRoutes)
+
+//Career Assessments Routes
+router.use("/assessments", assessmentsRoutes)
 
 export default router;

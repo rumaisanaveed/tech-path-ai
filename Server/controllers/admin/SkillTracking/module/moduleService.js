@@ -21,21 +21,20 @@ export const CreateModule = async (data) => {
 
     // Create module
     const module = await Module.create(
-  {
-    title: data.title,
-    description: data.description,
-    badge: data.badge,
-    totalXP: data.totalXp,              
-    typeId: data.typeId,                
-    sequence: data.sequence,
-    isFeatured: data.isFeatured ?? false,
-    slug,
-    prerequisiteModuleId: data.prerequisiteModuleId || null, 
-    createdBy: data.createdBy || null,
-  },
-  { transaction }
-);
-
+      {
+        title: data.title,
+        description: data.description,
+        badge: data.badge,
+        totalXP: data.totalXp,
+        typeId: data.typeId,
+        sequence: data.sequence,
+        isFeatured: data.isFeatured ?? false,
+        slug,
+        prerequisiteModuleId: data.prerequisiteModuleId || null,
+        createdBy: data.createdBy || null,
+      },
+      { transaction }
+    );
 
     // Map to domain
     await DomainModuleMapping.create(
@@ -127,7 +126,6 @@ export const GetAllModules = async ({ domainId, page = 1, limit = 9 }) => {
     throw error;
   }
 };
-
 
 export const DeleteModule = async ({ moduleId, domainId }) => {
   const transaction = await sequelize.transaction();

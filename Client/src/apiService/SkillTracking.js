@@ -158,16 +158,20 @@ export const GetAdminAllCareerDomains = () => {
 export const GetAdminAllModulesFromDomain = (domainId, page, limit = 5) => {
   return useQuery({
     queryKey: ["adminModulesFromDomain", domainId, page, limit],
-    queryFn: async (domainId, page = 1, limit = 5) => {
+    queryFn: async ({ queryKey }) => {
+      const [_key, domainId, page, limit] = queryKey;
+
       const url = `${ADMIN_API_ROUTES.MODULE_TRACKING.GET_ALL_MODULES(
         domainId
       )}?page=${page}&limit=${limit}`;
+
       const res = await axiosReq(API_MODES.GET, url);
       return res.data;
     },
-    keepPreviousData: true, // helps with smooth transitions
+    keepPreviousData: true,
   });
 };
+
 
 export const CreateAdminModule = (domainId) => {
   const queryClient = useQueryClient();
