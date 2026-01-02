@@ -57,8 +57,10 @@ export const AddUserLesson = (moduleId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (moduleId) => {
+    mutationFn: async () => {
       const url = API_ROUTES.LESSONS.ADD_USER_LESSON(moduleId);
+      console.log("URL", url);
+
       const res = await axiosReq(API_MODES.POST, url);
       return res.data;
     },
@@ -68,6 +70,7 @@ export const AddUserLesson = (moduleId) => {
     },
   });
 };
+
 
 export const GetSingleLessonDetails = (lessonId) => {
   return useQuery({
