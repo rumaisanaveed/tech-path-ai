@@ -523,11 +523,12 @@ export const projectDropdownItems = [
 export const domainSkillDropdownItems = [
   {
     label: "View Lesson",
-    key: "lesson",
+    value: "lesson",
   },
   {
-    label: "Delete",
-    key: "delete",
+    label: "Remove Module",
+    value: "deactivate",
+    variant: "destructive",
   },
 ];
 

@@ -1,4 +1,7 @@
-import { GetUserEnrolledModule } from "@/apiService/ModuleTracking";
+import {
+  ChangeModuleStatus,
+  GetUserEnrolledModule,
+} from "@/apiService/ModuleTracking";
 import { OutlinedActionButton } from "@/components/buttons/OutlinedActionButton";
 import { ActionDropdown } from "@/components/dropdowns/ActionDropdown";
 import CertificationModal from "@/components/modals/CertificationModal";
@@ -214,6 +217,7 @@ const SkillTracker = () => {
   const { id: domainId } = useParams();
 
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId);
+  const { mutate: changeStatus, isPending } = ChangeModuleStatus();
 
   const activeModules = data?.userModules?.activeModules || [];
 
@@ -221,12 +225,27 @@ const SkillTracker = () => {
   const displayModules = activeModules.slice(0, 3);
 
   const handleActions = (action, moduleId) => {
+    console.log("Action selected:", action, moduleId);
     switch (action) {
       case "lesson":
         navigate(`/user/dashboard/skill-tracker/lesson-tracker/${moduleId}`);
         break;
-      case "delete":
-        toast.info("Delete logic not implemented yet.");
+
+      case "deactivate":
+        changeStatus(
+          { moduleId, status: "pending" },
+          {
+            onSuccess: () => {
+              toast.success("Module removed from active");
+            },
+            onError: (error) => {
+              toast.error(
+                error?.response?.data?.message ||
+                  "Failed to update module status"
+              );
+            },
+          }
+        );
         break;
     }
   };
@@ -310,7 +329,9 @@ const SkillTracker = () => {
                       <Ellipsis
                         color="black"
                         size={18}
-                        className="cursor-pointer ml-2"
+                        className={`cursor-pointer ml-2 ${
+                          isPending ? "opacity-50 pointer-events-none" : ""
+                        }`}
                       />
                     </DropdownMenuTrigger>
                     <ActionDropdown

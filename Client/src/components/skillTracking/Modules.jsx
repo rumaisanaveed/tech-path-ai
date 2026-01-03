@@ -3,14 +3,31 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { GetUserEnrolledModule } from "@/apiService/ModuleTracking";
+import {
+  ChangeModuleStatus,
+  GetUserEnrolledModule,
+} from "@/apiService/ModuleTracking";
 import { format } from "date-fns";
 import { AlertCircle, CalendarDays, Star } from "lucide-react";
 import { CustomPagination } from "../CustomPagination";
 import ModulesSkeletons from "../skeletons/skillTracking/modules/ModulesSkeletons";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formatDate = (iso) => (iso ? format(new Date(iso), "MMM d, yyyy") : "—");
 
@@ -19,10 +36,54 @@ const Modules = () => {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = GetUserEnrolledModule(domainId, page);
+  const { mutate: changeStatus, isPending } = ChangeModuleStatus();
+
+  const [statusMap, setStatusMap] = useState({});
 
   const userModules = data?.userModules || {};
   const modules = userModules?.modules || [];
   const totalPages = userModules?.totalPages || 1;
+
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+
+  useEffect(() => {
+    if (modules.length > 0) {
+      const map = {};
+      modules.forEach((m) => {
+        map[m.id] = m.status;
+      });
+      setStatusMap(map);
+    }
+  }, [modules]);
+
+  const handleView = (module) => {
+    setSelectedModule(module);
+    setIsViewOpen(true);
+  };
+
+  const handleStatusChange = (moduleId, newStatus) => {
+    const previousStatus = statusMap[moduleId];
+
+    // Optimistically update UI
+    setStatusMap((prev) => ({
+      ...prev,
+      [moduleId]: newStatus,
+    }));
+
+    changeStatus(
+      { moduleId, status: newStatus },
+      {
+        onError: () => {
+          // 🔙 Rollback UI on error
+          setStatusMap((prev) => ({
+            ...prev,
+            [moduleId]: previousStatus,
+          }));
+        },
+      }
+    );
+  };
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -134,15 +195,20 @@ const Modules = () => {
                     <Star size={14} className="text-yellow-500" />
                     <span>{mod.totalXp} XP</span>
                   </div>
-                  <span
-                    className={`font-medium ${
-                      mod.status === "active"
-                        ? "text-teal-600"
-                        : "text-gray-400"
-                    }`}
+                  <Select
+                    value={statusMap[mod.id]}
+                    onValueChange={(value) => handleStatusChange(mod.id, value)}
+                    disabled={isPending}
                   >
-                    {mod.status || "Pending"}
-                  </span>
+                    <SelectTrigger className="h-7 w-[110px] text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Buttons */}
@@ -150,6 +216,7 @@ const Modules = () => {
                   <Button
                     variant="outline"
                     className="w-1/2 text-xs border-[#59A4C0] text-[#59A4C0] hover:bg-[#59A4C0]/10"
+                    onClick={() => handleView(mod)}
                   >
                     View
                   </Button>
@@ -172,6 +239,19 @@ const Modules = () => {
         currentPage={page}
         onPageChange={handlePageChange}
       />
+
+      <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{selectedModule?.title || "Module"}</DialogTitle>
+          </DialogHeader>
+
+          {/* Empty for now */}
+          <div className="text-sm text-gray-500 text-center py-10">
+            Module details will appear here
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

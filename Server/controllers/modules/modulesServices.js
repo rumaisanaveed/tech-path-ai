@@ -85,8 +85,12 @@ export const EnrollInModule = async (userId, userResponse, domainId) => {
   };
 };
 
-
-export const GetAllUserModules = async (userId, domainId, page = 1, limit = 6) => {
+export const GetAllUserModules = async (
+  userId,
+  domainId,
+  page = 1,
+  limit = 6
+) => {
   // ✅ Step 1: Fetch career domain name
   const careerDomain = await CareerDomain.findOne({
     where: { id: domainId },
@@ -164,7 +168,9 @@ export const GetAllUserModules = async (userId, domainId, page = 1, limit = 6) =
     };
   });
 
-  const activeModules = combinedModules.filter((mod) => mod.status === "active");
+  const activeModules = combinedModules.filter(
+    (mod) => mod.status === "active"
+  );
 
   // ✅ Step 6: Return structured + paginated response
   return {
@@ -176,24 +182,39 @@ export const GetAllUserModules = async (userId, domainId, page = 1, limit = 6) =
     totalModules: userModuleIds.length,
     totalPages: Math.ceil(userModuleIds.length / limit),
     modules: combinedModules,
-    activeModules
+    activeModules,
   };
 };
 
 export const ToggleModule = async (userId, moduleId, status) => {
-  
+  // If trying to activate a module
+  if (status === "active") {
+    const activeCount = await UserModuleMapping.count({
+      where: {
+        userId,
+        status: "active",
+      },
+    });
+
+    if (activeCount >= 3) {
+      return {
+        error: true,
+        statusCode: 400,
+        message: "You can only have 3 active modules at a time",
+      };
+    }
+  }
 
   const userModule = await UserModuleMapping.findOne({
     where: { userId, moduleId },
   });
 
   if (!userModule) {
-    return []
+    throw new Error("Module not found for this user");
   }
-  userModule.status = status;
 
+  userModule.status = status;
   await userModule.save();
 
   return userModule;
-
-}
+};

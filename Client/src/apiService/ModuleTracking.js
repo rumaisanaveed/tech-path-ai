@@ -1,7 +1,8 @@
 import { API_ROUTES } from "@/constants/apiUrls";
 import { API_MODES } from "@/constants/enums";
 import axiosReq from "@/services/axiosHelper";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const GetUserEnrolledModule = (domainId, page = 1, perPage = 6) => {
   return useQuery({
@@ -19,6 +20,40 @@ export const GetUserEnrolledModule = (domainId, page = 1, perPage = 6) => {
     refetchOnWindowFocus: false,
   });
 };
+
+export const ChangeModuleStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ moduleId, status }) => {
+      const url = API_ROUTES.SKILLMODULE.CHANGE_MODULE_STATUS(moduleId);
+      console.log("🔄 Changing module status:", { moduleId, status, url });
+
+      const res = await axiosReq(API_MODES.PATCH, url, { status });
+
+      return res.data;
+    },
+
+    onSuccess: (data) => {
+      toast.success(data?.message || "Module status updated");
+
+      queryClient.invalidateQueries({
+        queryKey: ["userEnrolledModules"],
+      });
+    },
+
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to update module status";
+
+      toast.error(message);
+
+      console.error("❌ Error changing module status:", error);
+    },
+  });
+};
+
 
 // export const GetAllModulesFromDomain = (domainId) => {
 //   return useQuery({

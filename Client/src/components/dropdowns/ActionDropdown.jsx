@@ -14,7 +14,7 @@ export const ActionDropdown = ({ items, onAction, variant = "dark" }) => {
         <DropdownMenuItem
           key={index}
           className="px-4 py-2 text-sm cursor-pointer font-medium text-center w-full justify-center hover:text-white text-black"
-          onClick={() => onAction(item.key)}
+          onClick={() => onAction(item.value)}
         >
           {item.label}
         </DropdownMenuItem>

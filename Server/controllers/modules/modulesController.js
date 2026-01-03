@@ -2,7 +2,7 @@ import {
   errorResponse,
   successResponse,
 } from "../../utils/handlers/reponseHandler.js";
-import { EnrollInModule, GetAllUserModules } from "./modulesServices.js";
+import { EnrollInModule, GetAllUserModules, ToggleModule } from "./modulesServices.js";
 
 export const enrollInModule = async (req, res) => {
   try {
@@ -53,21 +53,27 @@ export const toggleModule = async (req, res) => {
   try {
     const userId = req.userId;
     const { moduleId } = req.params;
-    const { status } = req.body; 
-    
+    const { status } = req.body;
+
     const validStatuses = ["active", "completed", "pending"];
     if (!validStatuses.includes(status)) {
-      errorResponse(res, null, "Invalid status value");
+      return errorResponse(res, null, "Invalid status value", 400);
     }
 
-    const toggled = await ToggleModule(userId, moduleId, status);
+    const result = await ToggleModule(userId, moduleId, status);
+
+    if (result?.error) {
+      return errorResponse(res, null, result.message, result.statusCode);
+    }
+
     return successResponse(
       res,
-      { toggled },
-      "Module status toggled successfully"
+      result,
+      "Module status updated successfully"
     );
   } catch (error) {
     console.log("Error toggling module status:", error);
-    errorResponse(res, error, "Failed to toggle module status");
+    return errorResponse(res, error, "Failed to toggle module status", 500);
   }
 };
+

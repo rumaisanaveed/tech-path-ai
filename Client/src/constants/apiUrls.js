@@ -40,6 +40,8 @@ export const API_ROUTES = {
   },
   SKILLMODULE: {
     GET_USER_ENROLLED: (domainId) => `${skillEnrollment}modules/${domainId}`,
+    CHANGE_MODULE_STATUS: (moduleId) =>
+      `${skillEnrollment}module/${moduleId}`,
   },
   LESSONS: {
     GET_MODULE_LESSONS: (moduleId) =>
