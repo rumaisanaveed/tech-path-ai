@@ -51,6 +51,10 @@ const options = {
         name: "Assessment",
         description: "Skill assessment APIs",
       },
+      {
+        name: "Career Explorer",
+        description: "Public career exploration endpoints",
+      },
     ],
   },
 

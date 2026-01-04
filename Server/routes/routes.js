@@ -9,6 +9,7 @@ import lessonRoutes from "./lessonRoutes.js";
 import quizRoutes from "./quizRoutes.js";
 import roadMapRoutes from "./roadMapRoutes.js";
 import eventRoutes from "./eventRoutes.js";
+import explorerRoutes from "./careerExplorerRoute.js";
 
 const router = express.Router();
 
@@ -34,5 +35,7 @@ router.use("/quiz", quizRoutes);
 router.use("/roadmaps", roadMapRoutes);
 
 router.use("/events", eventRoutes);
+
+router.use("/career-explorer", explorerRoutes);
 
 export default router;

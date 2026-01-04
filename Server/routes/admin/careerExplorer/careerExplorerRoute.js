@@ -16,7 +16,7 @@ router.post(
   "/add-career",
   verifyToken,
   isAdmin,
-  upload.single("coverImage"),
+  upload.single("imageUrl"),
   addCareerController
 );
 
@@ -31,7 +31,7 @@ router.put(
   "/update-career/:careerId",
   verifyToken,
   isAdmin,
-  upload.single("coverImage"),
+  upload.single("imageUrl"),
   updateCareerController
 );
 
