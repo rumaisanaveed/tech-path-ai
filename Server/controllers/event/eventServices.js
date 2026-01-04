@@ -115,6 +115,7 @@ export const getEventDetailsService = async ({ eventId, userId }) => {
     endTime: event.endTime,
     venue: event.venue,
     image_url: event.image_url,
+    LongDesc: event.longDesc,
     status: event.status,
     registration_type: event.registration_type,
     registration_link: event.registration_link,

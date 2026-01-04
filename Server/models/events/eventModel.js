@@ -18,6 +18,10 @@ const Events = sequelize.define(
     shortDesc: {
       type: DataTypes.STRING(500),
     },
+     longDesc: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
 
     eventDate: {
       type: DataTypes.DATEONLY,

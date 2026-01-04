@@ -37,6 +37,7 @@ export const postEventServices = async ({
         eventDate,
         startTime,
         endTime,
+        longDesc,
         venue,
         image_url: imageUrl,
         organizer_id: adminId,
