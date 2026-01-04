@@ -7,6 +7,8 @@ import {
   getAllBlogsService,
   getBlogBySlugService,
   getBlogTagsService,
+  updateBlogService,
+  deleteBlogService
 } from "./blogServices.js";
 
 export const createBlogController = async (req, res) => {
@@ -112,6 +114,58 @@ export const getBlogTagsController = async (req, res) => {
     const tags = await getBlogTagsService();
 
     return successResponse(res, { tags }, "Blog tags fetched successfully");
+  } catch (err) {
+    console.error(err);
+    return errorResponse(res, err.message || "Something went wrong");
+  }
+};
+
+export const updateBlogController = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const file = req.file;
+    const { title, shortDesc, longDesc, timeToRead, tags } = req.body;
+
+    // ✅ Basic validations
+    if (!title?.trim() || !shortDesc?.trim() || !longDesc) {
+      return errorResponse(
+        res,
+        "Title, short description, and long description are required"
+      );
+    }
+
+    // ✅ Pass parsed data to service
+    const updatedBlog = await updateBlogService({
+      slug,
+      title,
+      shortDesc,
+      longDesc,
+      timeToRead,
+      tags,
+      file,
+    });
+
+    return successResponse(
+      res,
+      {
+        blogId: updatedBlog.id,
+        title: updatedBlog.title,
+        coverImage: updatedBlog.coverImage,
+      },
+      "Blog updated successfully"
+    );
+  } catch (err) {
+    console.error(err);
+    return errorResponse(res, err.message || "Something went wrong");
+  }
+};
+
+export const deleteBlogController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Implement deleteBlogService in blogServices.js
+    await deleteBlogService(id);
+    return successResponse(res, null, "Blog deleted successfully");
   } catch (err) {
     console.error(err);
     return errorResponse(res, err.message || "Something went wrong");

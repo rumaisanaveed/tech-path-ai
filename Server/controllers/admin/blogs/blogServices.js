@@ -207,3 +207,163 @@ export const getBlogTagsService = async () => {
 
   return tags;
 };
+
+export const updateBlogService = async ({
+  slug,
+  title,
+  shortDesc,
+  longDesc,
+  timeToRead,
+  tags,
+  file,
+}) => {
+  const transaction = await blogs.sequelize.transaction();
+  let coverImageUrl = null;
+
+  try {
+    const blog = await blogs.findOne({ where: { slug }, transaction });
+    if (!blog) throw new Error("Blog not found");
+
+    console.log("file:", file);
+
+    if (file) {
+      coverImageUrl = await uploadFileToS3(file, "blogs", title);
+      console.log("Uploaded new cover image to S3:", coverImageUrl);
+    }
+
+    const normalizedTags = normalizeTags(tags);
+    const timeToReadValue = timeToRead || calculateTimeToRead(longDesc);
+
+    const { metaTitle, metaDescription, metaKeywords } =
+      generateSEO({ title, shortDesc });
+
+    // 1️⃣ Update blog
+    await blog.update(
+      {
+        title,
+        shortDesc,
+        longDesc,
+        timeToRead: timeToReadValue,
+        coverImage: coverImageUrl || blog.coverImage,
+        metaTitle,
+        metaDescription,
+        metaKeywords,
+      },
+      { transaction }
+    );
+
+    // 2️⃣ Get existing tag mappings
+    const existingMappings = await blog_tag_mapping.findAll({
+      where: { blog_id: blog.id },
+      transaction,
+    });
+
+    const existingTagIds = existingMappings.map((m) => m.tag_id);
+
+    const existingTags = await tag.findAll({
+      where: { id: existingTagIds },
+      transaction,
+    });
+
+    const existingTagNames = existingTags.map((t) => t.name);
+
+    // 3️⃣ Find removed tags
+    const removedTags = existingTags.filter(
+      (t) => !normalizedTags.includes(t.name)
+    );
+
+    // 4️⃣ Decrement usageCount for removed tags
+    for (const t of removedTags) {
+      await t.decrement("usageCount", { by: 1, transaction });
+    }
+
+    // 5️⃣ Remove old mappings
+    await blog_tag_mapping.destroy({
+      where: { blog_id: blog.id },
+      transaction,
+    });
+
+    // 6️⃣ Add / reuse new tags
+    const tagInstances = await Promise.all(
+      normalizedTags.map(async (name) => {
+        const [tagInstance, created] = await tag.findOrCreate({
+          where: { name },
+          defaults: { usageCount: 1 },
+          transaction,
+        });
+
+        if (!created && !existingTagNames.includes(name)) {
+          await tagInstance.increment("usageCount", { by: 1, transaction });
+        }
+
+        return tagInstance;
+      })
+    );
+
+    // 7️⃣ Create new mappings
+    await blog_tag_mapping.bulkCreate(
+      tagInstances.map((tagInstance) => ({
+        blog_id: blog.id,
+        tag_id: tagInstance.id,
+      })),
+      { transaction }
+    );
+
+    await transaction.commit();
+    return blog;
+  } catch (error) {
+    await transaction.rollback();
+    if (coverImageUrl) await deleteFileFromS3(coverImageUrl);
+    throw error;
+  }
+};
+
+
+export const deleteBlogService = async (id) => {
+  const transaction = await blogs.sequelize.transaction();
+
+  try {
+    const blog = await blogs.findByPk(id, { transaction });
+    if (!blog) throw new Error("Blog not found");
+
+    // 1️⃣ Delete associated S3 image (if exists)
+    if (blog.coverImage) {
+      await deleteFileFromS3(blog.coverImage);
+    }
+
+    // 2️⃣ Get tag mappings
+    const mappings = await blog_tag_mapping.findAll({
+      where: { blog_id: id },
+      transaction,
+    });
+
+    const tagIds = mappings.map((m) => m.tag_id);
+
+    // 3️⃣ Fetch tags
+    const tags = await tag.findAll({
+      where: { id: tagIds },
+      transaction,
+    });
+
+    // 4️⃣ Decrement usageCount
+    for (const t of tags) {
+      await t.decrement("usageCount", { by: 1, transaction });
+    }
+
+    // 5️⃣ Remove mappings
+    await blog_tag_mapping.destroy({
+      where: { blog_id: id },
+      transaction,
+    });
+
+    // 6️⃣ Delete blog
+    await blog.destroy({ transaction });
+
+    await transaction.commit();
+    return { id };
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
+

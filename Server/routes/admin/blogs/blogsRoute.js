@@ -12,6 +12,8 @@ import {
   getAllBlogsController,
   getBlogBySlugController,
   getBlogTagsController,
+  updateBlogController,
+  deleteBlogController
 } from "../../../controllers/admin/blogs/blogController.js";
 import { upload } from "../../../utils/S3.js";
 
@@ -244,5 +246,131 @@ router.get("/single-blog/:slug", verifyToken, isAdmin, getBlogBySlugController);
  */
 
 router.get("/blog-tags", verifyToken, isAdmin, getBlogTagsController);
+
+/**
+ * @swagger
+ * /admin/blogs/edit-blog/{slug}:
+ *   patch:
+ *     summary: Edit blog (Admin)
+ *     tags: [Admin Blogs]
+ *     security:
+ *       - BearerAuth: []
+ *
+ *     parameters:
+ *       - in: path
+ *         name: slug
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: how-to-become-a-frontend-developer
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: The Importance of Data Structures and Algorithms
+ *               shortDesc:
+ *                 type: string
+ *                 example: Why DSA matters for every software engineer
+ *               longDesc:
+ *                 type: string
+ *                 example: "<p>Data structures and algorithms are the backbone...</p>"
+ *               timeToRead:
+ *                 type: integer
+ *                 example: 5
+ *               tags:
+ *                 type: string
+ *                 example: javascript, dsa, programming
+ *               coverImage:
+ *                 type: string
+ *                 format: binary
+ *
+ *     responses:
+ *       200:
+ *         description: Blog edited successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Blog updated successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 12
+ *                     title:
+ *                       type: string
+ *                       example: The Importance of Data Structures and Algorithms
+ *                     coverImage:
+ *                       type: string
+ *                       example: https://careermentor-fyp.s3.eu-north-1.amazonaws.com/blogs/uuid.jpg
+ *
+ *       400:
+ *         description: Bad request / validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (Admin only)
+ *       404:
+ *         description: Blog not found
+ */
+
+router.patch("/edit-blog/:slug", verifyToken, isAdmin, upload.single("coverImage"), updateBlogController);
+
+/**
+ * @swagger
+ * /admin/blogs/{id}:
+ *   delete:
+ *     summary: Delete blog (Admin)
+ *     tags: [Admin Blogs]
+ *     security:
+ *       - BearerAuth: []
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 12
+ *
+ *     responses:
+ *       200:
+ *         description: Blog deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Blog deleted successfully
+ *                 data:
+ *                   type: null
+ *
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (Admin only)
+ *       404:
+ *         description: Blog not found
+ */
+
+router.delete("/:id", verifyToken, isAdmin, deleteBlogController);
 
 export default router;
