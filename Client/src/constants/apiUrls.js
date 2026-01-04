@@ -61,6 +61,7 @@ export const API_ROUTES = {
     UNLOCK_QUIZ: (moduleId) => `${quizController}start-quiz/${moduleId}`,
     GET_ALL_QUIZZES: (moduleId) => `${quizController}all-quiz/${moduleId}`,
     START_QUIZ: (quizId) => `${quizController}quiz-questions/${quizId}`,
+    SUBMIT_ANSWERS: (quizId) => `${quizController}submit-quiz/${quizId}`,
   },
   ROADMAPS: {
     GET_ROADMAPS: `${roadmapController}all`,

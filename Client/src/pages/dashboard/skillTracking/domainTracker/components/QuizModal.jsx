@@ -1,4 +1,4 @@
-import { StartQuiz } from "@/apiService/QuizTracking";
+import { StartQuiz, SubmitQuizAnswers } from "@/apiService/QuizTracking";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,8 +15,14 @@ const QuizModal = ({ open, onClose, quiz }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
   const [preparing, setPreparing] = useState(true);
+  const [quizSummary, setQuizSummary] = useState(null);
+  const [hasStarted, setHasStarted] = useState(false);
 
-  const { data, isLoading } = StartQuiz(quiz?.id, { enabled: !!quiz });
+  const { data, isLoading } = StartQuiz(quiz?.id, {
+    enabled: open && !!quiz?.id && !hasStarted,
+  });
+
+  const submitMutation = SubmitQuizAnswers();
 
   useEffect(() => {
     if (data?.question && Array.isArray(data.question)) {
@@ -30,8 +36,20 @@ const QuizModal = ({ open, onClose, quiz }) => {
       }));
       setQuestions(parsed);
       setPreparing(false);
+      setHasStarted(true);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (!open) {
+      setQuestions([]);
+      setUserAnswers([]);
+      setCurrentIndex(0);
+      setPreparing(true);
+      setQuizSummary(null);
+      setHasStarted(false);
+    }
+  }, [open]);
 
   if (!quiz) return null;
 
@@ -53,27 +71,67 @@ const QuizModal = ({ open, onClose, quiz }) => {
     setUserAnswers(newAnswers);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Quiz completed, calculate score
+      // Quiz completed
       let correctCount = 0;
       questions.forEach((q, i) => {
         if (userAnswers[i] === q.correctAnswer) correctCount++;
-        console.log(
-          `Q${i + 1}: ${q.text} | Your answer: ${
-            userAnswers[i] || "No answer"
-          } | Correct: ${q.correctAnswer}`
-        );
       });
-      console.log(`Total: ${questions.length}, Correct: ${correctCount}`);
-      alert(
-        `Quiz completed! You got ${correctCount}/${questions.length} correct. Check console for details.`
-      );
-      onClose();
+
+      try {
+        const result = await submitMutation.mutateAsync({
+          quizSessionId: quiz.id,
+          totalQuestions: questions.length,
+          correctAnswers: correctCount,
+        });
+
+        // Show the summary
+        setQuizSummary({
+          totalQuestions: questions.length,
+          correctAnswers: correctCount,
+          earnedXP: result.earnedXP,
+          progress: result.progress,
+        });
+      } catch (error) {
+        console.error("Error submitting quiz:", error);
+        alert("Failed to submit quiz. Try again.");
+        onClose();
+      }
     }
   };
+
+  if (quizSummary) {
+    return (
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="max-w-md w-full flex flex-col items-center justify-center py-8">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-gray-900">
+              Quiz Summary
+            </DialogTitle>
+          </DialogHeader>
+          <Separator className="my-4" />
+
+          <p className="text-gray-800 text-center mb-2">
+            You answered <strong>{quizSummary.correctAnswers}</strong> out of{" "}
+            <strong>{quizSummary.totalQuestions}</strong> questions correctly.
+          </p>
+          <p className="text-gray-800 text-center mb-2">
+            🎯 Earned XP: <strong>{quizSummary.earnedXP}</strong>
+          </p>
+          <p className="text-gray-800 text-center">
+            📈 Module Progress: <strong>{quizSummary.progress}%</strong>
+          </p>
+
+          <Button className="mt-6 w-full" onClick={onClose}>
+            Close
+          </Button>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   const progressPercent = ((currentIndex + 1) / questions.length) * 100;
 
@@ -102,7 +160,10 @@ const QuizModal = ({ open, onClose, quiz }) => {
             <div className="w-full bg-[#FFD272] rounded-full h-3 overflow-hidden">
               <div
                 className="h-3 transition-all duration-300"
-                style={{ width: `${progressPercent}%`, backgroundColor: "#59A4C0" }}
+                style={{
+                  width: `${progressPercent}%`,
+                  backgroundColor: "#59A4C0",
+                }}
               />
             </div>
 
@@ -117,7 +178,9 @@ const QuizModal = ({ open, onClose, quiz }) => {
                 <Button
                   key={opt.key}
                   variant={
-                    userAnswers[currentIndex] === opt.key ? "default" : "outline"
+                    userAnswers[currentIndex] === opt.key
+                      ? "default"
+                      : "outline"
                   }
                   className="w-full text-left break-words whitespace-normal"
                   onClick={() => handleSelectAnswer(opt.key)}
@@ -138,10 +201,7 @@ const QuizModal = ({ open, onClose, quiz }) => {
                   Previous
                 </Button>
               )}
-              <Button
-                className="flex-1 min-w-[120px]"
-                onClick={handleNext}
-              >
+              <Button className="flex-1 min-w-[120px]" onClick={handleNext}>
                 {currentIndex === questions.length - 1 ? "Finish Quiz" : "Next"}
               </Button>
             </div>

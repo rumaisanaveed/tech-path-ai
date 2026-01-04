@@ -7,6 +7,7 @@ import {
   PostQuizeSession,
   GetQuizSessions,
   StartQuizSession,
+  SubmitQuizAnswer
 } from "./quizServices.js";
 
 export const postQuizSession = async (req, res) => {
@@ -62,4 +63,29 @@ export const startQuizSession = async (req, res) => {
   }
 };
 
-export const submitQuizAnswer = async (req, res) => {}
+export const submitQuizAnswer = async (req, res) => {
+  const { quizSessionId } = req.params;
+  const userId = req.userId;
+  const { totalQuestions, correctAnswers } = req.body;
+
+  console.log("submitQuizAnswer called with:", {
+    quizSessionId,
+    userId,
+    totalQuestions,
+    correctAnswers,
+  });
+
+  try {
+    const result = await SubmitQuizAnswer({
+      quizSessionId,
+      userId,
+      totalQuestions,
+      correctAnswers,
+    });
+
+    return successResponse(res, result, "Quiz submitted successfully");
+  } catch (error) {
+    console.error("Error in submitQuizAnswer:", error.message);
+    return errorResponse(res, error, error.message || "Internal Server Error");
+  }
+};

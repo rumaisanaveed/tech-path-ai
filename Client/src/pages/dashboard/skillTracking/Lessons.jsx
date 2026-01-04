@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { ArrowLeft, BookOpen, Eye, Lock, Star } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import QuizModal from "./domainTracker/components/QuizModal";
 import ViewLessonModal from "./domainTracker/components/ViewLessonModal";
@@ -54,11 +54,14 @@ const Lessons = () => {
       />
     );
   }
-  console.log("quizData", quizData);
 
-// Safe handling for initial undefined
-const quizzes = Object.values(quizData || {}).filter((q) => typeof q === "object");
-
+  // Safe handling for initial undefined
+  const quizzes = Object.values(quizData || {})
+    .filter((q) => q && typeof q === "object" && q.id)
+    .map((quiz) => ({
+      ...quiz,
+      locked: quiz.locked || quiz.isCompleted,
+    }));
 
   const module = lessonsData;
   const allLocked = module.lessons?.every((lesson) => lesson.locked);
@@ -168,26 +171,52 @@ const quizzes = Object.values(quizData || {}).filter((q) => typeof q === "object
             <QuizListSkeleton />
           ) : (
             <div className="flex gap-3">
-              {quizzes.map((quiz) => (
-                <Button
-                  key={quiz.id}
-                  variant="outline"
-                  size="sm"
-                  disabled={quiz.locked}
-                  className={`${
-                    quiz.locked ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  onClick={() => {
-                    if (!quiz.locked) {
-                      setSelectedQuiz(quiz);
-                      setIsQuizModalOpen(true);
-                    }
-                  }}
-                >
-                  {quiz.quizTitle}
-                </Button>
-              ))}
-            </div>
+  {quizzes.map((quiz) => {
+    const isCompleted = quiz.isCompleted;
+    const isLessonLocked = quiz.locked && !quiz.isCompleted;
+    const isDisabled = quiz.locked;
+
+    let tooltipText = null;
+
+    if (isCompleted) {
+      tooltipText = `You already attempted ${quiz.quizTitle}`;
+    } else if (isLessonLocked) {
+      tooltipText =
+        "Please complete the remaining lessons to unlock this quiz";
+    }
+
+    return (
+      <Tooltip key={quiz.id}>
+        <TooltipTrigger asChild>
+          <span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isDisabled}
+              className={`flex items-center gap-2 ${
+                isDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={() => {
+                if (!isDisabled) {
+                  setSelectedQuiz(quiz);
+                  setIsQuizModalOpen(true);
+                }
+              }}
+            >
+              {quiz.quizTitle}
+              {isDisabled && <Lock size={14} />}
+            </Button>
+          </span>
+        </TooltipTrigger>
+
+        {tooltipText && (
+          <TooltipContent side="top">{tooltipText}</TooltipContent>
+        )}
+      </Tooltip>
+    );
+  })}
+</div>
+
           )}
         </div>
 

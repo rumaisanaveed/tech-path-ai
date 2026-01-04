@@ -1,7 +1,8 @@
 import { API_ROUTES } from "@/constants/apiUrls";
 import { API_MODES } from "@/constants/enums";
 import axiosReq from "@/services/axiosHelper";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // export const UnlockQuiz = (moduleId) => {
 //   return useQuery({
@@ -39,5 +40,27 @@ export const StartQuiz = (quizId) => {
     },
     enabled: !!quizId,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const SubmitQuizAnswers = (moduleId) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ quizSessionId, totalQuestions, correctAnswers }) => {
+      const url = API_ROUTES.QUIZZES.SUBMIT_ANSWERS(quizSessionId);
+      const res = await axiosReq(API_MODES.PATCH, url, {
+        totalQuestions,
+        correctAnswers,
+      });
+      return res.data;
+    },
+
+    onSuccess: (data) => {
+      toast.success(data.message || "Quiz submitted successfully!");
+      // 🔥 THIS IS THE KEY
+      queryClient.invalidateQueries(["allQuizzes", moduleId]);
+      queryClient.invalidateQueries(["allUserLessons", moduleId]);
+    },
   });
 };

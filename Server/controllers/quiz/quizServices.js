@@ -1,5 +1,12 @@
 // services/quizServices.js
-import { Module, QuizSession, XpWeight, Lesson } from "../../models/index.js";
+import { sequelize } from "../../config/connectDB.js";
+import {
+  Module,
+  QuizSession,
+  XpWeight,
+  Lesson,
+  UserModuleMapping,
+} from "../../models/index.js";
 
 export const PostQuizeSession = async (userId, moduleId) => {
   // 1️⃣ Check if user already has quiz sessions for this module
@@ -62,17 +69,15 @@ export const PostQuizeSession = async (userId, moduleId) => {
   return quizSessions;
 };
 
-
 export const GetQuizSessions = async (userId, moduleId) => {
   const quizSessions = await QuizSession.findAll({
     where: { userId, moduleId },
     order: [["quizNumber", "ASC"]],
   });
   return quizSessions;
-}
+};
 
 export const StartQuizSession = async (quizSessionId, userId) => {
-
   console.log("Starting quiz session:", { quizSessionId, userId });
 
   const quizSession = await QuizSession.findOne({
@@ -91,5 +96,81 @@ export const StartQuizSession = async (quizSessionId, userId) => {
   });
 
   return lessons;
+};
 
-}
+export const SubmitQuizAnswer = async ({
+  quizSessionId,
+  userId,
+  totalQuestions,
+  correctAnswers,
+}) => {
+  if (!totalQuestions || totalQuestions <= 0) {
+    throw new Error("Total questions must be greater than 0");
+  }
+
+  if (correctAnswers < 0 || correctAnswers > totalQuestions) {
+    throw new Error("Invalid correct answers count");
+  }
+
+  return await sequelize.transaction(async (t) => {
+    // 1️⃣ Fetch quiz session (LOCKED)
+    const quiz = await QuizSession.findOne({
+      where: { id: quizSessionId, userId },
+      lock: t.LOCK.UPDATE,
+      transaction: t,
+    });
+
+    if (!quiz) {
+      throw new Error("Quiz session not found");
+    }
+
+    // 2️⃣ Prevent double submission
+    if (quiz.isCompleted) {
+      throw new Error("Quiz already completed");
+    }
+
+    // 3️⃣ XP calculation
+    const xpPerQuestion = Number(quiz.xp) / totalQuestions;
+    const earnedXP = Number((xpPerQuestion * correctAnswers).toFixed(2));
+
+    // 4️⃣ Update quiz session
+    quiz.score = earnedXP;
+    quiz.isCompleted = true;
+    await quiz.save({ transaction: t });
+
+    // 5️⃣ Update module progress (ATOMIC)
+    const [affectedRows] = await UserModuleMapping.increment(
+      { progress: earnedXP },
+      {
+        where: {
+          userId,
+          moduleId: quiz.moduleId,
+        },
+        transaction: t,
+      }
+    );
+
+    if (affectedRows === 0) {
+      throw new Error("User is not enrolled in this module");
+    }
+
+    // 6️⃣ Fetch updated progress (optional but useful)
+    const updatedMapping = await UserModuleMapping.findOne({
+      where: {
+        userId,
+        moduleId: quiz.moduleId,
+      },
+      transaction: t,
+    });
+
+    return {
+      quizSessionId,
+      moduleId: quiz.moduleId,
+      totalQuestions,
+      correctAnswers,
+      earnedXP,
+      progress: Number(updatedMapping.progress),
+      completed: true,
+    };
+  });
+};

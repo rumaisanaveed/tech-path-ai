@@ -19,7 +19,7 @@ const QuizSession = sequelize.define(
       allowNull: false,
     },
     userId: {
-      type: DataTypes.INTEGER, // UUID or string depending on your users table
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     badge: {
