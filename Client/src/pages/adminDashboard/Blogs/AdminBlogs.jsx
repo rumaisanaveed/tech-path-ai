@@ -31,7 +31,7 @@ const AdminBlogs = () => {
     search: debouncedSearch,
     tagName: selectedTag,
   }); 
-
+ 
   const blogs = data?.blogs || [];
   const pagination = data?.pagination;
   const { data: tagsResponse } = GetBlogTags();
