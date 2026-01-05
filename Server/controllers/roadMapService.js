@@ -4,11 +4,14 @@ import {
   UserCareerDomain,
   UserLessonProgress,
   UserModuleMapping,
-  Module
+  Module,
+  DomainModuleMapping,
 } from "../models/index.js";
 
 export const GetAllRoadmapsService = async (req, res) => {
-  const data = await CareerDomain.findAll();
+  const data = await CareerDomain.findAll({
+    where: { isActive: true },
+  });
   return data;
 };
 
@@ -140,9 +143,71 @@ export const GetDashboardService = async (userId) => {
       level,
       continueLearning, // <— NEW SECTION
     };
-
   } catch (err) {
     console.error("GetDashboardService Error:", err);
     return null;
   }
+};
+
+export const GetSingleRoadMapService = async (roadmapId) => {
+  if (!roadmapId) {
+    throw new Error("Roadmap ID is required");
+  }
+
+  // 1️⃣ Get Career / Roadmap details
+  const career = await CareerDomain.findOne({
+    where: {
+      id: roadmapId,
+      isActive: true,
+    },
+    attributes: ["id", "title", "description", "coverImage"],
+  });
+
+  if (!career) {
+    throw new Error("Roadmap not found or inactive");
+  }
+
+  // 2️⃣ Get module IDs from mapping table
+  const mappings = await DomainModuleMapping.findAll({
+    where: {
+      careerDomainId: roadmapId,
+    },
+    attributes: ["moduleId", "customTitle", "customDescription"],
+  });
+
+  if (!mappings.length) {
+    return {
+      career,
+      modules: [],
+    };
+  }
+
+  const moduleIds = mappings.map((m) => m.moduleId);
+
+  // 3️⃣ Fetch modules
+  const modules = await Module.findAll({
+    where: {
+      id: moduleIds,
+    },
+    attributes: ["id", "title", "description"],
+    order: [["sequence", "ASC"]],
+  });
+
+  // 4️⃣ Optional: apply custom title/description override
+  const modulesWithOverrides = modules.map((module) => {
+    const mapping = mappings.find(
+      (m) => String(m.moduleId) === String(module.id)
+    );
+
+    return {
+      id: module.id,
+      title: mapping?.customTitle || module.title,
+      description: mapping?.customDescription || module.description,
+    };
+  });
+
+  return {
+    career,
+    modules: modulesWithOverrides,
+  };
 };

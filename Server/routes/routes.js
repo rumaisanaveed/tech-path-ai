@@ -11,6 +11,8 @@ import roadMapRoutes from "./roadMapRoutes.js";
 import eventRoutes from "./eventRoutes.js";
 import explorerRoutes from "./careerExplorerRoute.js";
 
+import achivevementRoutes from "./achivevementRoutes.js";
+
 const router = express.Router();
 
 /**
@@ -37,5 +39,7 @@ router.use("/roadmaps", roadMapRoutes);
 router.use("/events", eventRoutes);
 
 router.use("/career-explorer", explorerRoutes);
+
+router.use("/achivement", achivevementRoutes);
 
 export default router;

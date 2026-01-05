@@ -7,6 +7,7 @@ import {
   GetAllUserLessons,
   GetDetailLesson,
   PatchLessonProgress,
+  GetModuleProjects
 } from "./lessonService.js";
 
 import { PostQuizeSession } from "../quiz/quizServices.js";
@@ -94,3 +95,17 @@ export const patchLessonProgress = async (req, res) => {
     return errorResponse(res, error.message, "Internal Server Error");
   }
 };
+
+export const getModuleProjects = async (req, res) => {
+  try {
+    const { moduleId } = req.params;
+    if (!moduleId) {
+      return errorResponse(res, "Module ID is required", "Bad Request", 400);
+    }
+    const moduleProjects = await GetModuleProjects(moduleId);
+    return successResponse(res, {moduleProjects}, "Module projects fetched successfully", 200);
+  } catch (error) {
+    console.log(error);
+    errorResponse(res, error.message, "Internal Server Error");
+  }
+}

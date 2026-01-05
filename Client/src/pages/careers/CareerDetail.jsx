@@ -4,26 +4,64 @@ import React from "react";
 import { ImageHeader } from "./components/ImageHeader";
 import CareerBg from "@/assets/images/career-bg.png";
 import { CareerDetailSkeleton } from "@/components/skeletons/careers/CareerDetailsSkeleton";
-import ProseKitRenderer from "@/components/editor/examples/full/ProseKitRenderer";
+import { useNavigate, useParams } from "react-router-dom";
+import { GetSingleCareer } from "@/apiService/Roadmaps";
+import { SecondaryButton } from "@/components/buttons/SecondaryButton";
 
 const CareerDetail = () => {
+  const { id } = useParams();
   usePageTitle("Career Details");
-  const isLoading = false;
+  const navigate = useNavigate();
+
+  // Fetch single career
+  const { data, isLoading } = GetSingleCareer(id);
+  const career = data;
+
   return (
     <MainLayout>
-      {isLoading ? <CareerDetailSkeleton /> : <CareerDetails />}
+      {isLoading ? (
+        <CareerDetailSkeleton />
+      ) : career ? (
+        <CareerDetails career={career} navigate={navigate} />
+      ) : (
+        <div className="text-center py-10 text-gray-500">Career not found.</div>
+      )}
     </MainLayout>
   );
 };
 
-const CareerDetails = () => {
-  const stringifiedContent =
-    '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"This is a sample career description."}]}]}';
-
+const CareerDetails = ({ career, navigate }) => {
   return (
-    <div className="flex flex-col gap-4 md:gap-5 lg:gap-8 px-6 py-10 md:px-12 lg:px-24">
-      <ImageHeader bgImage={CareerBg} heading="Frontend Developer" />
-      <ProseKitRenderer contentString={stringifiedContent} />
+    <div className="flex flex-col gap-6 md:gap-8 lg:gap-10 px-6 py-10 md:px-12 lg:px-24">
+      {/* Back Button */}
+      <div className="w-full">
+        <SecondaryButton
+          title="← Back"
+          variant="light"
+          onClickHandler={() => navigate(-1)}
+        />
+      </div>
+
+      {/* Header Image */}
+      <ImageHeader
+        bgImage={career.imageUrl || CareerBg}
+        heading={career.title}
+      />
+
+      {/* Short Description */}
+      {career.shortDesc && (
+        <p className="text-base md:text-lg text-gray-700 mt-4">
+          {career.shortDesc}
+        </p>
+      )}
+
+      {/* Long Description */}
+      {career.longDesc && (
+        <div
+          className="prose max-w-full mt-6"
+          dangerouslySetInnerHTML={{ __html: career.longDesc }}
+        />
+      )}
     </div>
   );
 };

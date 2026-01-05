@@ -5,6 +5,7 @@ import {
   createModule,
   deleteModule,
   getAllModules,
+  createModuleProject
 } from "../../../controllers/admin/SkillTracking/module/moduleController.js";
 
 const router = express.Router();
@@ -22,5 +23,8 @@ router.delete(
   isAdmin,
   deleteModule
 );
+
+router.post("/create-module-project/:moduleId", verifyToken, isAdmin, createModuleProject);
+
 
 export default router;

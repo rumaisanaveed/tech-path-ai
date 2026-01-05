@@ -11,6 +11,7 @@ import {
   UserModuleMapping,
   XpWeight,
 } from "../../models/index.js";
+import ModuleProject from "../../models/skilltracking/moduleProjectModel.js";
 
 export const PostLessonEnrollment = async ({ userId, moduleId }) => {
   // 1️⃣ Check if user already enrolled in this module
@@ -362,4 +363,12 @@ export const unlockLessons = async (userId, moduleId) => {
   }
 
   return message;
+};
+
+
+export const GetModuleProjects = async (moduleId) => {
+  const moduleProjects = await ModuleProject.findAll({
+    where: { moduleId },
+  });
+  return moduleProjects;
 };

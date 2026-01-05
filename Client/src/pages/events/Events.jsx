@@ -26,6 +26,8 @@ const Events = () => {
 
   const events = data?.events || [];
 
+  console.log("events", events);
+
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
     setPage(1);
@@ -121,6 +123,25 @@ const Event = ({ event }) => {
             </div>
           ))}
         </div>
+        <p className="text-black font-normal text-sm py-1 truncate">
+          {event.venue}
+        </p>
+        {/* statsu adn endtime */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="bg-custom-gray text-black font-normal text-xs md:text-sm px-2 py-1 rounded-full shrink-0">
+              {event.status}
+            </div>
+            <p className="text-black font-normal text-sm py-1 truncate">
+              {new Date(event.eventDate).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+            </p>
+          </div>
+        </div>
+
         <p className="text-black font-normal text-sm py-1 truncate">
           {event.shortDesc}
         </p>

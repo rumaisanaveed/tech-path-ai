@@ -66,10 +66,12 @@ export const API_ROUTES = {
   ROADMAPS: {
     GET_ROADMAPS: `${roadmapController}all`,
     GET_DASHBOARD_DATA: `${roadmapController}/dashboard`,
+    GET_SINGLE_ROADMAP_DATA: (roadmapId) => `${roadmapController}${roadmapId}`,
   },
   MODULES: {
     GET_ALL_MODULES_FROM_DOMAIN: (domainId) =>
       `${skillmoduleController}module/${domainId}`,
+    GET_ALLPROJECT: (moduleId) => `/projects/${moduleId}`,
   },
   BLOGS: {
     FETCH_BLOGS_FOR_USERS: `/blogs/all-blogs`,
@@ -78,7 +80,21 @@ export const API_ROUTES = {
   EVENTS: {
     FETCH_EVENTS_FOR_USERS: `/events`,
     FETCH_SINGLE_EVENT: (slug) => `/events/details/${slug}`,
+    ENROLL_INTO_EVENT: (id) => `/events/enrollment/${id}`,
+    CANCEL_ENROLLMENT: (id) => `/events/enrollment/cancel/${id}`,
   },
+  ACHIEVEMENTS: {
+    GET_PROGRESS_ACHIEVEMENTS: (careerDomain) => `/achivement/progress/${careerDomain}`,
+    GET_LEADERBOARD: (careerDomain) => `/achivement/leaderboard/${careerDomain}`,
+  },
+  DASHBOARD: {
+    GET_DASHBOARD_DATA: `/roadmaps/dashboard`,
+    GET_MODULE_PROJECTS: (moduleId) => `/lessons/module-project/${moduleId}`,
+  },
+  CAREER_EXPLORER:{
+    GET_ALL_CAREERS:`/career-explorer`,
+    GET_SINGLE_CAREER_DATA:(id)=>`/career-explorer/view-career/${id}`,
+  }
 };
 
 const adminController = "/admin";

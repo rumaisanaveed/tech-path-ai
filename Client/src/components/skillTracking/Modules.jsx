@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import {
   ChangeModuleStatus,
   GetUserEnrolledModule,
+  useModuleProject,
 } from "@/apiService/ModuleTracking";
 import { format } from "date-fns";
 import { AlertCircle, CalendarDays, Star } from "lucide-react";
@@ -47,14 +48,16 @@ const Modules = () => {
 
   const [selectedModule, setSelectedModule] = useState(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
-  // Add this state at the top alongside selectedModule/isViewOpen
+
   const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const { data: moduleProjectData } = useModuleProject(selectedModule?.id);
 
   const handleProject = (module) => {
     console.log("Selected module:", module);
     setSelectedModule(module); // reuse selectedModule for context
     setIsProjectOpen(true);
   };
+  const projects = moduleProjectData?.moduleProjects ?? [];
 
   useEffect(() => {
     if (modules.length > 0) {
@@ -276,10 +279,50 @@ const Modules = () => {
               </DialogTitle>
             </DialogHeader>
 
-            <div className="text-sm text-gray-700 py-4">
-              This module allows you to create a practice project to strengthen
-              your skills. You can experiment, apply what you've learned, and
-              track your progress here.
+            <div className="space-y-4 py-4">
+              <p className="text-sm text-gray-600">
+                These are practice projects designed to help you apply what
+                you've learned in this module. Completing them will strengthen
+                your real-world skills.
+              </p>
+
+              {projects.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center">
+                  No projects available for this module yet.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {projects.map((project) => (
+                    <Card
+                      key={project.id}
+                      className="border border-gray-100 shadow-sm hover:shadow-md transition"
+                    >
+                      <CardContent className="p-4">
+                        <h4 className="text-sm font-semibold text-gray-800">
+                          {project.projectName}
+                        </h4>
+
+                        <p className="text-xs text-gray-500 mt-1">
+                          Use this project for hands-on practice and skill
+                          reinforcement.
+                        </p>
+
+                        <div className="flex justify-end mt-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              toast.success(`Started "${project.projectName}"`)
+                            }
+                          >
+                            Start Project
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end gap-2 mt-4">

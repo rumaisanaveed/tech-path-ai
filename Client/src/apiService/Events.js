@@ -152,3 +152,42 @@ export const FetchSingleEventForUsers = (slug) => {
     },
   });
 };
+
+export const useEnrollIntoEvent = (id) => {
+  return useMutation({
+    mutationFn: async () => {
+      console.log("Enrolling into event with ID:", id); // ✅ log here
+      const url = API_ROUTES.EVENTS.ENROLL_INTO_EVENT(id);
+      const res = await axiosReq(API_MODES.POST, url);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      console.log("Enroll success:", data); // ✅ log response
+      toast.success(data.message || "Enrolled into event successfully");
+    },
+    onError: (error) => {
+      console.error("Error enrolling into event:", error); // ✅ log error
+      toast.error(error.response?.data?.message || "Failed to enroll into event");
+    },
+  });
+};
+
+export const useCancelEnrollment = (eventId) => {
+  return useMutation({
+    mutationFn: async () => {
+      if (!eventId) throw new Error("Event ID is required");
+      const url = API_ROUTES.EVENTS.CANCEL_ENROLLMENT(eventId);
+      console.log("url", url);
+      const res = await axiosReq(API_MODES.PATCH, url);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      console.log("Enrollment cancelled successfully:", data);
+      toast.success(data.message || "Enrollment cancelled successfully");
+    },
+    onError: (error) => {
+      console.error("Error cancelling enrollment", error);
+      toast.error(error.response?.data?.message || "Failed to cancel enrollment");
+    },
+  });
+};

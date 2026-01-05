@@ -232,6 +232,27 @@ Module.belongsToMany(User, {
   as: "enrolledUsers",
 });
 
+// 🔑 Direct access to user progress from Module
+Module.hasMany(UserModuleMapping, {
+  foreignKey: "moduleId",
+  as: "userProgress",
+});
+
+UserModuleMapping.belongsTo(Module, {
+  foreignKey: "moduleId",
+  as: "module",
+});
+
+// 🔑 Direct access from UserModuleMapping to User
+UserModuleMapping.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+User.hasMany(UserModuleMapping, {
+  foreignKey: "userId",
+  as: "moduleEnrollments",
+});
 //MASCOTS
 // --------------------
 // CATEGORY ↔ QUESTION

@@ -172,7 +172,7 @@ export const sidebarItems = [
     icon: BarChart3,
     href: "/user/dashboard/skill-tracker",
   },
-  { label: "Mentorship", icon: Users, href: "/user/dashboard/mentorship" },
+  //{ label: "Mentorship", icon: Users, href: "/user/dashboard/mentorship" },
   {
     label: "Events",
     icon: Calendar,

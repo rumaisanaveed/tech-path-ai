@@ -3,7 +3,7 @@ import {
   errorResponse,
   successResponse,
 } from "../../../../utils/handlers/reponseHandler.js";
-import { CreateModule, DeleteModule, GetAllModules } from "./moduleService.js";
+import { CreateModule, DeleteModule, GetAllModules,CreateModuleProject } from "./moduleService.js";
 
 export const createModule = async (req, res) => {
   try {
@@ -91,3 +91,31 @@ export const deleteModule = async (req, res) => {
     return errorResponse(res, error, "Internal Server Error");
   }
 };
+
+export const createModuleProject = async (req, res) => {
+  try {
+    //creting a new module project
+    const { moduleId } = req.params;
+    const {projectName} = req.body;
+
+    if (!moduleId) return errorResponse(res, "Module ID is required", 400);
+
+    if (!projectName) return errorResponse(res, "Project name is required", 400);
+
+    const moduleProject = await CreateModuleProject({
+      moduleId,
+      projectName,
+    });
+
+    return successResponse(
+      res,
+      moduleProject,
+      "Module project created successfully",
+      201
+    );
+
+  } catch (error) {
+    console.log(error);
+    errorResponse(res, error.message, "Internal Server Error");
+  }
+}

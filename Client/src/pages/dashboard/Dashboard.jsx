@@ -1,235 +1,230 @@
-import usePageTitle from "@/hooks/usePageTitle";
-import DashboardLayout from "@/layouts/DashboardLayout";
-import { useEffect, useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-
-import axios from "axios";
-import { Award, Flame, Star } from "lucide-react";
+import { Award, Flame, Star, BookOpen, TrendingUp, Calendar } from "lucide-react";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import { useDashboardData } from "@/apiService/achievement";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  usePageTitle("Dashboard");
+  const { data, isLoading, error } = useDashboardData();
+  const { user } = useAuth();
 
-  // --- Static data ---
-  const buddyImg = "/buddy.png"; // your buddy asset
-  const user = {
-    name: "Abdul Qasim",
-    track: "Frontend Developer Track",
-    level: 1, // default, will update with API
-    xpToday: 20,
-  };
+  const navigate = useNavigate();
 
-  const stats = {
-    xpTotal: 1220,
-    xpGoal: 65,
-    streak: 5,
-    badges: ["UI Master", "Consistent Learner", "Quiz Pro"],
-  };
+  if (isLoading) return <div>Loading dashboard...</div>;
+  if (error) return <div>Error loading dashboard: {error.message}</div>;
 
-  const moduleInfo = {
-    title: "Module 3: React Essentials",
-    nextLesson: "State Management Basics",
-    progress: 45,
-    lessons: 12,
-    xp: 220,
-    time: "2h 30m",
-  };
+  const dashboardData = data?.dashboardData || {};
+  const buddyImg = "/buddy.png";
 
-  const activity = [
-    { id: 1, text: "Completed Lesson: HTML Forms & Inputs", time: "2h ago" },
-    { id: 2, text: "Earned Badge: UI Master", time: "Yesterday" },
-    { id: 3, text: "Scored 8/10 on Quiz", time: "3 days ago" },
-  ];
-
-  // --- API data state ---
-  const [dashboardData, setDashboardData] = useState(null);
-
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:3000/api/roadmaps/dashboard",
-          { withCredentials: true }
-        );
-
-        // Axios already parses JSON, so use res.data
-        const data = res.data;
-
-        if (data.success && data.dashboardData) {
-          setDashboardData(data.dashboardData);
-        }
-      } catch (err) {
-        console.error("Failed to fetch dashboard:", err);
-      }
-    };
-    fetchDashboard();
-  }, []);
-
-  // --- Merge API data with static data ---
   const mergedModuleInfo = dashboardData?.continueLearning
     ? {
+        id: dashboardData.continueLearning.moduleId, // <-- ensure correct ID
         title: dashboardData.continueLearning.moduleTitle,
         nextLesson: dashboardData.continueLearning.nextLesson?.title || "",
-        progress: dashboardData.totalProgressRaw || moduleInfo.progress,
-        lessons: moduleInfo.lessons,
-        xp: dashboardData.continueLearning.totalXP || moduleInfo.xp,
-        time: moduleInfo.time,
+        progress: dashboardData.totalProgressRaw || 0,
+        xp: dashboardData.continueLearning.totalXP || 0,
       }
-    : moduleInfo;
+    : null;
 
-  const mergedUser = {
-    ...user,
-    level: dashboardData?.level || user.level,
+  // Handlers
+  const handleContinueLearning = (moduleId) => {
+    navigate(`/user/dashboard/skill-tracker/lesson-tracker/${moduleId}`);
   };
+
+  const handleViewDomain = (domainId) => {
+    navigate(`/user/dashboard/skill-tracker/domain/${domainId}`);
+  };
+
+  console.log("Dashboard Data:", dashboardData);
 
   return (
     <DashboardLayout>
-      <div className="p-4 sm:p-6 space-y-6">
-        {/* HERO SECTION */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {mergedUser.name}! 👋
-          </h1>
-
-          <div className="mt-6 flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="w-32 h-32">
-              <img
-                src={buddyImg}
-                alt="Buddy"
-                className="w-full h-full object-contain"
-              />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+          {/* HERO SECTION */}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                Welcome back, {user?.firstName} 👋
+              </h1>
+              <p className="mt-2 text-gray-600">Continue your learning journey</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-              <Card className="rounded-2xl shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-sm text-gray-700">
-                    Current Track
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold">{mergedUser.track}</p>
-                </CardContent>
-              </Card>
+            {/* LEVEL / XP / DOMAINS */}
+            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0">
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#59A4C0] to-[#ED846B] p-1">
+                  <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                    <img
+                      src={buddyImg}
+                      alt="Buddy"
+                      className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
 
-              <Card className="rounded-2xl shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-sm text-gray-700">
-                    XP Earned Today
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold">+{mergedUser.xpToday} XP</p>
-                </CardContent>
-              </Card>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+                <div className="bg-gradient-to-br from-[#59A4C0]/10 to-[#59A4C0]/5 rounded-2xl p-4 border border-[#59A4C0]/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Award className="w-4 h-4 text-[#59A4C0]" />
+                    <p className="text-sm font-medium text-gray-600">Level</p>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-900">{dashboardData?.level || 1}</p>
+                </div>
 
-              <Card className="rounded-2xl shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-sm text-gray-700">Level</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold">Level {mergedUser.level}</p>
-                </CardContent>
-              </Card>
+                <div className="bg-gradient-to-br from-[#F3B34E]/10 to-[#F3B34E]/5 rounded-2xl p-4 border border-[#F3B34E]/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Flame className="w-4 h-4 text-[#F3B34E]" />
+                    <p className="text-sm font-medium text-gray-600">Total XP</p>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-900">{mergedModuleInfo?.xp || 0}</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-[#ED846B]/10 to-[#ED846B]/5 rounded-2xl p-4 border border-[#ED846B]/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BookOpen className="w-4 h-4 text-[#ED846B]" />
+                    <p className="text-sm font-medium text-gray-600">Domains</p>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-900">{dashboardData?.domains?.length || 0}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CONTINUE LEARNING MODULE */}
+          {mergedModuleInfo && (
+            <div className="bg-gradient-to-br from-[#59A4C0] to-[#59A4C0]/90 rounded-3xl p-6 sm:p-8 shadow-lg text-white">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5" />
+                <Button
+                  variant="ghost"
+                  className="text-lg font-semibold p-0"
+                  onClick={() => handleContinueLearning(mergedModuleInfo.id)}
+                >
+                  Continue Learning
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-2xl sm:text-3xl font-bold">{mergedModuleInfo.title}</h3>
+                  {mergedModuleInfo.nextLesson && (
+                    <p className="mt-2 text-white/90">
+                      Next Lesson: <span className="font-semibold">{mergedModuleInfo.nextLesson}</span>
+                    </p>
+                  )}
+                </div>
+
+                <div className="bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm">
+                  <div
+                    className="h-full bg-[#FFD272] rounded-full transition-all duration-500"
+                    style={{ width: `${mergedModuleInfo.progress}%` }}
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-4 text-sm">
+                    <span className="font-medium">{mergedModuleInfo.progress.toFixed(1)}% completed</span>
+                    <span className="text-white/80">•</span>
+                    <span className="text-white/90">{mergedModuleInfo.xp} XP earned</span>
+                  </div>
+
+                  <Button
+                    onClick={() => handleContinueLearning(mergedModuleInfo.id)}
+                    className="bg-white text-[#59A4C0] hover:bg-white/90 font-semibold shadow-lg"
+                  >
+                    Continue Lesson →
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ENROLLED DOMAINS */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Learning Paths</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {dashboardData?.domains?.map((domain, index) => {
+                const colors = [
+                  { from: '#ED846B', to: '#ED846B/90', border: '#ED846B/20', bg: '#ED846B/10' },
+                  { from: '#F3B34E', to: '#F3B34E/90', border: '#F3B34E/20', bg: '#F3B34E/10' }
+                ];
+                const color = colors[index % colors.length];
+
+                return (
+                  <div
+                    key={domain.id}
+                    className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center`}
+                           style={{ background: `linear-gradient(to bottom right, ${color.from}, ${color.to})` }}>
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewDomain(domain.id)}
+                      >
+                        Active
+                      </Button>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{domain.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{domain.description}</p>
+
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>Enrolled {new Date(domain.enrolledAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}</span>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      className="w-full font-semibold hover:bg-gray-50"
+                      style={{ borderColor: color.border }}
+                      onClick={() => handleViewDomain(domain.id)}
+                    >
+                      View Domain
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* STATS OVERVIEW */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Progress Overview</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="text-center p-4 rounded-2xl bg-gray-50">
+                <Star className="w-6 h-6 text-[#F3B34E] mx-auto mb-2" />
+                <p className="text-2xl font-bold text-gray-900">{dashboardData?.level || 1}</p>
+                <p className="text-sm text-gray-600">Current Level</p>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-gray-50">
+                <BookOpen className="w-6 h-6 text-[#59A4C0] mx-auto mb-2" />
+                <p className="text-2xl font-bold text-gray-900">{dashboardData?.totalModules || 0}</p>
+                <p className="text-sm text-gray-600">Total Modules</p>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-gray-50">
+                <Flame className="w-6 h-6 text-[#ED846B] mx-auto mb-2" />
+                <p className="text-2xl font-bold text-gray-900">{mergedModuleInfo?.xp || 0}</p>
+                <p className="text-sm text-gray-600">XP Earned</p>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-gray-50">
+                <TrendingUp className="w-6 h-6 text-[#F3B34E] mx-auto mb-2" />
+                <p className="text-2xl font-bold text-gray-900">{mergedModuleInfo?.progress.toFixed(0)}%</p>
+                <p className="text-sm text-gray-600">Completion</p>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* MODULE BOX */}
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Continue Learning
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <h3 className="text-xl font-bold">{mergedModuleInfo.title}</h3>
-            <p className="text-gray-600">
-              Next Lesson: <strong>{mergedModuleInfo.nextLesson}</strong>
-            </p>
-            <Progress value={mergedModuleInfo.progress} />
-            <p className="text-sm text-gray-500">
-              {mergedModuleInfo.progress}% completed
-            </p>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-              <span>Lessons: {mergedModuleInfo.lessons}</span>
-              <span>XP in module: {mergedModuleInfo.xp}</span>
-              <span>Time: {mergedModuleInfo.time}</span>
-            </div>
-            <Button className="mt-2">Continue Lesson</Button>
-          </CardContent>
-        </Card>
-
-        {/* XP / STREAK / BADGES */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="rounded-2xl shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Award className="w-5 h-5" /> XP Progress
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 text-sm">{stats.xpTotal} XP Earned</p>
-              <Progress value={stats.xpGoal} className="mt-3" />
-              <p className="text-xs text-gray-500 mt-1">
-                {stats.xpGoal}% of your monthly goal
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Flame className="w-5 h-5 text-orange-500" /> Learning Streak
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{stats.streak} days 🔥</p>
-              <p className="text-sm text-gray-600">
-                Keep going! You're on fire.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-500" /> Badges Earned
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 flex-wrap">
-                {stats.badges.map((b, i) => (
-                  <Badge key={i} variant="secondary">
-                    {b}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* RECENT ACTIVITY */}
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {activity.map((item) => (
-              <div key={item.id}>
-                <div className="flex items-center justify-between">
-                  <p className="font-medium">{item.text}</p>
-                  <Badge variant="secondary">{item.time}</Badge>
-                </div>
-                <Separator className="mt-3" />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
       </div>
     </DashboardLayout>
   );

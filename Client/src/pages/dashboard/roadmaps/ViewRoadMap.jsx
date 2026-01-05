@@ -1,125 +1,102 @@
-import { GetRoadmaps } from "@/apiService/Roadmaps";
-import { EnrollInCareerDomain } from "@/apiService/SkillTracking";
-import { BreadCrumb } from "@/components/careerAssessment/BreadCrumb";
-import { FullPageError } from "@/components/fullPageError/FullPageError";
-import ModuleCard from "@/components/roadmap/ModuleCard";
-import {
-  RoadMapDetailsHeaderSkeleton,
-  RoadmapEnrollButtonSkeleton,
-  RoadmapSkeleton,
-} from "@/components/skeletons/roadmaps/RoadmapsSkeletons";
-import { Button } from "@/components/ui/button";
-import { useGlobalContext } from "@/context/GlobalContext";
-import usePageTitle from "@/hooks/usePageTitle";
-import { useScreenSize } from "@/hooks/useScreenSize";
+import { GetSingleRoadmap } from "@/apiService/Roadmaps";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
-// NOTE: There's no api for this
-// TODO: Fix the ui later
 const ViewRoadMap = () => {
   const { id } = useParams();
-  usePageTitle("Roadmap Tracking");
-  const { setBreadcrumbText } = useGlobalContext();
-  const [expandedModuleId, setExpandedModuleId] = useState(null);
-  const { isSmallScreen } = useScreenSize();
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = GetSingleRoadmap(id);
 
-  const { data: roadmapData, isLoading, isError } = GetRoadmaps(id);
-
-  const { mutate: enrollDomain, isPending: enrolling } = EnrollInCareerDomain();
-
-  const roadmapTitle = roadmapData?.domain?.title ?? "";
-
-  useEffect(() => {
-    setBreadcrumbText(`Roadmaps/${roadmapTitle}`);
-  }, [roadmapTitle]);
-
-  const toggleModule = (moduleId) => {
-    setExpandedModuleId((prev) => (prev === moduleId ? null : moduleId));
-  };
-
-  const handleEnroll = () => {
-    if (!id) return;
-    enrollDomain(id);
-  };
-
-  const shouldShowAlreadyEnrolledButton =
-    !isLoading && Array.isArray(roadmapData) && roadmapData.length > 0;
-
-  const shouldShowEnrollNowButton =
-    !isLoading && Array.isArray(roadmapData) && roadmapData.length === 0;
-
-  if (isError || !isLoading || !Array.isArray(roadmapData)) {
+  if (isLoading) {
     return (
-      <FullPageError
-        title="Roadmap coming soon"
-        subtitle="This career roadmap hasn’t been published yet. Please check back later or explore other available roadmaps."
-      />
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Loading roadmap...
+      </div>
     );
   }
 
+  if (isError || !data?.career) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Roadmap not available
+      </div>
+    );
+  }
+
+  const { career, modules } = data;
+
   return (
     <DashboardLayout>
-      <div className="px-4 md:px-8 lg:px-12 pt-5 pb-10 flex flex-col gap-8">
-        {/* Breadcrumb & Heading */}
-        <div className="flex flex-col gap-2">
-          {isLoading ? (
-            <>
-              <BreadCrumb />
-              <h2 className="text-xl md:text-2xl font-bold">
-                Roadmap Details of {roadmapData?.domain?.title}
-              </h2>
-            </>
-          ) : (
-            <RoadMapDetailsHeaderSkeleton />
-          )}
+      <div className="min-h-screen bg-background px-4 md:px-10 lg:px-16 py-10">
+        <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
 
-          {/* Enroll button */}
-          {isLoading ? (
-            <RoadmapEnrollButtonSkeleton />
-          ) : shouldShowAlreadyEnrolledButton && roadmapData?.isEnrolled ? (
-            <Button disabled variant="secondary" className="w-full md:w-auto">
-              Already Enrolled
-            </Button>
-          ) : shouldShowEnrollNowButton ? (
-            <Button
-              onClick={handleEnroll}
-              disabled={enrolling}
-              className="w-full md:w-auto"
+          {/* Header */}
+          <div className="mb-14">
+            <h1
+              className="text-3xl md:text-4xl font-semibold tracking-tight"
+              style={{ color: "#59A4C0" }}
             >
-              {enrolling ? "Enrolling..." : "Enroll Now"}
-            </Button>
-          ) : null}
+              {career.title}
+            </h1>
+
+            <p className="mt-4 max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">
+              {career.description}
+            </p>
+
+            <div
+              className="mt-8 h-[2px] w-28 rounded-full"
+              style={{ backgroundColor: "#F3B34E" }}
+            />
+          </div>
+
+          {/* Roadmap Timeline */}
+          <div className="relative">
+            {/* Vertical line */}
+            <div
+              className="absolute left-[14px] top-0 bottom-0 w-px"
+              style={{ backgroundColor: "rgba(89,164,192,0.25)" }}
+            />
+
+            <ul className="space-y-10">
+              {modules.map((module, index) => (
+                <li key={module.id} className="relative pl-12">
+                  {/* Dot */}
+                  <div
+                    className="absolute left-[9px] top-2 w-3 h-3 rounded-full"
+                    style={{ backgroundColor: "#59A4C0" }}
+                  />
+
+                  {/* Content */}
+                  <div className="group">
+                    <span
+                      className="text-xs font-medium tracking-wider"
+                      style={{ color: "#ED846B" }}
+                    >
+                      STEP {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <h3 className="mt-1 text-lg font-medium text-foreground group-hover:underline underline-offset-4 transition">
+                      {module.title}
+                    </h3>
+
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                      {module.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-
-        {/* Roadmap Content */}
-        {isLoading ? (
-          <RoadmapSkeleton />
-        ) : (
-          roadmapData?.roadmap?.length && (
-            <div className="relative">
-              {!isSmallScreen && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-[#59a4c0]" />
-              )}
-
-              <div className="flex flex-col gap-12 relative">
-                {roadmapData.roadmap
-                  .sort((a, b) => a.sequence - b.sequence)
-                  .map((module, index) => (
-                    <ModuleCard
-                      key={module.id}
-                      module={module}
-                      expandedModuleId={expandedModuleId}
-                      toggleModule={toggleModule}
-                      isSmallScreen={isSmallScreen}
-                      index={index}
-                    />
-                  ))}
-              </div>
-            </div>
-          )
-        )}
       </div>
     </DashboardLayout>
   );

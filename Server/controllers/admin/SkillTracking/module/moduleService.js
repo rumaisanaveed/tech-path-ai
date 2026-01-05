@@ -5,6 +5,7 @@ import {
 } from "../../../../models/index.js";
 import { sequelize } from "../../../../config/connectDB.js";
 import slugify from "slugify";
+import ModuleProject from "../../../../models/skilltracking/moduleProjectModel.js";
 
 export const CreateModule = async (data) => {
   const transaction = await sequelize.transaction();
@@ -182,3 +183,16 @@ export const DeleteModule = async ({ moduleId, domainId }) => {
     throw error;
   }
 };
+
+export const CreateModuleProject = async ({ moduleId, projectName }) => {
+  try {
+    const moduleProject = await ModuleProject.create({
+      moduleId,
+      projectName,
+    });
+    return moduleProject;
+  } catch (error) {
+    console.error("❌ Error creating module project:", error);
+    throw error;
+  }
+}

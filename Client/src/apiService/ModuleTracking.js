@@ -55,6 +55,21 @@ export const ChangeModuleStatus = () => {
 };
 
 
+export const useModuleProject = (moduleId) => {
+  return useQuery({
+    queryKey: ["moduleProject", moduleId], // ✅ include moduleId
+    enabled: !!moduleId, // ✅ don't run without moduleId
+    queryFn: async () => {
+      const url = API_ROUTES.DASHBOARD.GET_MODULE_PROJECTS(moduleId);
+      const res = await axiosReq(API_MODES.GET, url);
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+};
+
+
 // export const GetAllModulesFromDomain = (domainId) => {
 //   return useQuery({
 //     queryKey: ["allModulesFromDomain", domainId],

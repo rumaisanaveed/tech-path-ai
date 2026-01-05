@@ -87,7 +87,7 @@ const SkillTracking = () => {
             <Domains />
           </div>
         </div>
-        <IndividualSkills />
+        {/* <IndividualSkills /> */}
       </div>
     </DashboardLayout>
   );
@@ -213,84 +213,84 @@ const NoDomainsFound = () => {
   );
 };
 
-const IndividualSkills = () => {
-  const navigate = useNavigate();
-  const { isSmallScreen } = useScreenSize();
+// const IndividualSkills = () => {
+//   const navigate = useNavigate();
+//   const { isSmallScreen } = useScreenSize();
 
-  const isLoadingSkills = false;
+//   const isLoadingSkills = false;
 
-  return (
-    <div className="flex flex-col gap-3 w-full">
-      <div className="flex items-center justify-between w-full">
-        <Heading heading="Individual Skills" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <OutlinedActionButton
-              title={isSmallScreen ? "Add" : "Add Skills"}
-              icon={<Plus size={isSmallScreen ? 15 : 18} color="black" />}
-            />
-          </DropdownMenuTrigger>
-          <SelectionDropdown items={skillDropDownItems} />
-        </DropdownMenu>
-      </div>
-      <div className="flex flex-col gap-4 mt-5 w-full">
-        {isLoadingSkills ? (
-          <IndividualSkillsSkeleton />
-        ) : (
-          individualSkills.map((skill, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between w-full"
-            >
-              <div className="w-7/12 lg:w-5/6">
-                <h2 className="font-normal text-base md:text-lg">
-                  {skill.name}
-                </h2>
-                <OrangeProgressBar value={skill.value} />
-              </div>
-              <div className="flex items-center gap-2 w-fit">
-                <OutlinedActionButton
-                  title="Take Quiz"
-                  handleClick={() =>
-                    navigate("/user/dashboard/skill-tracker/skill-assessment")
-                  }
-                  className="px-3"
-                  icon={
-                    <BookOpenCheck
-                      size={isSmallScreen ? 15 : 18}
-                      color="black"
-                    />
-                  }
-                />
-                <Trash2 color="black" size={18} className="cursor-pointer" />
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex flex-col gap-3 w-full">
+//       <div className="flex items-center justify-between w-full">
+//         <Heading heading="Individual Skills" />
+//         <DropdownMenu>
+//           <DropdownMenuTrigger asChild>
+//             <OutlinedActionButton
+//               title={isSmallScreen ? "Add" : "Add Skills"}
+//               icon={<Plus size={isSmallScreen ? 15 : 18} color="black" />}
+//             />
+//           </DropdownMenuTrigger>
+//           <SelectionDropdown items={skillDropDownItems} />
+//         </DropdownMenu>
+//       </div>
+//       <div className="flex flex-col gap-4 mt-5 w-full">
+//         {isLoadingSkills ? (
+//           <IndividualSkillsSkeleton />
+//         ) : (
+//           individualSkills.map((skill, index) => (
+//             <div
+//               key={index}
+//               className="flex items-center justify-between w-full"
+//             >
+//               <div className="w-7/12 lg:w-5/6">
+//                 <h2 className="font-normal text-base md:text-lg">
+//                   {skill.name}
+//                 </h2>
+//                 <OrangeProgressBar value={skill.value} />
+//               </div>
+//               <div className="flex items-center gap-2 w-fit">
+//                 <OutlinedActionButton
+//                   title="Take Quiz"
+//                   handleClick={() =>
+//                     navigate("/user/dashboard/skill-tracker/skill-assessment")
+//                   }
+//                   className="px-3"
+//                   icon={
+//                     <BookOpenCheck
+//                       size={isSmallScreen ? 15 : 18}
+//                       color="black"
+//                     />
+//                   }
+//                 />
+//                 <Trash2 color="black" size={18} className="cursor-pointer" />
+//               </div>
+//             </div>
+//           ))
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
-const IndividualSkillsSkeleton = ({ count = 3 }) => {
-  return (
-    <div className="flex flex-col gap-4 mt-5 w-full">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="flex items-center justify-between w-full">
-          {/* Skill name and progress bar */}
-          <div className="w-7/12 lg:w-5/6 flex flex-col gap-2">
-            <Skeleton className="h-5 w-3/5 md:h-6 md:w-2/5 rounded-md" />
-            <Skeleton className="h-3 w-full rounded-full" />
-          </div>
+// const IndividualSkillsSkeleton = ({ count = 3 }) => {
+//   return (
+//     <div className="flex flex-col gap-4 mt-5 w-full">
+//       {Array.from({ length: count }).map((_, index) => (
+//         <div key={index} className="flex items-center justify-between w-full">
+//           {/* Skill name and progress bar */}
+//           <div className="w-7/12 lg:w-5/6 flex flex-col gap-2">
+//             <Skeleton className="h-5 w-3/5 md:h-6 md:w-2/5 rounded-md" />
+//             <Skeleton className="h-3 w-full rounded-full" />
+//           </div>
 
-          {/* Buttons */}
-          <div className="flex items-center gap-2 w-fit">
-            <Skeleton className="h-10 w-24 rounded-md" />
-            {/* Take Quiz button */}
-            <Skeleton className="h-10 w-10 rounded-full" /> {/* Trash icon */}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+//           {/* Buttons */}
+//           <div className="flex items-center gap-2 w-fit">
+//             <Skeleton className="h-10 w-24 rounded-md" />
+//             {/* Take Quiz button */}
+//             <Skeleton className="h-10 w-10 rounded-full" /> {/* Trash icon */}
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
