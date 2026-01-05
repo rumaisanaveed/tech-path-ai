@@ -16,7 +16,7 @@ const ViewDomain = lazy(() =>
 const MentorShip = lazy(() => import("@/pages/dashboard/mentorship/Mentors"));
 const Roadmap = lazy(() => import("@/pages/dashboard/roadmaps/Roadmap"));
 const ViewRoadmap = lazy(() =>
-  import("@/pages/dashboard/roadmaps/ViewRoadmap")
+  import("@/pages/dashboard/roadmaps/ViewRoadMap")
 );
 const Achievements = lazy(() =>
   import("@/pages/dashboard/achievements/Achievements")
