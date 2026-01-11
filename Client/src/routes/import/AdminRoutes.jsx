@@ -9,7 +9,7 @@ const AdminBlogs = lazy(() =>
 const AddBlog = lazy(() => import("@/pages/adminDashboard/Blogs/AddBlog"));
 const EditBlog = lazy(() => import("@/pages/adminDashboard/Blogs/EditBlog"));
 const AdminEvents = lazy(() =>
-  import("@/pages/adminDashboard/events/AdminEvents")
+  import("@/pages/adminDashboard/Events/AdminEvents")
 );
 const AddEvent = lazy(() => import("@/pages/adminDashboard/Events/AddEvent"));
 const EditEvent = lazy(() => import("@/pages/adminDashboard/Events/EditEvent"));
