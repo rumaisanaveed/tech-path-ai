@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Buddy } from "./buddy";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "@/services/axiosInstance";
+import { Buddy } from "./Buddy";
 
 export const BuddyConversation = () => {
   const { id } = useParams();
