@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Buddy } from "./buddy";
+import { Buddy } from "./Buddy";
 
 const BuddyLessons = () => {
   const [isOpen, setIsOpen] = useState(false);
