@@ -1,8 +1,8 @@
-import Sidebar from "@/components/Sidebar/Sidebar";
 import { Button } from "@/components/ui/button";
 import { adminSidebarItems } from "@/constants";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Logo from "@/assets/icons/logo.svg";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 export default function AdminDashboardLayout({ children }) {
   return (
